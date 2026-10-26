@@ -1,0 +1,222 @@
+{
+  "document_id": "24fd3ddc6989474687c13d70e932e89e",
+  "document_type": "residential_rental_agreement",
+  "document_decision": "FINANCIAL_RELEVANT",
+  "items": [
+    {
+      "chunk_id": "chk_9d2159324edff9933c64e59dbc59",
+      "page_number": 1,
+      "section_heading": "RESIDENTIAL TENANCY AGREEMENT",
+      "decision": "IRRELEVANT",
+      "category": "administrative_content",
+      "source_text": "RESIDENTIAL TENANCY AGREEMENT\n\nSTANDARD FIXED-TERM RESIDENTIAL LEASE \u2022 REFERENCE: [AGR-2026-894]",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_c816cf7d1aad4ed80e3fcb923080",
+      "page_number": 1,
+      "section_heading": "RESIDENTIAL TENANCY AGREEMENT",
+      "decision": "RELEVANT",
+      "category": "rent_leases_recurring_payments",
+      "source_text": "Landlord: [Landlord Full Legal Name] | Tenant: [Tenant Full Legal Name]\nPremises Address: [Unit/Apt #, Street Address, City, | Term of Lease: [12 Months] (Commencing: [Start Date] \u2022\nState/Postal Code] | Ending: [End Date])\nMonthly Rent: [$2,400.00 USD] (Payable on the 1st day of | Security Deposit: [$2,400.00 USD] (Held in designated\neach month) | escrow)",
+      "financial_fields": [
+        {
+          "field": "monthly_rent",
+          "original_text": "[$2,400.00 USD]",
+          "normalized_value": "2400.00",
+          "currency": "USD",
+          "frequency": "monthly",
+          "due_date": "1st day of each month",
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "confidence": 0.99
+        },
+        {
+          "field": "security_deposit",
+          "original_text": "[$2,400.00 USD]",
+          "normalized_value": "2400.00",
+          "currency": "USD",
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "confidence": 0.99
+        }
+      ],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_ac2507b1ffb7a2558cb578f79473",
+      "page_number": 1,
+      "section_heading": "1. PARTIES AND DEMISED PREMISES",
+      "decision": "IRRELEVANT",
+      "category": "administrative_content",
+      "source_text": "1. PARTIES AND DEMISED PREMISES\n\nThis Residential Lease Agreement (the \"Agreement\") is entered into as of [Agreement Date], by and between\n[Landlord Full Legal Name] (hereinafter referred to as the \"Landlord\"), and [Tenant Full Legal Name]\n(hereinafter referred to as the \"Tenant\"). The Landlord hereby leases to the Tenant, and the Tenant hereby rents from the\nLandlord, the private residential dwelling situated at [Complete Property Address] (the \"Premises\"), for use strictly\nand exclusively as a private residential home.",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_eb924393d5dd8573bebf29744750",
+      "page_number": 1,
+      "section_heading": "2. LEASE TERM AND OCCUPANCY",
+      "decision": "RELEVANT",
+      "category": "rent_leases_recurring_payments",
+      "source_text": "2. LEASE TERM AND OCCUPANCY\n\nThe term of this lease shall commence at 12:01 AM on [Lease Start Date] and shall conclude at 11:59 PM on [Lease End\nDate]. The Tenant must furnish written notice at least sixty (60) days prior to the expiration date indicating their intent to\nrenew the tenancy or vacate the Premises. The Premises shall be occupied solely by the named Tenant and designated\nregistered occupants: [Occupant Names / None]. Subletting, Airbnb operations, licensing, or assignments without\nexpress written consent from the Landlord are strictly prohibited.",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_4a4197abc1a160ba10055eeb72f0",
+      "page_number": 1,
+      "section_heading": "3. RENTAL CONSIDERATION AND DUE DATES",
+      "decision": "RELEVANT",
+      "category": "rent_leases_recurring_payments",
+      "source_text": "3. RENTAL CONSIDERATION AND DUE DATES\n\nThe agreed rental consideration for the Premises shall be [$2,400.00] per calendar month. Rent is due and payable on or\nbefore the first (1st) day of each month via electronic funds transfer (ACH) or accredited direct deposit to the account\ninstructed by the Landlord. If full rent is not received by 11:59 PM on the fifth (5th) calendar day of the month, a late\nprocessing charge of [$75.00] or 5% of the unpaid balance, whichever is greater, shall apply as liquidated damages.",
+      "financial_fields": [
+        {
+          "field": "monthly_rent",
+          "original_text": "[$2,400.00]",
+          "normalized_value": "2400.00",
+          "currency": "USD",
+          "frequency": "monthly",
+          "due_date": "1st day of each month",
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "confidence": 0.99
+        },
+        {
+          "field": "late_fee_clause",
+          "original_text": "[$75.00] or 5%, whichever is greater",
+          "normalized_value": "75.00",
+          "currency": "USD",
+          "frequency": null,
+          "due_date": null,
+          "condition": "whichever is greater",
+          "details": {
+            "type": "conditional_greater_of",
+            "fixed_amount": "75.00",
+            "currency": "USD",
+            "percentage": "5",
+            "percentage_base": "unpaid balance",
+            "condition": "whichever is greater"
+          },
+          "validation_status": "PASSED",
+          "confidence": 0.98
+        },
+        {
+          "field": "late_fee_amount",
+          "original_text": "[$75.00]",
+          "normalized_value": "75.00",
+          "currency": "USD",
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "confidence": 0.98
+        },
+        {
+          "field": "late_fee_percentage",
+          "original_text": "5%",
+          "normalized_value": "5",
+          "currency": null,
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": {
+            "unit": "%",
+            "base": "unpaid balance"
+          },
+          "validation_status": "PASSED",
+          "confidence": 0.98
+        }
+      ],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_2c95c21673e2281ad6d332f0603a",
+      "page_number": 1,
+      "section_heading": "4. SECURITY DEPOSIT PROTECTION",
+      "decision": "RELEVANT",
+      "category": "rent_leases_recurring_payments",
+      "source_text": "4. SECURITY DEPOSIT PROTECTION\n\nUpon signing this Agreement, the Tenant shall deposit with the Landlord the sum of [$2,400.00] as security for the\nfaithful performance of all obligations hereunder. The deposit shall be maintained in a compliant, segregated banking\naccount. The Landlord shall return the full security deposit within twenty-one (21) to thirty (30) days of vacating, less any\nlegitimate deductions for unpaid utilities, delinquent charges, or damage beyond normal, expected wear and tear.",
+      "financial_fields": [
+        {
+          "field": "security_deposit",
+          "original_text": "[$2,400.00]",
+          "normalized_value": "2400.00",
+          "currency": "USD",
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "confidence": 0.99
+        }
+      ],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_e20b212d39bd071127415a27de32",
+      "page_number": 2,
+      "section_heading": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS",
+      "decision": "IRRELEVANT",
+      "category": "non_financial_content",
+      "source_text": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS\n\nThe Tenant shall be responsible for contracting and paying all consumable utilities, including electricity, cooking gas,\ninternet, and cable services. Water, sewer, and municipal refuse collection shall be provided by [Landlord / Tenant as\nagreed]. The Tenant covenants to maintain the interior Premises in a clean, sanitary condition, replace HVAC filters\nquarterly, test smoke and CO detectors monthly, and immediately report plumbing leaks or structural defects in writing to\nprevent property deterioration.",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_5af8b0c9c319a17690d228fe0288",
+      "page_number": 2,
+      "section_heading": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES",
+      "decision": "IRRELEVANT",
+      "category": "non_financial_content",
+      "source_text": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES\n\nThe Tenant shall respect the peaceful enjoyment of neighbors and adhere to municipal quiet hours (10:00 PM to 7:00 AM).\nNo architectural modifications, interior painting, wallpapering, or lock replacements shall be executed without prior written\napproval of the Landlord. Pets are prohibited on the Premises unless formally authorized under an appended pet rider.\nSmoking, vaping, or burning hazardous materials inside the Premises constitutes a material lease violation.",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_f5d477a9987588cf6889f9e42a49",
+      "page_number": 2,
+      "section_heading": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY",
+      "decision": "IRRELEVANT",
+      "category": "non_financial_content",
+      "source_text": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY\n\nThe Landlord or authorized agents shall possess the right to enter the Premises during customary business hours for routine\ninspections, necessary repairs, or showings to prospective tenants/purchasers, provided a minimum of twenty-four (24)\nhours advance written or electronic notice is served. In cases of bona fide emergency (fire, severe flooding, structural\ncompromise), immediate entry is permitted by law.",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_bfc830f8eb9c4460663e45dbe1da",
+      "page_number": 2,
+      "section_heading": "8. GOVERNING LAW AND ENTIRE AGREEMENT",
+      "decision": "IRRELEVANT",
+      "category": "non_financial_content",
+      "source_text": "8. GOVERNING LAW AND ENTIRE AGREEMENT\n\nThis instrument constitutes the final, complete, and exclusive agreement between the parties regarding the subject matter\nherein. Any amendment or addendum must be executed in writing and signed by both parties. This Agreement shall be\ngoverned by, construed, and enforced in accordance with the statutory laws of the jurisdiction of [State / Province /\nTerritory].",
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "chunk_id": "chk_ab6b90b36987500d4a38522c7238",
+      "page_number": 2,
+      "section_heading": "EXECUTION AND ACKNOWLEDGMENT OF TERMS",
+      "decision": "IRRELEVANT",
+      "category": "administrative_content",
+      "source_text": "EXECUTION AND ACKNOWLEDGMENT OF TERMS\n\nLANDLORD:\n\nTENANT:\n\nAUTHORIZED SIGNATURE\n\nTENANT SIGNATURE\n\nPrint Name: [Landlord Full Legal Name]\nDate: ________________________\n\nPrint Name: [Tenant Full Legal Name]\nDate: ________________________",
+      "financial_fields": [],
+      "requires_review": false
+    }
+  ],
+  "validation_summary": {
+    "monetary_values_checked": true,
+    "failed_checks": 0,
+    "requires_review": false,
+    "details": [
+      "Checked 7 extracted financial fields; 0 failed validation."
+    ]
+  }
+}

@@ -1,0 +1,3576 @@
+{
+  "document": {
+    "id": "24fd3ddc6989474687c13d70e932e89e",
+    "filename": "Residential Rental Agreement.pdf",
+    "extension": ".pdf",
+    "detected_type": "pdf",
+    "mime_type": "application/pdf",
+    "size_bytes": 150385,
+    "content_hash": "ff5a04edca039b471f21ae026c71599f67427cc588fc27215d0b941feedc68bf",
+    "uploaded_at": "2026-10-26T15:39:35.551967",
+    "status": "COMPLETED",
+    "relevance_status": "FINANCIAL_RELEVANT",
+    "relevance_score": 0.995,
+    "is_filtered": false,
+    "processing_ms": 491,
+    "page_count": 2,
+    "extraction_quality": {
+      "pages": 2,
+      "native_pages": 2,
+      "ocr_pages": 0,
+      "low_text_pages": 0,
+      "mean_ocr_confidence": null,
+      "tables": 1
+    },
+    "warnings": [],
+    "error_message": null,
+    "current_run_id": "run_20261026222755_24fd3d",
+    "classifier_version": "hybrid-baseline-v1",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "dataset_version": "1.0.0",
+    "processing_started_at": "2026-10-26T22:27:55.435620",
+    "processing_completed_at": "2026-10-26T22:27:55.924642",
+    "embedding_calls": 0,
+    "embedding_cache_hits": 11,
+    "llm_calls": 0,
+    "llm_cost_usd": 0.0,
+    "chunk_counts": {
+      "relevant": 4,
+      "uncertain": 0,
+      "irrelevant": 7,
+      "total": 11
+    },
+    "latest_job": {
+      "id": "dac11e9b16694191a359864a2c7e85ad",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "job_type": "process",
+      "status": "succeeded",
+      "stage": null,
+      "progress": 1.0,
+      "attempts": 1,
+      "max_attempts": 3,
+      "error": null,
+      "created_at": "2026-10-26T22:01:59.374551",
+      "started_at": "2026-10-26T22:01:59.736715",
+      "finished_at": "2026-10-26T22:02:00.797256"
+    },
+    "score_explanation": "Document score (0.96) combines the highest-scoring chunk with the top-3 chunk mean (chunks: 4 relevant, 5 uncertain, 4 irrelevant). Limitation: this score is a calibrated ranking heuristic combining lexical signals and local embedding similarity\u2014not a calibrated probability of financial materiality, nor a substitute for accounting review."
+  },
+  "decision_rationale": [
+    "Document contains both financial (4 RELEVANT, 5 UNCERTAIN) and non-financial (4 IRRELEVANT) sections; only relevant regions are prepared for downstream extraction."
+  ],
+  "category_breakdown": {
+    "rent_leases_recurring_payments": 2,
+    "contractual_financial_obligations": 1,
+    "deposits_and_escrow": 1
+  },
+  "chunks": [
+    {
+      "id": "chk_9d2159324edff9933c64e59dbc59",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 0,
+      "chunk_type": "prose",
+      "text": "RESIDENTIAL TENANCY AGREEMENT\n\nSTANDARD FIXED-TERM RESIDENTIAL LEASE \u2022 REFERENCE: [AGR-2026-894]",
+      "context": "RESIDENTIAL TENANCY AGREEMENT",
+      "location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 1,
+        "paragraph_end": 2,
+        "char_start": 0,
+        "char_end": 96,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            121.5,
+            54.7,
+            473.8,
+            70.2
+          ],
+          [
+            141.1,
+            77.1,
+            454.8,
+            85.3
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "RESIDENTIAL TENANCY AGREEMENT"
+        ],
+        "section_heading": "RESIDENTIAL TENANCY AGREEMENT"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.15,
+        "signal_score": 0.0,
+        "semantic_score": 0.8671,
+        "positive_similarity": 0.5455,
+        "negative_similarity": 0.2889,
+        "top_category": "administrative_content",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.5455,
+          "maturity_renewals_deadlines": 0.3822,
+          "loans_and_interest": 0.3378,
+          "contractual_financial_obligations": 0.2558,
+          "invoices_and_billing": 0.2363
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.6433,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.4439,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "loan-001",
+            "concept": "Loan Facilities and Interest Schedules",
+            "category": "loans_interest_repayment",
+            "label": "positive",
+            "similarity": 0.3902,
+            "matched_text": "Loan Facilities and Interest Schedules: Borrowed capital agreements specifying principal sums, interest rates, and amortized repayments."
+          },
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.2907,
+            "matched_text": "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.2788,
+            "matched_text": "Contractual Payment Obligations: Legally binding commitments to pay money for services, milestones, or acquisitions."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.2531,
+            "matched_text": "Purchase Order Commitments: Official document authorizing a vendor to deliver items at an agreed price."
+          }
+        ],
+        "signals": [],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_c816cf7d1aad4ed80e3fcb923080",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 1,
+      "chunk_type": "table",
+      "text": "Landlord: [Landlord Full Legal Name] | Tenant: [Tenant Full Legal Name]\nPremises Address: [Unit/Apt #, Street Address, City, | Term of Lease: [12 Months] (Commencing: [Start Date] \u2022\nState/Postal Code] | Ending: [End Date])\nMonthly Rent: [$2,400.00 USD] (Payable on the 1st day of | Security Deposit: [$2,400.00 USD] (Held in designated\neach month) | escrow)",
+      "context": "RESIDENTIAL TENANCY AGREEMENT",
+      "location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": 1,
+        "row_start": 1,
+        "row_end": 5,
+        "col_start": 1,
+        "col_end": 2,
+        "cell_range": "A1:B5",
+        "paragraph_start": null,
+        "paragraph_end": null,
+        "char_start": 98,
+        "char_end": 455,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            60.8,
+            112.3,
+            515.2,
+            174.5
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "RESIDENTIAL TENANCY AGREEMENT"
+        ],
+        "section_heading": "RESIDENTIAL TENANCY AGREEMENT"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "RELEVANT",
+        "score": 1.0,
+        "signal_score": 1.0,
+        "semantic_score": 1.0,
+        "positive_similarity": 0.708,
+        "negative_similarity": 0.2354,
+        "top_category": "rent_leases_recurring_payments",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.708,
+          "contractual_financial_obligations": 0.363,
+          "maturity_renewals_deadlines": 0.335,
+          "loans_and_interest": 0.3052,
+          "invoices_and_billing": 0.3022
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.7005,
+            "matched_text": "Tenant agrees to pay monthly base rent of $8,500.00 on the first day of each calendar month."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.3648,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "loan-001",
+            "concept": "Loan Facilities and Interest Schedules",
+            "category": "loans_interest_repayment",
+            "label": "positive",
+            "similarity": 0.3356,
+            "matched_text": "The Borrower shall repay the principal in twelve equal monthly installments of $25,000 plus accrued interest."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.3153,
+            "matched_text": "Client shall pay Contractor a fixed fee of $75,000 upon successful completion of Phase 2 deliverables."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.3115,
+            "matched_text": "Buyer hereby issues Purchase Order #PO-9012 for 500 units at unit price $120.00, subtotal $60,000.00."
+          },
+          {
+            "reference_id": "inv-001",
+            "concept": "Commercial Invoice Terms",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.3113,
+            "matched_text": "Invoice No | Date | Amount Due\nINV-8821 | 2024-04-15 | $14,850.00\nPayment Terms: Net 30 days."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 0,
+            "end": 8,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 11,
+            "end": 19,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 39,
+            "end": 45,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 48,
+            "end": 54,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "Commencing: [",
+            "start": 155,
+            "end": 168,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "Monthly Rent",
+            "start": 223,
+            "end": 235,
+            "category": "rent_leases_recurring_payments",
+            "weight": 0.34
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 238,
+            "end": 248,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "Security Deposit",
+            "start": 282,
+            "end": 298,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 301,
+            "end": 311,
+            "category": null,
+            "weight": 0.28
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_ac2507b1ffb7a2558cb578f79473",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 2,
+      "chunk_type": "prose",
+      "text": "1. PARTIES AND DEMISED PREMISES\n\nThis Residential Lease Agreement (the \"Agreement\") is entered into as of [Agreement Date], by and between\n[Landlord Full Legal Name] (hereinafter referred to as the \"Landlord\"), and [Tenant Full Legal Name]\n(hereinafter referred to as the \"Tenant\"). The Landlord hereby leases to the Tenant, and the Tenant hereby rents from the\nLandlord, the private residential dwelling situated at [Complete Property Address] (the \"Premises\"), for use strictly\nand exclusively as a private residential home.",
+      "context": "1. PARTIES AND DEMISED PREMISES",
+      "location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 3,
+        "paragraph_end": 4,
+        "char_start": 457,
+        "char_end": 983,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            193.8,
+            274.1,
+            204.0
+          ],
+          [
+            51.0,
+            209.2,
+            545.2,
+            268.2
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "1. PARTIES AND DEMISED PREMISES"
+        ],
+        "section_heading": "1. PARTIES AND DEMISED PREMISES"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.15,
+        "signal_score": 0.0,
+        "semantic_score": 0.4173,
+        "positive_similarity": 0.3589,
+        "negative_similarity": 0.3675,
+        "top_category": "administrative_content",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.3589,
+          "maturity_renewals_deadlines": 0.2796,
+          "invoices_and_billing": 0.2532,
+          "loans_and_interest": 0.2518,
+          "contractual_financial_obligations": 0.2479
+        },
+        "matched_references": [
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.4369,
+            "matched_text": "This agreement may be executed in counterparts, each of which shall be deemed an original."
+          },
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.4223,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.3882,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "loan-001",
+            "concept": "Loan Facilities and Interest Schedules",
+            "category": "loans_interest_repayment",
+            "label": "positive",
+            "similarity": 0.3226,
+            "matched_text": "Loan Facilities and Interest Schedules: Borrowed capital agreements specifying principal sums, interest rates, and amortized repayments."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.2769,
+            "matched_text": "Contractual Payment Obligations: Legally binding commitments to pay money for services, milestones, or acquisitions."
+          },
+          {
+            "reference_id": "apar-002",
+            "concept": "Accounts Receivable Aging",
+            "category": "accounts_payable_receivable",
+            "label": "positive",
+            "similarity": 0.2716,
+            "matched_text": "Accounts Receivable Aging: Funds due to a business from customers for goods delivered or services rendered."
+          }
+        ],
+        "signals": [],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_eb924393d5dd8573bebf29744750",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 3,
+      "chunk_type": "prose",
+      "text": "2. LEASE TERM AND OCCUPANCY\n\nThe term of this lease shall commence at 12:01 AM on [Lease Start Date] and shall conclude at 11:59 PM on [Lease End\nDate]. The Tenant must furnish written notice at least sixty (60) days prior to the expiration date indicating their intent to\nrenew the tenancy or vacate the Premises. The Premises shall be occupied solely by the named Tenant and designated\nregistered occupants: [Occupant Names / None]. Subletting, Airbnb operations, licensing, or assignments without\nexpress written consent from the Landlord are strictly prohibited.",
+      "context": "2. LEASE TERM AND OCCUPANCY",
+      "location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 5,
+        "paragraph_end": 6,
+        "char_start": 985,
+        "char_end": 1551,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            280.1,
+            251.6,
+            290.3
+          ],
+          [
+            51.0,
+            296.2,
+            545.2,
+            354.5
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "2. LEASE TERM AND OCCUPANCY"
+        ],
+        "section_heading": "2. LEASE TERM AND OCCUPANCY"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "RELEVANT",
+        "score": 0.9572,
+        "signal_score": 0.79,
+        "semantic_score": 0.8661,
+        "positive_similarity": 0.5449,
+        "negative_similarity": 0.2878,
+        "top_category": "contractual_financial_obligations",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.5449,
+          "maturity_renewals_deadlines": 0.3849,
+          "contractual_financial_obligations": 0.3329,
+          "invoices_and_billing": 0.2302,
+          "loans_and_interest": 0.2301
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.5847,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.4734,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.2893,
+            "matched_text": "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware."
+          },
+          {
+            "reference_id": "loan-001",
+            "concept": "Loan Facilities and Interest Schedules",
+            "category": "loans_interest_repayment",
+            "label": "positive",
+            "similarity": 0.2643,
+            "matched_text": "Loan Facilities and Interest Schedules: Borrowed capital agreements specifying principal sums, interest rates, and amortized repayments."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.2613,
+            "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+          },
+          {
+            "reference_id": "exp-001",
+            "concept": "Operating Expenses (OpEx)",
+            "category": "expenses_operating_costs",
+            "label": "positive",
+            "similarity": 0.2594,
+            "matched_text": "Operating Expenses (OpEx): Day-to-day expenditures required to administer and operate a business."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "payment_phrase",
+            "text": "LEASE TERM",
+            "start": 3,
+            "end": 13,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "term of this lease",
+            "start": 33,
+            "end": 51,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 157,
+            "end": 163,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "expiration date",
+            "start": 230,
+            "end": 245,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 366,
+            "end": 372,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 533,
+            "end": 541,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_4a4197abc1a160ba10055eeb72f0",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 4,
+      "chunk_type": "prose",
+      "text": "3. RENTAL CONSIDERATION AND DUE DATES\n\nThe agreed rental consideration for the Premises shall be [$2,400.00] per calendar month. Rent is due and payable on or\nbefore the first (1st) day of each month via electronic funds transfer (ACH) or accredited direct deposit to the account\ninstructed by the Landlord. If full rent is not received by 11:59 PM on the fifth (5th) calendar day of the month, a late\nprocessing charge of [$75.00] or 5% of the unpaid balance, whichever is greater, shall apply as liquidated damages.",
+      "context": "3. RENTAL CONSIDERATION AND DUE DATES",
+      "location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 7,
+        "paragraph_end": 8,
+        "char_start": 1553,
+        "char_end": 2070,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            367.1,
+            324.9,
+            377.3
+          ],
+          [
+            51.0,
+            383.2,
+            545.2,
+            428.7
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "3. RENTAL CONSIDERATION AND DUE DATES"
+        ],
+        "section_heading": "3. RENTAL CONSIDERATION AND DUE DATES"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "RELEVANT",
+        "score": 1.0,
+        "signal_score": 1.0,
+        "semantic_score": 1.0,
+        "positive_similarity": 0.7026,
+        "negative_similarity": 0.0,
+        "top_category": "rent_leases_recurring_payments",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.7026,
+          "contractual_financial_obligations": 0.4572,
+          "invoices_and_billing": 0.408,
+          "maturity_renewals_deadlines": 0.3713,
+          "loans_and_interest": 0.3518
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.6042,
+            "matched_text": "Tenant agrees to pay monthly base rent of $8,500.00 on the first day of each calendar month."
+          },
+          {
+            "reference_id": "pen-001",
+            "concept": "Late Payment Fees and Penalties",
+            "category": "penalties_late_fees",
+            "label": "positive",
+            "similarity": 0.4839,
+            "matched_text": "Overdue balances shall incur a late charge of 1.5% per month or the maximum legal rate."
+          },
+          {
+            "reference_id": "inv-001",
+            "concept": "Commercial Invoice Terms",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.4461,
+            "matched_text": "Invoice No | Date | Amount Due\nINV-8821 | 2024-04-15 | $14,850.00\nPayment Terms: Net 30 days."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.3952,
+            "matched_text": "Client shall pay Contractor a fixed fee of $75,000 upon successful completion of Phase 2 deliverables."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.3915,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.3899,
+            "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "payment_phrase",
+            "text": "RENTAL CONSIDERATION",
+            "start": 3,
+            "end": 23,
+            "category": "rent_leases_recurring_payments",
+            "weight": 0.34
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "rental consideration",
+            "start": 50,
+            "end": 70,
+            "category": "rent_leases_recurring_payments",
+            "weight": 0.34
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 98,
+            "end": 107,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 298,
+            "end": 306,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$75.00",
+            "start": 424,
+            "end": 430,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "liquidated damages",
+            "start": 498,
+            "end": 516,
+            "category": "penalties_late_fees",
+            "weight": 0.34
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_2c95c21673e2281ad6d332f0603a",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 5,
+      "chunk_type": "prose",
+      "text": "4. SECURITY DEPOSIT PROTECTION\n\nUpon signing this Agreement, the Tenant shall deposit with the Landlord the sum of [$2,400.00] as security for the\nfaithful performance of all obligations hereunder. The deposit shall be maintained in a compliant, segregated banking\naccount. The Landlord shall return the full security deposit within twenty-one (21) to thirty (30) days of vacating, less any\nlegitimate deductions for unpaid utilities, delinquent charges, or damage beyond normal, expected wear and tear.",
+      "context": "4. SECURITY DEPOSIT PROTECTION",
+      "location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 9,
+        "paragraph_end": 10,
+        "char_start": 2072,
+        "char_end": 2575,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            441.3,
+            267.8,
+            451.5
+          ],
+          [
+            51.0,
+            457.4,
+            545.2,
+            503.0
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "4. SECURITY DEPOSIT PROTECTION"
+        ],
+        "section_heading": "4. SECURITY DEPOSIT PROTECTION"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "RELEVANT",
+        "score": 0.8971,
+        "signal_score": 1.0,
+        "semantic_score": 0.834,
+        "positive_similarity": 0.5249,
+        "negative_similarity": 0.2485,
+        "top_category": "deposits_and_escrow",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.5249,
+          "loans_and_interest": 0.3336,
+          "contractual_financial_obligations": 0.3007,
+          "invoices_and_billing": 0.298,
+          "bank_transactions": 0.2719,
+          "deposits_and_escrow": 0.5249
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.6191,
+            "matched_text": "Lessee deposited a security deposit of EUR 17,000 with Landlord upon execution of this lease."
+          },
+          {
+            "reference_id": "loan-001",
+            "concept": "Loan Facilities and Interest Schedules",
+            "category": "loans_interest_repayment",
+            "label": "positive",
+            "similarity": 0.3569,
+            "matched_text": "The Borrower shall repay the principal in twelve equal monthly installments of $25,000 plus accrued interest."
+          },
+          {
+            "reference_id": "pen-001",
+            "concept": "Late Payment Fees and Penalties",
+            "category": "penalties_late_fees",
+            "label": "positive",
+            "similarity": 0.3227,
+            "matched_text": "A late payment penalty of $250.00 is assessed for any installment received after the 10-day grace period."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.3109,
+            "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+          },
+          {
+            "reference_id": "cash-001",
+            "concept": "Bank Statement and Wire Transfers",
+            "category": "cash_flow_bank_transactions",
+            "label": "positive",
+            "similarity": 0.2976,
+            "matched_text": "Bank Statement and Wire Transfers: Record of deposits, withdrawals, ACH, and wire transfers across institutional bank accounts."
+          },
+          {
+            "reference_id": "apar-002",
+            "concept": "Accounts Receivable Aging",
+            "category": "accounts_payable_receivable",
+            "label": "positive",
+            "similarity": 0.2964,
+            "matched_text": "Aged receivables over 90 days total $42,500 and may require a reserve for uncollectible accounts."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "payment_phrase",
+            "text": "SECURITY DEPOSIT",
+            "start": 3,
+            "end": 19,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 65,
+            "end": 71,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "deposit with the Landlord",
+            "start": 78,
+            "end": 103,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 95,
+            "end": 103,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 116,
+            "end": 125,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 278,
+            "end": 286,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "security deposit",
+            "start": 309,
+            "end": 325,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_e20b212d39bd071127415a27de32",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 6,
+      "chunk_type": "prose",
+      "text": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS\n\nThe Tenant shall be responsible for contracting and paying all consumable utilities, including electricity, cooking gas,\ninternet, and cable services. Water, sewer, and municipal refuse collection shall be provided by [Landlord / Tenant as\nagreed]. The Tenant covenants to maintain the interior Premises in a clean, sanitary condition, replace HVAC filters\nquarterly, test smoke and CO detectors monthly, and immediately report plumbing leaks or structural defects in writing to\nprevent property deterioration.",
+      "context": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS",
+      "location": {
+        "page": 2,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 1,
+        "paragraph_end": 2,
+        "char_start": 2577,
+        "char_end": 3138,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            53.6,
+            402.7,
+            63.8
+          ],
+          [
+            51.0,
+            69.7,
+            545.2,
+            128.0
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS"
+        ],
+        "section_heading": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.25,
+        "signal_score": 0.22,
+        "semantic_score": 0.5279,
+        "positive_similarity": 0.3975,
+        "negative_similarity": 0.2992,
+        "top_category": "non_financial_content",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.3975,
+          "contractual_financial_obligations": 0.3149,
+          "invoices_and_billing": 0.3026,
+          "loans_and_interest": 0.2551,
+          "assets_liabilities_investments": 0.253
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.4795,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.3767,
+            "matched_text": "Contractual Payment Obligations: Legally binding commitments to pay money for services, milestones, or acquisitions."
+          },
+          {
+            "reference_id": "apar-001",
+            "concept": "Accounts Payable Ledger",
+            "category": "accounts_payable_receivable",
+            "label": "positive",
+            "similarity": 0.3384,
+            "matched_text": "Accounts Payable Ledger: Outstanding short-term debts and obligations owed by a business to its creditors and suppliers."
+          },
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.3154,
+            "matched_text": "Standard Non-Disclosure Boilerplate: Confidentiality obligations, governing law, and general legal terms without financial commitments."
+          },
+          {
+            "reference_id": "asset-001",
+            "concept": "Balance Sheet Assets and Liabilities",
+            "category": "assets_liabilities_investments",
+            "label": "positive",
+            "similarity": 0.2921,
+            "matched_text": "Balance Sheet Assets and Liabilities: Summary of economic resources owned, obligations owed, and equity capital invested."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.2919,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 55,
+            "end": 61,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 270,
+            "end": 278,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 281,
+            "end": 287,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 304,
+            "end": 310,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_5af8b0c9c319a17690d228fe0288",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 7,
+      "chunk_type": "prose",
+      "text": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES\n\nThe Tenant shall respect the peaceful enjoyment of neighbors and adhere to municipal quiet hours (10:00 PM to 7:00 AM).\nNo architectural modifications, interior painting, wallpapering, or lock replacements shall be executed without prior written\napproval of the Landlord. Pets are prohibited on the Premises unless formally authorized under an appended pet rider.\nSmoking, vaping, or burning hazardous materials inside the Premises constitutes a material lease violation.",
+      "context": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES",
+      "location": {
+        "page": 2,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 3,
+        "paragraph_end": 4,
+        "char_start": 3140,
+        "char_end": 3655,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            140.6,
+            356.6,
+            150.8
+          ],
+          [
+            51.0,
+            156.7,
+            545.2,
+            202.2
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES"
+        ],
+        "section_heading": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.25,
+        "signal_score": 0.22,
+        "semantic_score": 0.3996,
+        "positive_similarity": 0.3297,
+        "negative_similarity": 0.2238,
+        "top_category": "non_financial_content",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.3297,
+          "maturity_renewals_deadlines": 0.1595,
+          "contractual_financial_obligations": 0.1361,
+          "expenses_operating_costs": 0.1175,
+          "invoices_and_billing": 0.115
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.3561,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.2585,
+            "matched_text": "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.1862,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "pen-001",
+            "concept": "Late Payment Fees and Penalties",
+            "category": "penalties_late_fees",
+            "label": "positive",
+            "similarity": 0.1512,
+            "matched_text": "Liquidated damages of EUR 1,000 per day of delay shall be deducted from the final contractor disbursement."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.1483,
+            "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+          },
+          {
+            "reference_id": "exp-001",
+            "concept": "Operating Expenses (OpEx)",
+            "category": "expenses_operating_costs",
+            "label": "positive",
+            "similarity": 0.1357,
+            "matched_text": "Operating Expenses (OpEx): Day-to-day expenditures required to administer and operate a business."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 48,
+            "end": 54,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 306,
+            "end": 314,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_f5d477a9987588cf6889f9e42a49",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 8,
+      "chunk_type": "prose",
+      "text": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY\n\nThe Landlord or authorized agents shall possess the right to enter the Premises during customary business hours for routine\ninspections, necessary repairs, or showings to prospective tenants/purchasers, provided a minimum of twenty-four (24)\nhours advance written or electronic notice is served. In cases of bona fide emergency (fire, severe flooding, structural\ncompromise), immediate entry is permitted by law.",
+      "context": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY",
+      "location": {
+        "page": 2,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 5,
+        "paragraph_end": 6,
+        "char_start": 3657,
+        "char_end": 4112,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            214.8,
+            351.1,
+            225.0
+          ],
+          [
+            51.0,
+            230.9,
+            545.2,
+            276.5
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "7. LANDLORD RIGHT OF INSPECTION AND ENTRY"
+        ],
+        "section_heading": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.25,
+        "signal_score": 0.22,
+        "semantic_score": 0.404,
+        "positive_similarity": 0.3258,
+        "negative_similarity": 0.1845,
+        "top_category": "non_financial_content",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.3258,
+          "invoices_and_billing": 0.2241,
+          "contractual_financial_obligations": 0.2083,
+          "maturity_renewals_deadlines": 0.1912,
+          "insurance_and_claims": 0.1777
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.3353,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.3,
+            "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.2509,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "pen-001",
+            "concept": "Late Payment Fees and Penalties",
+            "category": "penalties_late_fees",
+            "label": "positive",
+            "similarity": 0.235,
+            "matched_text": "Liquidated damages of EUR 1,000 per day of delay shall be deducted from the final contractor disbursement."
+          },
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.1877,
+            "matched_text": "The Receiving Party shall hold all Confidential Information in strict confidence using reasonable care."
+          },
+          {
+            "reference_id": "ins-001",
+            "concept": "Insurance Policy and Deductibles",
+            "category": "insurance",
+            "label": "positive",
+            "similarity": 0.1845,
+            "matched_text": "Policy coverage limit is EUR 2,000,000 for general commercial liability and indemnity."
+          }
+        ],
+        "signals": [
+          {
+            "signal": "financial_party",
+            "text": "LANDLORD",
+            "start": 3,
+            "end": 11,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 47,
+            "end": 55,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_bfc830f8eb9c4460663e45dbe1da",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 9,
+      "chunk_type": "prose",
+      "text": "8. GOVERNING LAW AND ENTIRE AGREEMENT\n\nThis instrument constitutes the final, complete, and exclusive agreement between the parties regarding the subject matter\nherein. Any amendment or addendum must be executed in writing and signed by both parties. This Agreement shall be\ngoverned by, construed, and enforced in accordance with the statutory laws of the jurisdiction of [State / Province /\nTerritory].",
+      "context": "8. GOVERNING LAW AND ENTIRE AGREEMENT",
+      "location": {
+        "page": 2,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 7,
+        "paragraph_end": 8,
+        "char_start": 4114,
+        "char_end": 4518,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            289.1,
+            333.9,
+            299.3
+          ],
+          [
+            51.0,
+            305.2,
+            545.2,
+            350.7
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "8. GOVERNING LAW AND ENTIRE AGREEMENT"
+        ],
+        "section_heading": "8. GOVERNING LAW AND ENTIRE AGREEMENT"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.1407,
+        "signal_score": 0.0,
+        "semantic_score": 0.3492,
+        "positive_similarity": 0.3597,
+        "negative_similarity": 0.5747,
+        "top_category": "non_financial_content",
+        "category_scores": {
+          "contractual_financial_obligations": 0.3597,
+          "invoices_and_billing": 0.2969,
+          "maturity_renewals_deadlines": 0.2582,
+          "rent_leases_recurring_payments": 0.2574,
+          "tax_and_payroll": 0.2483
+        },
+        "matched_references": [
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.5906,
+            "matched_text": "This agreement may be executed in counterparts, each of which shall be deemed an original."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.4466,
+            "matched_text": "Contractual Payment Obligations: Legally binding commitments to pay money for services, milestones, or acquisitions."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.371,
+            "matched_text": "Purchase Order Commitments: Official document authorizing a vendor to deliver items at an agreed price."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.3319,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "refund-001",
+            "concept": "Refunds, Credit Memos, and Settlements",
+            "category": "refunds_credits_settlements",
+            "label": "positive",
+            "similarity": 0.3307,
+            "matched_text": "The parties agreed to a full settlement payment of $250,000 in resolution of all outstanding warranty claims."
+          },
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.2972,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          }
+        ],
+        "signals": [],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    },
+    {
+      "id": "chk_ab6b90b36987500d4a38522c7238",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_index": 10,
+      "chunk_type": "prose",
+      "text": "EXECUTION AND ACKNOWLEDGMENT OF TERMS\n\nLANDLORD:\n\nTENANT:\n\nAUTHORIZED SIGNATURE\n\nTENANT SIGNATURE\n\nPrint Name: [Landlord Full Legal Name]\nDate: ________________________\n\nPrint Name: [Tenant Full Legal Name]\nDate: ________________________",
+      "context": "EXECUTION AND ACKNOWLEDGMENT OF TERMS",
+      "location": {
+        "page": 2,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 9,
+        "paragraph_end": 15,
+        "char_start": 4520,
+        "char_end": 4757,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            370.8,
+            278.7,
+            379.1
+          ],
+          [
+            51.0,
+            388.2,
+            96.5,
+            394.6
+          ],
+          [
+            307.1,
+            388.2,
+            342.5,
+            394.6
+          ],
+          [
+            51.0,
+            426.3,
+            143.2,
+            434.0
+          ],
+          [
+            307.1,
+            426.3,
+            381.8,
+            434.0
+          ],
+          [
+            51.0,
+            443.7,
+            199.1,
+            464.0
+          ],
+          [
+            307.1,
+            443.7,
+            448.0,
+            464.0
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "EXECUTION AND ACKNOWLEDGMENT OF TERMS"
+        ],
+        "section_heading": "EXECUTION AND ACKNOWLEDGMENT OF TERMS"
+      },
+      "extra_locations": [],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "classification": {
+        "decision": "IRRELEVANT",
+        "score": 0.15,
+        "signal_score": 0.0,
+        "semantic_score": 0.4817,
+        "positive_similarity": 0.3916,
+        "negative_similarity": 0.3963,
+        "top_category": "administrative_content",
+        "category_scores": {
+          "rent_leases_recurring_payments": 0.3916,
+          "maturity_renewals_deadlines": 0.2998,
+          "contractual_financial_obligations": 0.2695,
+          "invoices_and_billing": 0.2649,
+          "loans_and_interest": 0.2514
+        },
+        "matched_references": [
+          {
+            "reference_id": "rent-001",
+            "concept": "Commercial Lease and Monthly Rent",
+            "category": "rent_leases_recurring_payments",
+            "label": "positive",
+            "similarity": 0.4264,
+            "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+          },
+          {
+            "reference_id": "neg-005",
+            "concept": "Standard Non-Disclosure Boilerplate",
+            "category": "non_financial",
+            "label": "negative",
+            "similarity": 0.4222,
+            "matched_text": "This agreement may be executed in counterparts, each of which shall be deemed an original."
+          },
+          {
+            "reference_id": "mat-001",
+            "concept": "Maturity Dates and Renewal Terms",
+            "category": "maturity_renewals_deadlines",
+            "label": "positive",
+            "similarity": 0.4057,
+            "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+          },
+          {
+            "reference_id": "contract-001",
+            "concept": "Contractual Payment Obligations",
+            "category": "contracts_payment_obligations",
+            "label": "positive",
+            "similarity": 0.3003,
+            "matched_text": "Contractual Payment Obligations: Legally binding commitments to pay money for services, milestones, or acquisitions."
+          },
+          {
+            "reference_id": "inv-002",
+            "concept": "Purchase Order Commitments",
+            "category": "invoices_purchase_orders",
+            "label": "positive",
+            "similarity": 0.2827,
+            "matched_text": "Purchase Order Commitments: Official document authorizing a vendor to deliver items at an agreed price."
+          },
+          {
+            "reference_id": "loan-001",
+            "concept": "Loan Facilities and Interest Schedules",
+            "category": "loans_interest_repayment",
+            "label": "positive",
+            "similarity": 0.2583,
+            "matched_text": "Interest on the outstanding term loan facility shall accrue at SOFR plus 2.75% per annum."
+          }
+        ],
+        "signals": [],
+        "negative_signals": [],
+        "decided_by": "baseline",
+        "llm_used": false,
+        "llm_rationale": null,
+        "classifier_version": "hybrid-baseline-v1",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "dataset_version": "1.0.0",
+        "thresholds": {
+          "relevant": 0.6,
+          "irrelevant": 0.35,
+          "source": "calibrated:2026-10-26"
+        }
+      },
+      "feedback": [],
+      "section_heading": null,
+      "financial_fields": [],
+      "requires_review": false
+    }
+  ],
+  "handoff": [
+    {
+      "schema_version": "1.0",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_id": "chk_c816cf7d1aad4ed80e3fcb923080",
+      "source_filename": "Residential Rental Agreement.pdf",
+      "source_type": "pdf",
+      "source_location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": 1,
+        "row_start": 1,
+        "row_end": 5,
+        "col_start": 1,
+        "col_end": 2,
+        "cell_range": "A1:B5",
+        "paragraph_start": null,
+        "paragraph_end": null,
+        "char_start": 98,
+        "char_end": 455,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            60.8,
+            112.3,
+            515.2,
+            174.5
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "RESIDENTIAL TENANCY AGREEMENT"
+        ],
+        "section_heading": "RESIDENTIAL TENANCY AGREEMENT"
+      },
+      "extracted_text": "Landlord: [Landlord Full Legal Name] | Tenant: [Tenant Full Legal Name]\nPremises Address: [Unit/Apt #, Street Address, City, | Term of Lease: [12 Months] (Commencing: [Start Date] \u2022\nState/Postal Code] | Ending: [End Date])\nMonthly Rent: [$2,400.00 USD] (Payable on the 1st day of | Security Deposit: [$2,400.00 USD] (Held in designated\neach month) | escrow)",
+      "context": "RESIDENTIAL TENANCY AGREEMENT",
+      "financial_category": "rent_leases_recurring_payments",
+      "category_scores": {
+        "rent_leases_recurring_payments": 0.708,
+        "contractual_financial_obligations": 0.363,
+        "maturity_renewals_deadlines": 0.335,
+        "loans_and_interest": 0.3052,
+        "invoices_and_billing": 0.3022
+      },
+      "relevance_score": 1.0,
+      "semantic_score": 1.0,
+      "signal_score": 1.0,
+      "decision": "RELEVANT",
+      "matching_references": [
+        {
+          "reference_id": "rent-001",
+          "concept": "Commercial Lease and Monthly Rent",
+          "category": "rent_leases_recurring_payments",
+          "label": "positive",
+          "similarity": 0.7005,
+          "matched_text": "Tenant agrees to pay monthly base rent of $8,500.00 on the first day of each calendar month."
+        },
+        {
+          "reference_id": "mat-001",
+          "concept": "Maturity Dates and Renewal Terms",
+          "category": "maturity_renewals_deadlines",
+          "label": "positive",
+          "similarity": 0.3648,
+          "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+        },
+        {
+          "reference_id": "loan-001",
+          "concept": "Loan Facilities and Interest Schedules",
+          "category": "loans_interest_repayment",
+          "label": "positive",
+          "similarity": 0.3356,
+          "matched_text": "The Borrower shall repay the principal in twelve equal monthly installments of $25,000 plus accrued interest."
+        },
+        {
+          "reference_id": "contract-001",
+          "concept": "Contractual Payment Obligations",
+          "category": "contracts_payment_obligations",
+          "label": "positive",
+          "similarity": 0.3153,
+          "matched_text": "Client shall pay Contractor a fixed fee of $75,000 upon successful completion of Phase 2 deliverables."
+        },
+        {
+          "reference_id": "inv-002",
+          "concept": "Purchase Order Commitments",
+          "category": "invoices_purchase_orders",
+          "label": "positive",
+          "similarity": 0.3115,
+          "matched_text": "Buyer hereby issues Purchase Order #PO-9012 for 500 units at unit price $120.00, subtotal $60,000.00."
+        },
+        {
+          "reference_id": "inv-001",
+          "concept": "Commercial Invoice Terms",
+          "category": "invoices_purchase_orders",
+          "label": "positive",
+          "similarity": 0.3113,
+          "matched_text": "Invoice No | Date | Amount Due\nINV-8821 | 2024-04-15 | $14,850.00\nPayment Terms: Net 30 days."
+        }
+      ],
+      "evidence": [
+        {
+          "signal": "financial_party",
+          "text": "Landlord",
+          "start": 0,
+          "end": 8,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "financial_party",
+          "text": "Landlord",
+          "start": 11,
+          "end": 19,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "financial_party",
+          "text": "Tenant",
+          "start": 39,
+          "end": 45,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "financial_party",
+          "text": "Tenant",
+          "start": 48,
+          "end": 54,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "Commencing: [",
+          "start": 155,
+          "end": 168,
+          "category": "contractual_financial_obligations",
+          "weight": 0.34
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "Monthly Rent",
+          "start": 223,
+          "end": 235,
+          "category": "rent_leases_recurring_payments",
+          "weight": 0.34
+        },
+        {
+          "signal": "currency_amount",
+          "text": "$2,400.00",
+          "start": 238,
+          "end": 248,
+          "category": null,
+          "weight": 0.28
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "Security Deposit",
+          "start": 282,
+          "end": 298,
+          "category": "deposits_and_escrow",
+          "weight": 0.34
+        },
+        {
+          "signal": "currency_amount",
+          "text": "$2,400.00",
+          "start": 301,
+          "end": 311,
+          "category": null,
+          "weight": 0.28
+        }
+      ],
+      "evidence_bboxes": [
+        [
+          60.8,
+          112.3,
+          515.2,
+          174.5
+        ]
+      ],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "extraction_confidence": 1.0,
+      "financial_fields": [
+        {
+          "field": "monthly_rent",
+          "original_text": "[$2,400.00 USD]",
+          "normalized_value": "2400.00",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": "USD",
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": "monthly",
+          "due_date": "1st day of each month",
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Normalized source '[$2,400.00 USD]' into decimal 2400.00 USD; verified against text",
+          "confidence": 0.99,
+          "source_location": null,
+          "signed_accounting_value": "2400.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        },
+        {
+          "field": "security_deposit",
+          "original_text": "[$2,400.00 USD]",
+          "normalized_value": "2400.00",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": "USD",
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Normalized source '[$2,400.00 USD]' into decimal 2400.00 USD; verified against text",
+          "confidence": 0.99,
+          "source_location": null,
+          "signed_accounting_value": "2400.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        }
+      ],
+      "table_rows": [],
+      "extraction_quality": {
+        "pages": 2,
+        "native_pages": 2,
+        "ocr_pages": 0,
+        "low_text_pages": 0,
+        "mean_ocr_confidence": null,
+        "tables": 1
+      },
+      "classifier_version": "hybrid-baseline-v1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dataset_version": "1.0.0",
+      "untrusted_content": true
+    },
+    {
+      "schema_version": "1.0",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_id": "chk_eb924393d5dd8573bebf29744750",
+      "source_filename": "Residential Rental Agreement.pdf",
+      "source_type": "pdf",
+      "source_location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 5,
+        "paragraph_end": 6,
+        "char_start": 985,
+        "char_end": 1551,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            280.1,
+            251.6,
+            290.3
+          ],
+          [
+            51.0,
+            296.2,
+            545.2,
+            354.5
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "2. LEASE TERM AND OCCUPANCY"
+        ],
+        "section_heading": "2. LEASE TERM AND OCCUPANCY"
+      },
+      "extracted_text": "2. LEASE TERM AND OCCUPANCY\n\nThe term of this lease shall commence at 12:01 AM on [Lease Start Date] and shall conclude at 11:59 PM on [Lease End\nDate]. The Tenant must furnish written notice at least sixty (60) days prior to the expiration date indicating their intent to\nrenew the tenancy or vacate the Premises. The Premises shall be occupied solely by the named Tenant and designated\nregistered occupants: [Occupant Names / None]. Subletting, Airbnb operations, licensing, or assignments without\nexpress written consent from the Landlord are strictly prohibited.",
+      "context": "2. LEASE TERM AND OCCUPANCY",
+      "financial_category": "contractual_financial_obligations",
+      "category_scores": {
+        "rent_leases_recurring_payments": 0.5449,
+        "maturity_renewals_deadlines": 0.3849,
+        "contractual_financial_obligations": 0.3329,
+        "invoices_and_billing": 0.2302,
+        "loans_and_interest": 0.2301
+      },
+      "relevance_score": 0.9572,
+      "semantic_score": 0.8661,
+      "signal_score": 0.79,
+      "decision": "RELEVANT",
+      "matching_references": [
+        {
+          "reference_id": "rent-001",
+          "concept": "Commercial Lease and Monthly Rent",
+          "category": "rent_leases_recurring_payments",
+          "label": "positive",
+          "similarity": 0.5847,
+          "matched_text": "Commercial Lease and Monthly Rent: Contractual lease agreements stipulating recurring base rent, security deposits, and escalations."
+        },
+        {
+          "reference_id": "mat-001",
+          "concept": "Maturity Dates and Renewal Terms",
+          "category": "maturity_renewals_deadlines",
+          "label": "positive",
+          "similarity": 0.4734,
+          "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+        },
+        {
+          "reference_id": "neg-005",
+          "concept": "Standard Non-Disclosure Boilerplate",
+          "category": "non_financial",
+          "label": "negative",
+          "similarity": 0.2893,
+          "matched_text": "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware."
+        },
+        {
+          "reference_id": "loan-001",
+          "concept": "Loan Facilities and Interest Schedules",
+          "category": "loans_interest_repayment",
+          "label": "positive",
+          "similarity": 0.2643,
+          "matched_text": "Loan Facilities and Interest Schedules: Borrowed capital agreements specifying principal sums, interest rates, and amortized repayments."
+        },
+        {
+          "reference_id": "inv-002",
+          "concept": "Purchase Order Commitments",
+          "category": "invoices_purchase_orders",
+          "label": "positive",
+          "similarity": 0.2613,
+          "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+        },
+        {
+          "reference_id": "exp-001",
+          "concept": "Operating Expenses (OpEx)",
+          "category": "expenses_operating_costs",
+          "label": "positive",
+          "similarity": 0.2594,
+          "matched_text": "Operating Expenses (OpEx): Day-to-day expenditures required to administer and operate a business."
+        }
+      ],
+      "evidence": [
+        {
+          "signal": "payment_phrase",
+          "text": "LEASE TERM",
+          "start": 3,
+          "end": 13,
+          "category": "contractual_financial_obligations",
+          "weight": 0.34
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "term of this lease",
+          "start": 33,
+          "end": 51,
+          "category": "contractual_financial_obligations",
+          "weight": 0.34
+        },
+        {
+          "signal": "financial_party",
+          "text": "Tenant",
+          "start": 157,
+          "end": 163,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "expiration date",
+          "start": 230,
+          "end": 245,
+          "category": "contractual_financial_obligations",
+          "weight": 0.34
+        },
+        {
+          "signal": "financial_party",
+          "text": "Tenant",
+          "start": 366,
+          "end": 372,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "financial_party",
+          "text": "Landlord",
+          "start": 533,
+          "end": 541,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        }
+      ],
+      "evidence_bboxes": [
+        [
+          51.0,
+          280.1,
+          251.6,
+          290.3
+        ],
+        [
+          51.0,
+          296.2,
+          545.2,
+          354.5
+        ]
+      ],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "extraction_confidence": 1.0,
+      "financial_fields": [],
+      "table_rows": [],
+      "extraction_quality": {
+        "pages": 2,
+        "native_pages": 2,
+        "ocr_pages": 0,
+        "low_text_pages": 0,
+        "mean_ocr_confidence": null,
+        "tables": 1
+      },
+      "classifier_version": "hybrid-baseline-v1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dataset_version": "1.0.0",
+      "untrusted_content": true
+    },
+    {
+      "schema_version": "1.0",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_id": "chk_4a4197abc1a160ba10055eeb72f0",
+      "source_filename": "Residential Rental Agreement.pdf",
+      "source_type": "pdf",
+      "source_location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 7,
+        "paragraph_end": 8,
+        "char_start": 1553,
+        "char_end": 2070,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            367.1,
+            324.9,
+            377.3
+          ],
+          [
+            51.0,
+            383.2,
+            545.2,
+            428.7
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "3. RENTAL CONSIDERATION AND DUE DATES"
+        ],
+        "section_heading": "3. RENTAL CONSIDERATION AND DUE DATES"
+      },
+      "extracted_text": "3. RENTAL CONSIDERATION AND DUE DATES\n\nThe agreed rental consideration for the Premises shall be [$2,400.00] per calendar month. Rent is due and payable on or\nbefore the first (1st) day of each month via electronic funds transfer (ACH) or accredited direct deposit to the account\ninstructed by the Landlord. If full rent is not received by 11:59 PM on the fifth (5th) calendar day of the month, a late\nprocessing charge of [$75.00] or 5% of the unpaid balance, whichever is greater, shall apply as liquidated damages.",
+      "context": "3. RENTAL CONSIDERATION AND DUE DATES",
+      "financial_category": "rent_leases_recurring_payments",
+      "category_scores": {
+        "rent_leases_recurring_payments": 0.7026,
+        "contractual_financial_obligations": 0.4572,
+        "invoices_and_billing": 0.408,
+        "maturity_renewals_deadlines": 0.3713,
+        "loans_and_interest": 0.3518
+      },
+      "relevance_score": 1.0,
+      "semantic_score": 1.0,
+      "signal_score": 1.0,
+      "decision": "RELEVANT",
+      "matching_references": [
+        {
+          "reference_id": "rent-001",
+          "concept": "Commercial Lease and Monthly Rent",
+          "category": "rent_leases_recurring_payments",
+          "label": "positive",
+          "similarity": 0.6042,
+          "matched_text": "Tenant agrees to pay monthly base rent of $8,500.00 on the first day of each calendar month."
+        },
+        {
+          "reference_id": "pen-001",
+          "concept": "Late Payment Fees and Penalties",
+          "category": "penalties_late_fees",
+          "label": "positive",
+          "similarity": 0.4839,
+          "matched_text": "Overdue balances shall incur a late charge of 1.5% per month or the maximum legal rate."
+        },
+        {
+          "reference_id": "inv-001",
+          "concept": "Commercial Invoice Terms",
+          "category": "invoices_purchase_orders",
+          "label": "positive",
+          "similarity": 0.4461,
+          "matched_text": "Invoice No | Date | Amount Due\nINV-8821 | 2024-04-15 | $14,850.00\nPayment Terms: Net 30 days."
+        },
+        {
+          "reference_id": "contract-001",
+          "concept": "Contractual Payment Obligations",
+          "category": "contracts_payment_obligations",
+          "label": "positive",
+          "similarity": 0.3952,
+          "matched_text": "Client shall pay Contractor a fixed fee of $75,000 upon successful completion of Phase 2 deliverables."
+        },
+        {
+          "reference_id": "mat-001",
+          "concept": "Maturity Dates and Renewal Terms",
+          "category": "maturity_renewals_deadlines",
+          "label": "positive",
+          "similarity": 0.3915,
+          "matched_text": "Maturity Dates and Renewal Terms: Maturity deadlines, payment grace periods, and contract renewal payment stipulations."
+        },
+        {
+          "reference_id": "inv-002",
+          "concept": "Purchase Order Commitments",
+          "category": "invoices_purchase_orders",
+          "label": "positive",
+          "similarity": 0.3899,
+          "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+        }
+      ],
+      "evidence": [
+        {
+          "signal": "payment_phrase",
+          "text": "RENTAL CONSIDERATION",
+          "start": 3,
+          "end": 23,
+          "category": "rent_leases_recurring_payments",
+          "weight": 0.34
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "rental consideration",
+          "start": 50,
+          "end": 70,
+          "category": "rent_leases_recurring_payments",
+          "weight": 0.34
+        },
+        {
+          "signal": "currency_amount",
+          "text": "$2,400.00",
+          "start": 98,
+          "end": 107,
+          "category": null,
+          "weight": 0.28
+        },
+        {
+          "signal": "financial_party",
+          "text": "Landlord",
+          "start": 298,
+          "end": 306,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "currency_amount",
+          "text": "$75.00",
+          "start": 424,
+          "end": 430,
+          "category": null,
+          "weight": 0.28
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "liquidated damages",
+          "start": 498,
+          "end": 516,
+          "category": "penalties_late_fees",
+          "weight": 0.34
+        }
+      ],
+      "evidence_bboxes": [
+        [
+          51.0,
+          367.1,
+          324.9,
+          377.3
+        ],
+        [
+          51.0,
+          383.2,
+          545.2,
+          428.7
+        ]
+      ],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "extraction_confidence": 1.0,
+      "financial_fields": [
+        {
+          "field": "monthly_rent",
+          "original_text": "[$2,400.00]",
+          "normalized_value": "2400.00",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": "USD",
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": "monthly",
+          "due_date": "1st day of each month",
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Normalized source '[$2,400.00]' into decimal 2400.00 USD; verified against text",
+          "confidence": 0.99,
+          "source_location": null,
+          "signed_accounting_value": "2400.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        },
+        {
+          "field": "late_fee_clause",
+          "original_text": "[$75.00] or 5%, whichever is greater",
+          "normalized_value": "75.00",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": "USD",
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": null,
+          "due_date": null,
+          "condition": "whichever is greater",
+          "details": {
+            "type": "conditional_greater_of",
+            "fixed_amount": "75.00",
+            "currency": "USD",
+            "percentage": "5",
+            "percentage_base": "unpaid balance",
+            "condition": "whichever is greater"
+          },
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Preserved dual comparison condition: [$75.00] or 5%, whichever is greater",
+          "confidence": 0.98,
+          "source_location": null,
+          "signed_accounting_value": "75.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        },
+        {
+          "field": "late_fee_amount",
+          "original_text": "[$75.00]",
+          "normalized_value": "75.00",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": "USD",
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Fixed late fee amount parsed as 75.00 USD",
+          "confidence": 0.98,
+          "source_location": null,
+          "signed_accounting_value": "75.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        },
+        {
+          "field": "late_fee_percentage",
+          "original_text": "5%",
+          "normalized_value": "5",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": null,
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": {
+            "unit": "%",
+            "base": "unpaid balance"
+          },
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Percentage fee parsed as 5% of unpaid balance",
+          "confidence": 0.98,
+          "source_location": null,
+          "signed_accounting_value": "5.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        }
+      ],
+      "table_rows": [],
+      "extraction_quality": {
+        "pages": 2,
+        "native_pages": 2,
+        "ocr_pages": 0,
+        "low_text_pages": 0,
+        "mean_ocr_confidence": null,
+        "tables": 1
+      },
+      "classifier_version": "hybrid-baseline-v1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dataset_version": "1.0.0",
+      "untrusted_content": true
+    },
+    {
+      "schema_version": "1.0",
+      "document_id": "24fd3ddc6989474687c13d70e932e89e",
+      "chunk_id": "chk_2c95c21673e2281ad6d332f0603a",
+      "source_filename": "Residential Rental Agreement.pdf",
+      "source_type": "pdf",
+      "source_location": {
+        "page": 1,
+        "sheet": null,
+        "table_index": null,
+        "row_start": null,
+        "row_end": null,
+        "col_start": null,
+        "col_end": null,
+        "cell_range": null,
+        "paragraph_start": 9,
+        "paragraph_end": 10,
+        "char_start": 2072,
+        "char_end": 2575,
+        "line_start": null,
+        "line_end": null,
+        "bboxes": [
+          [
+            51.0,
+            441.3,
+            267.8,
+            451.5
+          ],
+          [
+            51.0,
+            457.4,
+            545.2,
+            503.0
+          ]
+        ],
+        "page_width": 595.9199829101562,
+        "page_height": 842.8800048828125,
+        "heading_path": [
+          "4. SECURITY DEPOSIT PROTECTION"
+        ],
+        "section_heading": "4. SECURITY DEPOSIT PROTECTION"
+      },
+      "extracted_text": "4. SECURITY DEPOSIT PROTECTION\n\nUpon signing this Agreement, the Tenant shall deposit with the Landlord the sum of [$2,400.00] as security for the\nfaithful performance of all obligations hereunder. The deposit shall be maintained in a compliant, segregated banking\naccount. The Landlord shall return the full security deposit within twenty-one (21) to thirty (30) days of vacating, less any\nlegitimate deductions for unpaid utilities, delinquent charges, or damage beyond normal, expected wear and tear.",
+      "context": "4. SECURITY DEPOSIT PROTECTION",
+      "financial_category": "deposits_and_escrow",
+      "category_scores": {
+        "rent_leases_recurring_payments": 0.5249,
+        "loans_and_interest": 0.3336,
+        "contractual_financial_obligations": 0.3007,
+        "invoices_and_billing": 0.298,
+        "bank_transactions": 0.2719,
+        "deposits_and_escrow": 0.5249
+      },
+      "relevance_score": 0.8971,
+      "semantic_score": 0.834,
+      "signal_score": 1.0,
+      "decision": "RELEVANT",
+      "matching_references": [
+        {
+          "reference_id": "rent-001",
+          "concept": "Commercial Lease and Monthly Rent",
+          "category": "rent_leases_recurring_payments",
+          "label": "positive",
+          "similarity": 0.6191,
+          "matched_text": "Lessee deposited a security deposit of EUR 17,000 with Landlord upon execution of this lease."
+        },
+        {
+          "reference_id": "loan-001",
+          "concept": "Loan Facilities and Interest Schedules",
+          "category": "loans_interest_repayment",
+          "label": "positive",
+          "similarity": 0.3569,
+          "matched_text": "The Borrower shall repay the principal in twelve equal monthly installments of $25,000 plus accrued interest."
+        },
+        {
+          "reference_id": "pen-001",
+          "concept": "Late Payment Fees and Penalties",
+          "category": "penalties_late_fees",
+          "label": "positive",
+          "similarity": 0.3227,
+          "matched_text": "A late payment penalty of $250.00 is assessed for any installment received after the 10-day grace period."
+        },
+        {
+          "reference_id": "inv-002",
+          "concept": "Purchase Order Commitments",
+          "category": "invoices_purchase_orders",
+          "label": "positive",
+          "similarity": 0.3109,
+          "matched_text": "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number."
+        },
+        {
+          "reference_id": "cash-001",
+          "concept": "Bank Statement and Wire Transfers",
+          "category": "cash_flow_bank_transactions",
+          "label": "positive",
+          "similarity": 0.2976,
+          "matched_text": "Bank Statement and Wire Transfers: Record of deposits, withdrawals, ACH, and wire transfers across institutional bank accounts."
+        },
+        {
+          "reference_id": "apar-002",
+          "concept": "Accounts Receivable Aging",
+          "category": "accounts_payable_receivable",
+          "label": "positive",
+          "similarity": 0.2964,
+          "matched_text": "Aged receivables over 90 days total $42,500 and may require a reserve for uncollectible accounts."
+        }
+      ],
+      "evidence": [
+        {
+          "signal": "payment_phrase",
+          "text": "SECURITY DEPOSIT",
+          "start": 3,
+          "end": 19,
+          "category": "deposits_and_escrow",
+          "weight": 0.34
+        },
+        {
+          "signal": "financial_party",
+          "text": "Tenant",
+          "start": 65,
+          "end": 71,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "deposit with the Landlord",
+          "start": 78,
+          "end": 103,
+          "category": "deposits_and_escrow",
+          "weight": 0.34
+        },
+        {
+          "signal": "financial_party",
+          "text": "Landlord",
+          "start": 95,
+          "end": 103,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "currency_amount",
+          "text": "$2,400.00",
+          "start": 116,
+          "end": 125,
+          "category": null,
+          "weight": 0.28
+        },
+        {
+          "signal": "financial_party",
+          "text": "Landlord",
+          "start": 278,
+          "end": 286,
+          "category": "contractual_financial_obligations",
+          "weight": 0.16
+        },
+        {
+          "signal": "payment_phrase",
+          "text": "security deposit",
+          "start": 309,
+          "end": 325,
+          "category": "deposits_and_escrow",
+          "weight": 0.34
+        }
+      ],
+      "evidence_bboxes": [
+        [
+          51.0,
+          441.3,
+          267.8,
+          451.5
+        ],
+        [
+          51.0,
+          457.4,
+          545.2,
+          503.0
+        ]
+      ],
+      "extraction_method": "pymupdf",
+      "ocr_confidence": null,
+      "extraction_confidence": 1.0,
+      "financial_fields": [
+        {
+          "field": "security_deposit",
+          "original_text": "[$2,400.00]",
+          "normalized_value": "2400.00",
+          "reported_value": null,
+          "reported_scale": null,
+          "scale_multiplier": null,
+          "normalized_amount": null,
+          "currency": "USD",
+          "data_type": "monetary",
+          "reporting_period": null,
+          "row_label": null,
+          "category": null,
+          "frequency": null,
+          "due_date": null,
+          "condition": null,
+          "details": null,
+          "validation_status": "PASSED",
+          "normalization_status": "PASSED",
+          "validation_notes": "Normalized source '[$2,400.00]' into decimal 2400.00 USD; verified against text",
+          "confidence": 0.99,
+          "source_location": null,
+          "signed_accounting_value": "2400.00",
+          "change_value": null,
+          "change_semantics": null,
+          "change_direction": null,
+          "change_basis": "not_applicable",
+          "validation_issues": [],
+          "validation_evidence": [],
+          "review_required": false
+        }
+      ],
+      "table_rows": [],
+      "extraction_quality": {
+        "pages": 2,
+        "native_pages": 2,
+        "ocr_pages": 0,
+        "low_text_pages": 0,
+        "mean_ocr_confidence": null,
+        "tables": 1
+      },
+      "classifier_version": "hybrid-baseline-v1",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dataset_version": "1.0.0",
+      "untrusted_content": true
+    }
+  ],
+  "structured_extraction": {
+    "document_id": "24fd3ddc6989474687c13d70e932e89e",
+    "document_type": "residential_rental_agreement",
+    "document_decision": "FINANCIAL_RELEVANT",
+    "items": [
+      {
+        "chunk_id": "chk_9d2159324edff9933c64e59dbc59",
+        "page_number": 1,
+        "section_heading": "RESIDENTIAL TENANCY AGREEMENT",
+        "decision": "IRRELEVANT",
+        "category": "administrative_content",
+        "source_text": "RESIDENTIAL TENANCY AGREEMENT\n\nSTANDARD FIXED-TERM RESIDENTIAL LEASE \u2022 REFERENCE: [AGR-2026-894]",
+        "relevance_score": 0.15,
+        "semantic_score": 0.8671,
+        "signal_score": 0.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_c816cf7d1aad4ed80e3fcb923080",
+        "page_number": 1,
+        "section_heading": "RESIDENTIAL TENANCY AGREEMENT",
+        "decision": "RELEVANT",
+        "category": "rent_leases_recurring_payments",
+        "source_text": "Landlord: [Landlord Full Legal Name] | Tenant: [Tenant Full Legal Name]\nPremises Address: [Unit/Apt #, Street Address, City, | Term of Lease: [12 Months] (Commencing: [Start Date] \u2022\nState/Postal Code] | Ending: [End Date])\nMonthly Rent: [$2,400.00 USD] (Payable on the 1st day of | Security Deposit: [$2,400.00 USD] (Held in designated\neach month) | escrow)",
+        "relevance_score": 1.0,
+        "semantic_score": 1.0,
+        "signal_score": 1.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 0,
+            "end": 8,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 11,
+            "end": 19,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 39,
+            "end": 45,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 48,
+            "end": 54,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "Commencing: [",
+            "start": 155,
+            "end": 168,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "Monthly Rent",
+            "start": 223,
+            "end": 235,
+            "category": "rent_leases_recurring_payments",
+            "weight": 0.34
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 238,
+            "end": 248,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "Security Deposit",
+            "start": 282,
+            "end": 298,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 301,
+            "end": 311,
+            "category": null,
+            "weight": 0.28
+          }
+        ],
+        "financial_fields": [
+          {
+            "field": "monthly_rent",
+            "original_text": "[$2,400.00 USD]",
+            "normalized_value": "2400.00",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": "USD",
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": "monthly",
+            "due_date": "1st day of each month",
+            "condition": null,
+            "details": null,
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Normalized source '[$2,400.00 USD]' into decimal 2400.00 USD; verified against text",
+            "confidence": 0.99,
+            "source_location": null,
+            "signed_accounting_value": "2400.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          },
+          {
+            "field": "security_deposit",
+            "original_text": "[$2,400.00 USD]",
+            "normalized_value": "2400.00",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": "USD",
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": null,
+            "due_date": null,
+            "condition": null,
+            "details": null,
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Normalized source '[$2,400.00 USD]' into decimal 2400.00 USD; verified against text",
+            "confidence": 0.99,
+            "source_location": null,
+            "signed_accounting_value": "2400.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          }
+        ],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_ac2507b1ffb7a2558cb578f79473",
+        "page_number": 1,
+        "section_heading": "1. PARTIES AND DEMISED PREMISES",
+        "decision": "IRRELEVANT",
+        "category": "administrative_content",
+        "source_text": "1. PARTIES AND DEMISED PREMISES\n\nThis Residential Lease Agreement (the \"Agreement\") is entered into as of [Agreement Date], by and between\n[Landlord Full Legal Name] (hereinafter referred to as the \"Landlord\"), and [Tenant Full Legal Name]\n(hereinafter referred to as the \"Tenant\"). The Landlord hereby leases to the Tenant, and the Tenant hereby rents from the\nLandlord, the private residential dwelling situated at [Complete Property Address] (the \"Premises\"), for use strictly\nand exclusively as a private residential home.",
+        "relevance_score": 0.15,
+        "semantic_score": 0.4173,
+        "signal_score": 0.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_eb924393d5dd8573bebf29744750",
+        "page_number": 1,
+        "section_heading": "2. LEASE TERM AND OCCUPANCY",
+        "decision": "RELEVANT",
+        "category": "contractual_financial_obligations",
+        "source_text": "2. LEASE TERM AND OCCUPANCY\n\nThe term of this lease shall commence at 12:01 AM on [Lease Start Date] and shall conclude at 11:59 PM on [Lease End\nDate]. The Tenant must furnish written notice at least sixty (60) days prior to the expiration date indicating their intent to\nrenew the tenancy or vacate the Premises. The Premises shall be occupied solely by the named Tenant and designated\nregistered occupants: [Occupant Names / None]. Subletting, Airbnb operations, licensing, or assignments without\nexpress written consent from the Landlord are strictly prohibited.",
+        "relevance_score": 0.9572,
+        "semantic_score": 0.8661,
+        "signal_score": 0.79,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "payment_phrase",
+            "text": "LEASE TERM",
+            "start": 3,
+            "end": 13,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "term of this lease",
+            "start": 33,
+            "end": 51,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 157,
+            "end": 163,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "expiration date",
+            "start": 230,
+            "end": 245,
+            "category": "contractual_financial_obligations",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 366,
+            "end": 372,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 533,
+            "end": 541,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_4a4197abc1a160ba10055eeb72f0",
+        "page_number": 1,
+        "section_heading": "3. RENTAL CONSIDERATION AND DUE DATES",
+        "decision": "RELEVANT",
+        "category": "rent_leases_recurring_payments",
+        "source_text": "3. RENTAL CONSIDERATION AND DUE DATES\n\nThe agreed rental consideration for the Premises shall be [$2,400.00] per calendar month. Rent is due and payable on or\nbefore the first (1st) day of each month via electronic funds transfer (ACH) or accredited direct deposit to the account\ninstructed by the Landlord. If full rent is not received by 11:59 PM on the fifth (5th) calendar day of the month, a late\nprocessing charge of [$75.00] or 5% of the unpaid balance, whichever is greater, shall apply as liquidated damages.",
+        "relevance_score": 1.0,
+        "semantic_score": 1.0,
+        "signal_score": 1.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "payment_phrase",
+            "text": "RENTAL CONSIDERATION",
+            "start": 3,
+            "end": 23,
+            "category": "rent_leases_recurring_payments",
+            "weight": 0.34
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "rental consideration",
+            "start": 50,
+            "end": 70,
+            "category": "rent_leases_recurring_payments",
+            "weight": 0.34
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 98,
+            "end": 107,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 298,
+            "end": 306,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$75.00",
+            "start": 424,
+            "end": 430,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "liquidated damages",
+            "start": 498,
+            "end": 516,
+            "category": "penalties_late_fees",
+            "weight": 0.34
+          }
+        ],
+        "financial_fields": [
+          {
+            "field": "monthly_rent",
+            "original_text": "[$2,400.00]",
+            "normalized_value": "2400.00",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": "USD",
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": "monthly",
+            "due_date": "1st day of each month",
+            "condition": null,
+            "details": null,
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Normalized source '[$2,400.00]' into decimal 2400.00 USD; verified against text",
+            "confidence": 0.99,
+            "source_location": null,
+            "signed_accounting_value": "2400.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          },
+          {
+            "field": "late_fee_clause",
+            "original_text": "[$75.00] or 5%, whichever is greater",
+            "normalized_value": "75.00",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": "USD",
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": null,
+            "due_date": null,
+            "condition": "whichever is greater",
+            "details": {
+              "type": "conditional_greater_of",
+              "fixed_amount": "75.00",
+              "currency": "USD",
+              "percentage": "5",
+              "percentage_base": "unpaid balance",
+              "condition": "whichever is greater"
+            },
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Preserved dual comparison condition: [$75.00] or 5%, whichever is greater",
+            "confidence": 0.98,
+            "source_location": null,
+            "signed_accounting_value": "75.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          },
+          {
+            "field": "late_fee_amount",
+            "original_text": "[$75.00]",
+            "normalized_value": "75.00",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": "USD",
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": null,
+            "due_date": null,
+            "condition": null,
+            "details": null,
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Fixed late fee amount parsed as 75.00 USD",
+            "confidence": 0.98,
+            "source_location": null,
+            "signed_accounting_value": "75.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          },
+          {
+            "field": "late_fee_percentage",
+            "original_text": "5%",
+            "normalized_value": "5",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": null,
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": null,
+            "due_date": null,
+            "condition": null,
+            "details": {
+              "unit": "%",
+              "base": "unpaid balance"
+            },
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Percentage fee parsed as 5% of unpaid balance",
+            "confidence": 0.98,
+            "source_location": null,
+            "signed_accounting_value": "5.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          }
+        ],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_2c95c21673e2281ad6d332f0603a",
+        "page_number": 1,
+        "section_heading": "4. SECURITY DEPOSIT PROTECTION",
+        "decision": "RELEVANT",
+        "category": "deposits_and_escrow",
+        "source_text": "4. SECURITY DEPOSIT PROTECTION\n\nUpon signing this Agreement, the Tenant shall deposit with the Landlord the sum of [$2,400.00] as security for the\nfaithful performance of all obligations hereunder. The deposit shall be maintained in a compliant, segregated banking\naccount. The Landlord shall return the full security deposit within twenty-one (21) to thirty (30) days of vacating, less any\nlegitimate deductions for unpaid utilities, delinquent charges, or damage beyond normal, expected wear and tear.",
+        "relevance_score": 0.8971,
+        "semantic_score": 0.834,
+        "signal_score": 1.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "payment_phrase",
+            "text": "SECURITY DEPOSIT",
+            "start": 3,
+            "end": 19,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 65,
+            "end": 71,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "deposit with the Landlord",
+            "start": 78,
+            "end": 103,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 95,
+            "end": 103,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "currency_amount",
+            "text": "$2,400.00",
+            "start": 116,
+            "end": 125,
+            "category": null,
+            "weight": 0.28
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 278,
+            "end": 286,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "payment_phrase",
+            "text": "security deposit",
+            "start": 309,
+            "end": 325,
+            "category": "deposits_and_escrow",
+            "weight": 0.34
+          }
+        ],
+        "financial_fields": [
+          {
+            "field": "security_deposit",
+            "original_text": "[$2,400.00]",
+            "normalized_value": "2400.00",
+            "reported_value": null,
+            "reported_scale": null,
+            "scale_multiplier": null,
+            "normalized_amount": null,
+            "currency": "USD",
+            "data_type": "monetary",
+            "reporting_period": null,
+            "row_label": null,
+            "category": null,
+            "frequency": null,
+            "due_date": null,
+            "condition": null,
+            "details": null,
+            "validation_status": "PASSED",
+            "normalization_status": "PASSED",
+            "validation_notes": "Normalized source '[$2,400.00]' into decimal 2400.00 USD; verified against text",
+            "confidence": 0.99,
+            "source_location": null,
+            "signed_accounting_value": "2400.00",
+            "change_value": null,
+            "change_semantics": null,
+            "change_direction": null,
+            "change_basis": "not_applicable",
+            "validation_issues": [],
+            "validation_evidence": [],
+            "review_required": false
+          }
+        ],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_e20b212d39bd071127415a27de32",
+        "page_number": 2,
+        "section_heading": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS",
+        "decision": "IRRELEVANT",
+        "category": "non_financial_content",
+        "source_text": "5. UTILITIES, UPKEEP, AND MAINTENANCE OBLIGATIONS\n\nThe Tenant shall be responsible for contracting and paying all consumable utilities, including electricity, cooking gas,\ninternet, and cable services. Water, sewer, and municipal refuse collection shall be provided by [Landlord / Tenant as\nagreed]. The Tenant covenants to maintain the interior Premises in a clean, sanitary condition, replace HVAC filters\nquarterly, test smoke and CO detectors monthly, and immediately report plumbing leaks or structural defects in writing to\nprevent property deterioration.",
+        "relevance_score": 0.25,
+        "semantic_score": 0.5279,
+        "signal_score": 0.22,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 55,
+            "end": 61,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 270,
+            "end": 278,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 281,
+            "end": 287,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 304,
+            "end": 310,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_5af8b0c9c319a17690d228fe0288",
+        "page_number": 2,
+        "section_heading": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES",
+        "decision": "IRRELEVANT",
+        "category": "non_financial_content",
+        "source_text": "6. QUIET ENJOYMENT, ALTERATIONS, AND RULES\n\nThe Tenant shall respect the peaceful enjoyment of neighbors and adhere to municipal quiet hours (10:00 PM to 7:00 AM).\nNo architectural modifications, interior painting, wallpapering, or lock replacements shall be executed without prior written\napproval of the Landlord. Pets are prohibited on the Premises unless formally authorized under an appended pet rider.\nSmoking, vaping, or burning hazardous materials inside the Premises constitutes a material lease violation.",
+        "relevance_score": 0.25,
+        "semantic_score": 0.3996,
+        "signal_score": 0.22,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "financial_party",
+            "text": "Tenant",
+            "start": 48,
+            "end": 54,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 306,
+            "end": 314,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_f5d477a9987588cf6889f9e42a49",
+        "page_number": 2,
+        "section_heading": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY",
+        "decision": "IRRELEVANT",
+        "category": "non_financial_content",
+        "source_text": "7. LANDLORD RIGHT OF INSPECTION AND ENTRY\n\nThe Landlord or authorized agents shall possess the right to enter the Premises during customary business hours for routine\ninspections, necessary repairs, or showings to prospective tenants/purchasers, provided a minimum of twenty-four (24)\nhours advance written or electronic notice is served. In cases of bona fide emergency (fire, severe flooding, structural\ncompromise), immediate entry is permitted by law.",
+        "relevance_score": 0.25,
+        "semantic_score": 0.404,
+        "signal_score": 0.22,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [
+          {
+            "signal": "financial_party",
+            "text": "LANDLORD",
+            "start": 3,
+            "end": 11,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          },
+          {
+            "signal": "financial_party",
+            "text": "Landlord",
+            "start": 47,
+            "end": 55,
+            "category": "contractual_financial_obligations",
+            "weight": 0.16
+          }
+        ],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_bfc830f8eb9c4460663e45dbe1da",
+        "page_number": 2,
+        "section_heading": "8. GOVERNING LAW AND ENTIRE AGREEMENT",
+        "decision": "IRRELEVANT",
+        "category": "non_financial_content",
+        "source_text": "8. GOVERNING LAW AND ENTIRE AGREEMENT\n\nThis instrument constitutes the final, complete, and exclusive agreement between the parties regarding the subject matter\nherein. Any amendment or addendum must be executed in writing and signed by both parties. This Agreement shall be\ngoverned by, construed, and enforced in accordance with the statutory laws of the jurisdiction of [State / Province /\nTerritory].",
+        "relevance_score": 0.1407,
+        "semantic_score": 0.3492,
+        "signal_score": 0.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      },
+      {
+        "chunk_id": "chk_ab6b90b36987500d4a38522c7238",
+        "page_number": 2,
+        "section_heading": "EXECUTION AND ACKNOWLEDGMENT OF TERMS",
+        "decision": "IRRELEVANT",
+        "category": "administrative_content",
+        "source_text": "EXECUTION AND ACKNOWLEDGMENT OF TERMS\n\nLANDLORD:\n\nTENANT:\n\nAUTHORIZED SIGNATURE\n\nTENANT SIGNATURE\n\nPrint Name: [Landlord Full Legal Name]\nDate: ________________________\n\nPrint Name: [Tenant Full Legal Name]\nDate: ________________________",
+        "relevance_score": 0.15,
+        "semantic_score": 0.4817,
+        "signal_score": 0.0,
+        "extraction_confidence": 1.0,
+        "rule_evidence": [],
+        "financial_fields": [],
+        "table_rows": [],
+        "requires_review": false
+      }
+    ],
+    "validation_summary": {
+      "monetary_values_checked": true,
+      "failed_checks": 0,
+      "requires_review": false,
+      "details": [
+        "Quality Gate: ACCEPT. Evaluated 7 fields across 11 chunks.",
+        "Results: 0 failed, 0 warnings, 0 needs review.",
+        "ACCEPT: All accounting equations, field validations, and cross-checks passed successfully"
+      ],
+      "accounting_validations": [
+        {
+          "rule_id": "RULE_RENTAL_TERMS_001",
+          "rule_version": "1.0.0",
+          "statement": "Rental Agreement Terms",
+          "period": "Term",
+          "formula": "Contains monthly_rent and security_deposit",
+          "expected": "Rent and deposit fields present",
+          "actual": "rent=True, deposit=True, late_fee=True",
+          "status": "PASSED",
+          "message": "Rental agreement essential financial terms check",
+          "timestamp": "2026-10-26T22:28:10.591840+00:00"
+        }
+      ],
+      "quality_gate_decision": "ACCEPT",
+      "gate_reasons": [
+        "ACCEPT: All accounting equations, field validations, and cross-checks passed successfully"
+      ],
+      "cross_reference_checks": [],
+      "rule_audit_trail": [
+        {
+          "rule_id": "RULE_RENTAL_TERMS_001",
+          "rule_version": "1.0.0",
+          "statement": "Rental Agreement Terms",
+          "period": "Term",
+          "formula": "Contains monthly_rent and security_deposit",
+          "expected": "Rent and deposit fields present",
+          "actual": "rent=True, deposit=True, late_fee=True",
+          "status": "PASSED",
+          "message": "Rental agreement essential financial terms check",
+          "timestamp": "2026-10-26T22:28:10.591840+00:00"
+        }
+      ]
+    }
+  },
+  "generated_at": "2026-10-26T22:28:10.591840Z"
+}
