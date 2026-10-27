@@ -1,0 +1,1496 @@
+{
+ "document": "sample_annual_report.pdf",
+ "description": "Golden expectations for the 4-page Northwind Technologies sample annual report. Table cells and words are taken from the PDF; normalized values = printed value x the unit stated above each table (EPS is per share and never scaled; percentages are never scaled). Running page headers ('Northwind Technologies, Inc. ... (fictional sample)', 'Page N') are excluded from 'words'.",
+ "words": [
+  "NORTHWIND",
+  "TECHNOLOGIES,",
+  "INC.",
+  "2025",
+  "Annual",
+  "Report",
+  "For",
+  "the",
+  "fiscal",
+  "year",
+  "ended",
+  "December",
+  "31,",
+  "2025",
+  "SAMPLE",
+  "DOCUMENT",
+  "–",
+  "all",
+  "company",
+  "names",
+  "and",
+  "figures",
+  "are",
+  "fictional.",
+  "Letter",
+  "to",
+  "Shareholders",
+  "Dear",
+  "Shareholders,",
+  "Fiscal",
+  "2025",
+  "was",
+  "a",
+  "year",
+  "of",
+  "disciplined",
+  "growth",
+  "and",
+  "strong",
+  "execution.",
+  "Revenue",
+  "increased",
+  "14.2%",
+  "to",
+  "$482.6",
+  "million,",
+  "driven",
+  "by",
+  "expansion",
+  "of",
+  "our",
+  "cloud",
+  "subscription",
+  "business",
+  "and",
+  "continued",
+  "adoption",
+  "of",
+  "our",
+  "analytics",
+  "platform",
+  "among",
+  "mid-market",
+  "customers.",
+  "Operating",
+  "income",
+  "grew",
+  "21.5%",
+  "to",
+  "$71.9",
+  "million,",
+  "and",
+  "operating",
+  "margin",
+  "expanded",
+  "90",
+  "basis",
+  "points",
+  "to",
+  "14.9%.",
+  "We",
+  "generated",
+  "$88.4",
+  "million",
+  "in",
+  "cash",
+  "from",
+  "operations",
+  "and",
+  "returned",
+  "$25.0",
+  "million",
+  "to",
+  "shareholders",
+  "through",
+  "share",
+  "repurchases.",
+  "We",
+  "ended",
+  "the",
+  "year",
+  "with",
+  "$212.7",
+  "million",
+  "in",
+  "cash",
+  "and",
+  "equivalents",
+  "and",
+  "a",
+  "net",
+  "cash",
+  "position",
+  "of",
+  "$87.7",
+  "million.",
+  "Looking",
+  "ahead",
+  "to",
+  "2026,",
+  "we",
+  "expect",
+  "to",
+  "continue",
+  "investing",
+  "in",
+  "product",
+  "innovation,",
+  "international",
+  "expansion,",
+  "and",
+  "talent,",
+  "while",
+  "maintaining",
+  "our",
+  "focus",
+  "on",
+  "profitable",
+  "growth.",
+  "We",
+  "thank",
+  "our",
+  "employees,",
+  "customers,",
+  "and",
+  "shareholders",
+  "for",
+  "their",
+  "continued",
+  "trust.",
+  "Sincerely,",
+  "Maria",
+  "Alvarez,",
+  "Chief",
+  "Executive",
+  "Officer",
+  "Financial",
+  "Highlights",
+  "($",
+  "in",
+  "millions,",
+  "except",
+  "per",
+  "share)",
+  "2025",
+  "2024",
+  "Change",
+  "Revenue",
+  "$482.6",
+  "$422.6",
+  "14.2%",
+  "Gross",
+  "profit",
+  "$318.5",
+  "$274.7",
+  "15.9%",
+  "Operating",
+  "income",
+  "$71.9",
+  "$59.2",
+  "21.5%",
+  "Net",
+  "income",
+  "$54.3",
+  "$44.1",
+  "23.1%",
+  "Diluted",
+  "EPS",
+  "$2.71",
+  "$2.18",
+  "24.3%",
+  "Cash",
+  "from",
+  "operations",
+  "$88.4",
+  "$70.6",
+  "25.2%",
+  "Management’s",
+  "Discussion",
+  "&",
+  "Analysis",
+  "Revenue.",
+  "Subscription",
+  "revenue",
+  "grew",
+  "19%",
+  "to",
+  "$351.2",
+  "million",
+  "and",
+  "represented",
+  "73%",
+  "of",
+  "total",
+  "revenue",
+  "(2024:",
+  "69%).",
+  "Professional",
+  "services",
+  "revenue",
+  "was",
+  "$131.4",
+  "million,",
+  "up",
+  "3%.",
+  "North",
+  "America",
+  "contributed",
+  "68%",
+  "of",
+  "revenue;",
+  "international",
+  "revenue",
+  "grew",
+  "22%.",
+  "Gross",
+  "margin.",
+  "Gross",
+  "margin",
+  "was",
+  "66.0%",
+  "versus",
+  "65.0%",
+  "in",
+  "the",
+  "prior",
+  "year,",
+  "reflecting",
+  "improved",
+  "hosting",
+  "efficiency",
+  "and",
+  "a",
+  "higher",
+  "mix",
+  "of",
+  "subscription",
+  "revenue.",
+  "Operating",
+  "expenses.",
+  "Total",
+  "operating",
+  "expenses",
+  "were",
+  "$246.6",
+  "million,",
+  "or",
+  "51.1%",
+  "of",
+  "revenue,",
+  "compared",
+  "with",
+  "51.0%",
+  "in",
+  "2024.",
+  "R&D",
+  "investment",
+  "rose",
+  "12%",
+  "to",
+  "$97.4",
+  "million",
+  "as",
+  "we",
+  "expanded",
+  "our",
+  "AI-driven",
+  "analytics",
+  "capabilities.",
+  "Liquidity.",
+  "Cash",
+  "and",
+  "equivalents",
+  "were",
+  "$212.7",
+  "million.",
+  "We",
+  "have",
+  "a",
+  "$150.0",
+  "million",
+  "undrawn",
+  "revolving",
+  "credit",
+  "facility",
+  "maturing",
+  "in",
+  "2029.",
+  "Consolidated",
+  "Statements",
+  "of",
+  "Income",
+  "($",
+  "in",
+  "thousands)",
+  "2025",
+  "2024",
+  "Revenue",
+  "482,600",
+  "422,600",
+  "Cost",
+  "of",
+  "revenue",
+  "164,100",
+  "147,900",
+  "Gross",
+  "profit",
+  "318,500",
+  "274,700",
+  "Research",
+  "and",
+  "development",
+  "97,400",
+  "86,900",
+  "Sales",
+  "and",
+  "marketing",
+  "101,200",
+  "90,300",
+  "General",
+  "and",
+  "administrative",
+  "48,000",
+  "38,300",
+  "Total",
+  "operating",
+  "expenses",
+  "246,600",
+  "215,500",
+  "Operating",
+  "income",
+  "71,900",
+  "59,200",
+  "Interest",
+  "and",
+  "other",
+  "income,",
+  "net",
+  "3,100",
+  "2,400",
+  "Income",
+  "before",
+  "taxes",
+  "75,000",
+  "61,600",
+  "Provision",
+  "for",
+  "income",
+  "taxes",
+  "20,700",
+  "17,500",
+  "Net",
+  "income",
+  "54,300",
+  "44,100",
+  "Consolidated",
+  "Balance",
+  "Sheets",
+  "($",
+  "in",
+  "thousands)",
+  "Dec",
+  "31,",
+  "2025",
+  "Dec",
+  "31,",
+  "2024",
+  "Cash",
+  "and",
+  "cash",
+  "equivalents",
+  "212,700",
+  "176,500",
+  "Accounts",
+  "receivable,",
+  "net",
+  "96,300",
+  "84,200",
+  "Prepaid",
+  "and",
+  "other",
+  "current",
+  "assets",
+  "18,900",
+  "16,100",
+  "Total",
+  "current",
+  "assets",
+  "327,900",
+  "276,800",
+  "Property",
+  "and",
+  "equipment,",
+  "net",
+  "54,600",
+  "49,300",
+  "Goodwill",
+  "and",
+  "intangibles",
+  "142,300",
+  "145,800",
+  "Other",
+  "assets",
+  "21,400",
+  "19,700",
+  "Total",
+  "assets",
+  "546,200",
+  "491,600",
+  "Accounts",
+  "payable",
+  "24,800",
+  "22,100",
+  "Accrued",
+  "expenses",
+  "47,300",
+  "42,600",
+  "Deferred",
+  "revenue",
+  "118,500",
+  "103,200",
+  "Total",
+  "current",
+  "liabilities",
+  "190,600",
+  "167,900",
+  "Long-term",
+  "debt",
+  "125,000",
+  "125,000",
+  "Other",
+  "long-term",
+  "liabilities",
+  "16,800",
+  "15,400",
+  "Total",
+  "liabilities",
+  "332,400",
+  "308,300",
+  "Total",
+  "stockholders’",
+  "equity",
+  "213,800",
+  "183,300",
+  "Total",
+  "liabilities",
+  "and",
+  "equity",
+  "546,200",
+  "491,600",
+  "Selected",
+  "Notes",
+  "Note",
+  "1",
+  "–",
+  "Revenue",
+  "recognition.",
+  "Subscription",
+  "revenue",
+  "is",
+  "recognized",
+  "ratably",
+  "over",
+  "the",
+  "contract",
+  "term.",
+  "Professional",
+  "services",
+  "revenue",
+  "is",
+  "recognized",
+  "as",
+  "services",
+  "are",
+  "performed.",
+  "Note",
+  "2",
+  "–",
+  "Debt.",
+  "Long-term",
+  "debt",
+  "consists",
+  "of",
+  "$125.0",
+  "million",
+  "in",
+  "senior",
+  "notes",
+  "bearing",
+  "interest",
+  "at",
+  "4.5%,",
+  "due",
+  "2030.",
+  "Note",
+  "3",
+  "–",
+  "Share",
+  "repurchases.",
+  "During",
+  "2025,",
+  "the",
+  "Company",
+  "repurchased",
+  "0.52",
+  "million",
+  "shares",
+  "at",
+  "an",
+  "average",
+  "price",
+  "of",
+  "$48.08",
+  "per",
+  "share.",
+  "Note",
+  "4",
+  "–",
+  "Subsequent",
+  "events.",
+  "No",
+  "material",
+  "subsequent",
+  "events",
+  "were",
+  "identified",
+  "through",
+  "the",
+  "date",
+  "of",
+  "issuance."
+ ],
+ "tables": [
+  {
+   "caption": "Financial Highlights",
+   "statement_type": "highlights",
+   "unit_text": "($ in millions, except per share)",
+   "scale": "millions",
+   "multiplier": "1000000",
+   "periods": [
+    "2025",
+    "2024",
+    "Change"
+   ],
+   "rows": [
+    {
+     "label": "Revenue",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "$482.6",
+       "value": "482600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "$422.6",
+       "value": "422600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Change",
+       "raw": "14.2%",
+       "value": "14.2",
+       "data_type": "percentage"
+      }
+     ]
+    },
+    {
+     "label": "Gross profit",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "$318.5",
+       "value": "318500000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "$274.7",
+       "value": "274700000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Change",
+       "raw": "15.9%",
+       "value": "15.9",
+       "data_type": "percentage"
+      }
+     ]
+    },
+    {
+     "label": "Operating income",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "$71.9",
+       "value": "71900000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "$59.2",
+       "value": "59200000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Change",
+       "raw": "21.5%",
+       "value": "21.5",
+       "data_type": "percentage"
+      }
+     ]
+    },
+    {
+     "label": "Net income",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "$54.3",
+       "value": "54300000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "$44.1",
+       "value": "44100000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Change",
+       "raw": "23.1%",
+       "value": "23.1",
+       "data_type": "percentage"
+      }
+     ]
+    },
+    {
+     "label": "Diluted EPS",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "$2.71",
+       "value": "2.71",
+       "data_type": "per_share"
+      },
+      {
+       "period": "2024",
+       "raw": "$2.18",
+       "value": "2.18",
+       "data_type": "per_share"
+      },
+      {
+       "period": "Change",
+       "raw": "24.3%",
+       "value": "24.3",
+       "data_type": "percentage"
+      }
+     ]
+    },
+    {
+     "label": "Cash from operations",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "$88.4",
+       "value": "88400000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "$70.6",
+       "value": "70600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Change",
+       "raw": "25.2%",
+       "value": "25.2",
+       "data_type": "percentage"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "caption": "Consolidated Statements of Income",
+   "statement_type": "income_statement",
+   "unit_text": "($ in thousands)",
+   "scale": "thousands",
+   "multiplier": "1000",
+   "periods": [
+    "2025",
+    "2024"
+   ],
+   "rows": [
+    {
+     "label": "Revenue",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "482,600",
+       "value": "482600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "422,600",
+       "value": "422600000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Cost of revenue",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "164,100",
+       "value": "164100000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "147,900",
+       "value": "147900000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Gross profit",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "318,500",
+       "value": "318500000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "274,700",
+       "value": "274700000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Research and development",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "97,400",
+       "value": "97400000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "86,900",
+       "value": "86900000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Sales and marketing",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "101,200",
+       "value": "101200000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "90,300",
+       "value": "90300000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "General and administrative",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "48,000",
+       "value": "48000000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "38,300",
+       "value": "38300000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total operating expenses",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "246,600",
+       "value": "246600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "215,500",
+       "value": "215500000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Operating income",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "71,900",
+       "value": "71900000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "59,200",
+       "value": "59200000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Interest and other income, net",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "3,100",
+       "value": "3100000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "2,400",
+       "value": "2400000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Income before taxes",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "75,000",
+       "value": "75000000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "61,600",
+       "value": "61600000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Provision for income taxes",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "20,700",
+       "value": "20700000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "17,500",
+       "value": "17500000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Net income",
+     "cells": [
+      {
+       "period": "2025",
+       "raw": "54,300",
+       "value": "54300000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "2024",
+       "raw": "44,100",
+       "value": "44100000",
+       "data_type": "monetary"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "caption": "Consolidated Balance Sheets",
+   "statement_type": "balance_sheet",
+   "unit_text": "($ in thousands)",
+   "scale": "thousands",
+   "multiplier": "1000",
+   "periods": [
+    "Dec 31, 2025",
+    "Dec 31, 2024"
+   ],
+   "rows": [
+    {
+     "label": "Cash and cash equivalents",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "212,700",
+       "value": "212700000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "176,500",
+       "value": "176500000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Accounts receivable, net",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "96,300",
+       "value": "96300000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "84,200",
+       "value": "84200000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Prepaid and other current assets",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "18,900",
+       "value": "18900000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "16,100",
+       "value": "16100000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total current assets",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "327,900",
+       "value": "327900000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "276,800",
+       "value": "276800000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Property and equipment, net",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "54,600",
+       "value": "54600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "49,300",
+       "value": "49300000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Goodwill and intangibles",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "142,300",
+       "value": "142300000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "145,800",
+       "value": "145800000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Other assets",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "21,400",
+       "value": "21400000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "19,700",
+       "value": "19700000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total assets",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "546,200",
+       "value": "546200000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "491,600",
+       "value": "491600000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Accounts payable",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "24,800",
+       "value": "24800000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "22,100",
+       "value": "22100000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Accrued expenses",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "47,300",
+       "value": "47300000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "42,600",
+       "value": "42600000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Deferred revenue",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "118,500",
+       "value": "118500000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "103,200",
+       "value": "103200000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total current liabilities",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "190,600",
+       "value": "190600000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "167,900",
+       "value": "167900000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Long-term debt",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "125,000",
+       "value": "125000000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "125,000",
+       "value": "125000000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Other long-term liabilities",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "16,800",
+       "value": "16800000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "15,400",
+       "value": "15400000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total liabilities",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "332,400",
+       "value": "332400000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "308,300",
+       "value": "308300000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total stockholders’ equity",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "213,800",
+       "value": "213800000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "183,300",
+       "value": "183300000",
+       "data_type": "monetary"
+      }
+     ]
+    },
+    {
+     "label": "Total liabilities and equity",
+     "cells": [
+      {
+       "period": "Dec 31, 2025",
+       "raw": "546,200",
+       "value": "546200000",
+       "data_type": "monetary"
+      },
+      {
+       "period": "Dec 31, 2024",
+       "raw": "491,600",
+       "value": "491600000",
+       "data_type": "monetary"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "narrative_facts": [
+  {
+   "metric": "revenue",
+   "measure": "change_pct",
+   "value": "14.2",
+   "period": "FY2025",
+   "text": "14.2%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "revenue",
+   "measure": "level",
+   "value": "482600000",
+   "period": "FY2025",
+   "text": "$482.6 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "operating_income",
+   "measure": "change_pct",
+   "value": "21.5",
+   "period": "FY2025",
+   "text": "21.5%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "operating_income",
+   "measure": "level",
+   "value": "71900000",
+   "period": "FY2025",
+   "text": "$71.9 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "operating_margin",
+   "measure": "change_bps",
+   "value": "90",
+   "period": "FY2025",
+   "text": "90 basis points",
+   "data_type": "basis_points"
+  },
+  {
+   "metric": "operating_margin",
+   "measure": "level",
+   "value": "14.9",
+   "period": "FY2025",
+   "text": "14.9%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "cfo",
+   "measure": "level",
+   "value": "88400000",
+   "period": "FY2025",
+   "text": "$88.4 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "share_repurchases",
+   "measure": "level",
+   "value": "25000000",
+   "period": "FY2025",
+   "text": "$25.0 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "cash",
+   "measure": "level",
+   "value": "212700000",
+   "period": "FY2025",
+   "text": "$212.7 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "net_cash",
+   "measure": "level",
+   "value": "87700000",
+   "period": "FY2025",
+   "text": "$87.7 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "subscription_revenue",
+   "measure": "change_pct",
+   "value": "19",
+   "period": "FY2025",
+   "text": "19%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "subscription_revenue",
+   "measure": "level",
+   "value": "351200000",
+   "period": "FY2025",
+   "text": "$351.2 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "subscription_revenue",
+   "measure": "pct_of_revenue",
+   "value": "73",
+   "period": "FY2025",
+   "text": "73%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "subscription_revenue",
+   "measure": "pct_of_revenue",
+   "value": "69",
+   "period": "FY2024",
+   "text": "69%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "services_revenue",
+   "measure": "level",
+   "value": "131400000",
+   "period": "FY2025",
+   "text": "$131.4 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "services_revenue",
+   "measure": "change_pct",
+   "value": "3",
+   "period": "FY2025",
+   "text": "3%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "north_america_revenue",
+   "measure": "pct_of_revenue",
+   "value": "68",
+   "period": "FY2025",
+   "text": "68%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "international_revenue",
+   "measure": "change_pct",
+   "value": "22",
+   "period": "FY2025",
+   "text": "22%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "gross_margin",
+   "measure": "level",
+   "value": "66.0",
+   "period": "FY2025",
+   "text": "66.0%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "gross_margin",
+   "measure": "level",
+   "value": "65.0",
+   "period": "FY2024",
+   "text": "65.0%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "total_operating_expenses",
+   "measure": "level",
+   "value": "246600000",
+   "period": "FY2025",
+   "text": "$246.6 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "total_operating_expenses",
+   "measure": "pct_of_revenue",
+   "value": "51.1",
+   "period": "FY2025",
+   "text": "51.1%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "total_operating_expenses",
+   "measure": "pct_of_revenue",
+   "value": "51.0",
+   "period": "FY2024",
+   "text": "51.0%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "research_and_development",
+   "measure": "change_pct",
+   "value": "12",
+   "period": "FY2025",
+   "text": "12%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "research_and_development",
+   "measure": "level",
+   "value": "97400000",
+   "period": "FY2025",
+   "text": "$97.4 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "cash",
+   "measure": "level",
+   "value": "212700000",
+   "period": "FY2025",
+   "text": "$212.7 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "credit_facility",
+   "measure": "level",
+   "value": "150000000",
+   "period": "FY2025",
+   "text": "$150.0 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "credit_facility_maturity_year",
+   "measure": "maturity_year",
+   "value": "2029",
+   "period": "FY2025",
+   "text": "2029",
+   "data_type": "year"
+  },
+  {
+   "metric": "long_term_debt",
+   "measure": "level",
+   "value": "125000000",
+   "period": "FY2025",
+   "text": "$125.0 million",
+   "data_type": "monetary"
+  },
+  {
+   "metric": "interest_rate",
+   "measure": "rate",
+   "value": "4.5",
+   "period": "FY2025",
+   "text": "4.5%",
+   "data_type": "percentage"
+  },
+  {
+   "metric": "debt_maturity_year",
+   "measure": "maturity_year",
+   "value": "2030",
+   "period": "FY2025",
+   "text": "2030",
+   "data_type": "year"
+  },
+  {
+   "metric": "shares_repurchased",
+   "measure": "count",
+   "value": "520000",
+   "period": "FY2025",
+   "text": "0.52 million shares",
+   "data_type": "shares"
+  },
+  {
+   "metric": "average_repurchase_price",
+   "measure": "price",
+   "value": "48.08",
+   "period": "FY2025",
+   "text": "$48.08 per share",
+   "data_type": "per_share"
+  }
+ ]
+}

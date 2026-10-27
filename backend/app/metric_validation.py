@@ -307,9 +307,28 @@ class MetricValidator:
             f = r.field
             if r.is_table and f.measure == "level" and f.period_key:
                 groups[(f.metric, f.period_key, f.data_type)].append(r)  # type: ignore[index]
-        for (metric, period, _), rs in groups.items():
-            tables = {r.group for r in rs}
-            if len(tables) < 2:
+        for (metric, period, _), all_rs in groups.items():
+            if len({r.group for r in all_rs}) < 2:
+                continue
+            rs = [r for r in all_rs if r.field.reported_scale != "unknown"]
+            # A value without a known scale cannot be compared; report the scale that would reconcile it.
+            for unk in (r for r in all_rs if r.field.reported_scale == "unknown"):
+                known = next((r for r in rs if r.group != unk.group and r.value), None)
+                if known is None or not unk.value:
+                    continue
+                ratio = (known.value or _ZERO) / (unk.value or Decimal(1))
+                implied = {Decimal(1000): "thousands", Decimal(1_000_000): "millions", Decimal(1_000_000_000): "billions"}
+                hit = next((name for mult, name in implied.items() if abs(ratio - mult) <= mult * Decimal("0.001")), None)
+                if hit:
+                    unk.field.validation_issues.append({
+                        "rule_id": "RULE_SCALE_INFERENCE_001",
+                        "rule_version": VERSION,
+                        "severity": "INFO",
+                        "message": f"{metric} {period} would match {known.field.statement_type or 'another table'} if this table were in {hit}; scale left as unknown for review",
+                        "suggested_scale": hit,
+                        "review_required": True,
+                    })
+            if len({r.group for r in rs}) < 2:
                 continue
             anchor = min(rs, key=lambda r: r.tol)  # most precise table is the reference
             for other in rs:
@@ -328,6 +347,8 @@ class MetricValidator:
         for r in refs:
             f = r.field
             if f.measure != "level" or not f.period_key or f.data_type not in ("monetary", "per_share", "shares"):
+                continue
+            if f.reported_scale == "unknown":
                 continue
             key = (f.metric, f.period_key)
             pool = table_levels if r.is_table else narrative_levels
