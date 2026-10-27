@@ -1,0 +1,41 @@
+Subject: Action Required: Lease Agreement & Move-In Instructions for [Property Address]
+
+Dear [Tenant Full Name],
+
+We are pleased to welcome you to your new home! 
+
+Attached to this email, you will find your official Residential Lease Agreement for the property located at:
+[Unit/Apt #, Street Address, City, State/Postal Code]
+
+Please review the attached PDF agreement carefully. To confirm your tenancy and secure your move-in date, please complete the following steps:
+
+1. REVIEW & COUNTERSIGN:
+   - Carefully read all clauses, including the rent schedule, security deposit terms, and maintenance covenants.
+   - Please sign and date the agreement electronically or print, sign, scan, and reply with the executed copy by [Date, e.g., Friday, November 6, 2026].
+
+2. INITIAL DEPOSIT & FIRST MONTH'S RENT:
+   - Security Deposit: $[2,400.00]
+   - First Month's Rent: $[2,400.00]
+   - Total Amount Due Prior to Key Handover: $[4,800.00]
+   - Payment Method: Electronic transfer (ACH) to the following account:
+       • Bank Name: [Bank Name]
+       • Routing / Sort Code: [Routing Number]
+       • Account Number: [Account Number]
+       • Reference: [Tenant Surname] - [Unit Number]
+
+3. MOVE-IN LOGISTICS & KEY HANDOVER:
+   - Move-In Date: [Start Date, e.g., December 1, 2026] at [Time, e.g., 10:00 AM]
+   - Walkthrough Inspection: We will meet you at the property on the morning of your move-in date to conduct the initial condition checklist and hand over the keys and garage access fobs.
+   - Utility Setup: Please ensure electricity, cooking gas, and internet accounts are scheduled to be placed in your name effective on or before [Start Date].
+
+If you have any questions or require clarification on any clause in the lease agreement, please feel free to reach out directly by replying to this email or calling [Phone Number].
+
+We look forward to having you as a resident!
+
+Warm regards,
+
+[Landlord / Property Manager Name]
+[Property Management Company / Agency Name]
+[Phone Number]
+[Email Address]
+[Office / Mailing Address]

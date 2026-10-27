@@ -1,0 +1,4 @@
+*.pdf binary
+*.sqlite binary
+*.png binary
+*.joblib binary

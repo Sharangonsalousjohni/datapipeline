@@ -1,0 +1,6 @@
+{
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "threshold_relevant": 0.6,
+  "threshold_irrelevant": 0.35,
+  "calibrated_at": "2026-10-26"
+}

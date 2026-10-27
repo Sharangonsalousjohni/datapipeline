@@ -1,0 +1,429 @@
+"""Reference Dataset Builder: Generates the 14-category financial reference dataset and hard negatives."""
+
+import json
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+REF_DIR = BASE_DIR / "reference_data"
+REF_DIR.mkdir(parents=True, exist_ok=True)
+
+CATEGORIES = {
+    "income_revenue": "Income and revenue",
+    "expenses_operating_costs": "Expenses and operating costs",
+    "accounts_payable_receivable": "Accounts payable and receivable",
+    "invoices_purchase_orders": "Invoices and purchase orders",
+    "cash_flow_bank_transactions": "Cash flow and bank transactions",
+    "loans_interest_repayment": "Loans, principal, interest, and repayment schedules",
+    "rent_leases_recurring_payments": "Rent, leases, deposits, and recurring payments",
+    "contracts_payment_obligations": "Contracts and payment obligations",
+    "insurance": "Insurance premiums, deductibles, and payouts",
+    "taxes_duties": "Taxes, duties, and statutory payments",
+    "penalties_late_fees": "Penalties, late fees, and overdue balances",
+    "assets_liabilities_investments": "Financial assets, liabilities, and investments",
+    "maturity_renewals_deadlines": "Maturity dates, renewals, installments, and payment deadlines",
+    "refunds_credits_settlements": "Refunds, credits, reimbursements, and settlement terms",
+    "non_financial": "Non-financial (hard negatives)",
+}
+
+manifest = {
+    "version": "1.0.0",
+    "name": "FRIE Curated Financial Reference Set",
+    "description": "Curated reference dataset with positive entries across 14 financial categories and non-financial hard negatives.",
+    "source": "FRIE curated reference set v1",
+    "license": "CC0-1.0",
+    "attribution": "Authored specifically for FRIE reference similarity matching.",
+    "source_url": None,
+    "categories": CATEGORIES,
+    "created": "2026-10-26",
+}
+
+(REF_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+entries = [
+    # 1. income_revenue
+    {
+        "reference_id": "rev-001",
+        "concept": "Revenue Recognition",
+        "definition": "Accounting process of recording revenue when performance obligations are satisfied.",
+        "category": "income_revenue",
+        "examples": [
+            "The Company recognized gross subscription revenue of $4.2 million for the quarter ended September 30.",
+            "Revenue from the sale of software licenses is recognized upon delivery and customer acceptance.",
+            "Quarterly sales revenue increased 14% year-over-year to EUR 12,850,000.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "rev-002",
+        "concept": "Royalty and Licensing Income",
+        "definition": "Earnings received from licensing intellectual property, patents, or brand rights.",
+        "category": "income_revenue",
+        "examples": [
+            "Licensee shall pay Licensor a recurring royalty fee of 5.5% on all net commercial sales.",
+            "Royalty income for the fiscal period reached GBP 340,000 under the patent cross-license agreement.",
+            "Quarterly royalty distributions amounted to 8,200,000 JPY paid directly to the rights holder.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "rev-003",
+        "concept": "Deferred and Unearned Revenue",
+        "definition": "Money received by a company for goods or services that have not yet been delivered.",
+        "category": "income_revenue",
+        "examples": [
+            "Deferred revenue on the balance sheet totaled $1,450,000 representing prepaid annual customer contracts.",
+            "Unearned subscription fees of Rs. 9,50,000 were recorded as current liabilities pending service fulfillment.",
+            "As services are rendered, customer advance payments will be recognized as earned revenue monthly.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 2. expenses_operating_costs
+    {
+        "reference_id": "exp-001",
+        "concept": "Operating Expenses (OpEx)",
+        "definition": "Day-to-day expenditures required to administer and operate a business.",
+        "category": "expenses_operating_costs",
+        "examples": [
+            "Total operating expenses for Q2 were $1,850,000, primarily driven by payroll and cloud hosting costs.",
+            "General and administrative expenses increased by 8% to EUR 620,000 due to professional legal fees.",
+            "The division incurred Rs. 45,00,000 in selling, general, and administrative (SG&A) operational costs.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "exp-002",
+        "concept": "Cost of Goods Sold (COGS)",
+        "definition": "Direct costs attributable to the production of the goods sold or services delivered.",
+        "category": "expenses_operating_costs",
+        "examples": [
+            "Cost of goods sold was $3,410,000, yielding a gross profit margin of 42.5%.",
+            "Direct manufacturing material and labor expenses totaled GBP 215,000 for the production run.",
+            "COGS for hardware components amounted to 14,200,000 JPY during the fiscal semester.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 3. accounts_payable_receivable
+    {
+        "reference_id": "apar-001",
+        "concept": "Accounts Payable Ledger",
+        "definition": "Outstanding short-term debts and obligations owed by a business to its creditors and suppliers.",
+        "category": "accounts_payable_receivable",
+        "examples": [
+            "Accounts payable aging report indicates $184,200 is past 30 days due to hardware suppliers.",
+            "Trade payables outstanding at fiscal year-end were EUR 1,120,000 across 45 active vendors.",
+            "The vendor ledger reflects an unpaid balance of Rs. 6,80,000 under voucher AP-9921.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "apar-002",
+        "concept": "Accounts Receivable Aging",
+        "definition": "Funds due to a business from customers for goods delivered or services rendered.",
+        "category": "accounts_payable_receivable",
+        "examples": [
+            "Aged receivables over 90 days total $42,500 and may require a reserve for uncollectible accounts.",
+            "Outstanding trade receivables stood at GBP 890,000 as of the close of business Friday.",
+            "Customer receivables aging schedule shows net outstanding collections of EUR 310,000.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 4. invoices_purchase_orders
+    {
+        "reference_id": "inv-001",
+        "concept": "Commercial Invoice Terms",
+        "definition": "Itemized commercial bill requesting payment for products or services.",
+        "category": "invoices_purchase_orders",
+        "examples": [
+            "Invoice No | Date | Amount Due\nINV-8821 | 2024-04-15 | $14,850.00\nPayment Terms: Net 30 days.",
+            "lnvoice T0tal due: EUR 3,250.00 payable via wire transfer to Citibank IBAN DE893704.",
+            "Total amount payable under Purchase Order PO-44021 is $98,400 upon milestone delivery.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "inv-002",
+        "concept": "Purchase Order Commitments",
+        "definition": "Official document authorizing a vendor to deliver items at an agreed price.",
+        "category": "invoices_purchase_orders",
+        "examples": [
+            "Buyer hereby issues Purchase Order #PO-9012 for 500 units at unit price $120.00, subtotal $60,000.00.",
+            "Payment shall be made within 45 days after receipt of valid invoice citing PO reference number.",
+            "Line Total: Rs. 4,50,000 plus applicable GST of 18% as specified in PO-2024-11.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 5. cash_flow_bank_transactions
+    {
+        "reference_id": "cash-001",
+        "concept": "Bank Statement and Wire Transfers",
+        "definition": "Record of deposits, withdrawals, ACH, and wire transfers across institutional bank accounts.",
+        "category": "cash_flow_bank_transactions",
+        "examples": [
+            "Bank Statement: Opening balance $245,000.00, Wire transfer credit $50,000.00, Closing balance $295,000.00.",
+            "ACH transaction debited EUR 14,200.00 on 2024-05-12 for corporate payroll disbursement.",
+            "SWIFT/BIC transaction reference WT-88192 completed wire remittance of USD 180,000 to recipient escrow account.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 6. loans_interest_repayment
+    {
+        "reference_id": "loan-001",
+        "concept": "Loan Facilities and Interest Schedules",
+        "definition": "Borrowed capital agreements specifying principal sums, interest rates, and amortized repayments.",
+        "category": "loans_interest_repayment",
+        "examples": [
+            "The Borrower shall repay the principal in twelve equal monthly installments of $25,000 plus accrued interest.",
+            "Interest on the outstanding term loan facility shall accrue at SOFR plus 2.75% per annum.",
+            "Promissory note principal of EUR 500,000 matures on December 31, 2028 with semi-annual interest coupons.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 7. rent_leases_recurring_payments
+    {
+        "reference_id": "rent-001",
+        "concept": "Commercial Lease and Monthly Rent",
+        "definition": "Contractual lease agreements stipulating recurring base rent, security deposits, and escalations.",
+        "category": "rent_leases_recurring_payments",
+        "examples": [
+            "Tenant agrees to pay monthly base rent of $8,500.00 on the first day of each calendar month.",
+            "Lessee deposited a security deposit of EUR 17,000 with Landlord upon execution of this lease.",
+            "Annual rent shall escalate by 3.5% on each anniversary of the lease commencement date.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 8. contracts_payment_obligations
+    {
+        "reference_id": "contract-001",
+        "concept": "Contractual Payment Obligations",
+        "definition": "Legally binding commitments to pay money for services, milestones, or acquisitions.",
+        "category": "contracts_payment_obligations",
+        "examples": [
+            "Client shall pay Contractor a fixed fee of $75,000 upon successful completion of Phase 2 deliverables.",
+            "Company agrees to remit the full purchase price of EUR 1,200,000 to Seller within five business days.",
+            "The obligation to compensate the advisor includes an advisory retainer of Rs. 2,00,000 per month.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 9. insurance
+    {
+        "reference_id": "ins-001",
+        "concept": "Insurance Policy and Deductibles",
+        "definition": "Financial coverage terms including annual premiums, policy limits, deductibles, and claim payouts.",
+        "category": "insurance",
+        "examples": [
+            "The annual insurance premium is $24,500 with a per-occurrence deductible of $5,000.",
+            "Policy coverage limit is EUR 2,000,000 for general commercial liability and indemnity.",
+            "Insurer approved a claim payout of GBP 68,000 following casualty property damage inspection.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 10. taxes_duties
+    {
+        "reference_id": "tax-001",
+        "concept": "Corporate Taxes and Statutory Duties",
+        "definition": "Taxes, VAT/GST, customs duties, and statutory levies owed to governmental tax authorities.",
+        "category": "taxes_duties",
+        "examples": [
+            "The company remitted corporate income tax of $420,000 and payroll tax withholding of $85,000.",
+            "Applicable Value Added Tax (VAT) of 20% amounts to EUR 1,400 on the taxable supply.",
+            "Customs import duty of Rs. 1,25,000 was levied on the imported semiconductor equipment.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 11. penalties_late_fees
+    {
+        "reference_id": "pen-001",
+        "concept": "Late Payment Fees and Penalties",
+        "definition": "Additional financial charges imposed on delinquent balances or breached deadlines.",
+        "category": "penalties_late_fees",
+        "examples": [
+            "Overdue balances shall incur a late charge of 1.5% per month or the maximum legal rate.",
+            "A late payment penalty of $250.00 is assessed for any installment received after the 10-day grace period.",
+            "Liquidated damages of EUR 1,000 per day of delay shall be deducted from the final contractor disbursement.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 12. assets_liabilities_investments
+    {
+        "reference_id": "asset-001",
+        "concept": "Balance Sheet Assets and Liabilities",
+        "definition": "Summary of economic resources owned, obligations owed, and equity capital invested.",
+        "category": "assets_liabilities_investments",
+        "examples": [
+            "Total assets stood at $45,200,000 against total liabilities of $18,400,000, leaving equity of $26,800,000.",
+            "Marketable securities and short-term capital investments yielded an unrealized gain of EUR 320,000.",
+            "The firm acquired non-current capital equipment valued at Rs. 1,50,00,000 on its fixed asset register.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 13. maturity_renewals_deadlines
+    {
+        "reference_id": "mat-001",
+        "concept": "Maturity Dates and Renewal Terms",
+        "definition": "Maturity deadlines, payment grace periods, and contract renewal payment stipulations.",
+        "category": "maturity_renewals_deadlines",
+        "examples": [
+            "The debenture maturity date is October 15, 2027, on which date the entire principal of $1,000,000 is due.",
+            "Contract auto-renews for an annual term at $12,000 unless written cancellation is given 60 days prior.",
+            "Section 4.1 is hereby amended to replace the maturity payment deadline with June 30, 2026.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 14. refunds_credits_settlements
+    {
+        "reference_id": "refund-001",
+        "concept": "Refunds, Credit Memos, and Settlements",
+        "definition": "Reimbursements of funds, credit notes issued to customers, or negotiated settlement payouts.",
+        "category": "refunds_credits_settlements",
+        "examples": [
+            "Vendor issued Credit Memo #CM-104 in the amount of $3,200.00 for returned defective inventory.",
+            "Customer refund of EUR 450.00 was credited back to the original payment card within 7 business days.",
+            "The parties agreed to a full settlement payment of $250,000 in resolution of all outstanding warranty claims.",
+        ],
+        "label": "positive",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+
+    # 15. non_financial (Hard Negatives)
+    {
+        "reference_id": "neg-001",
+        "concept": "Scientific Electrical Charge",
+        "definition": "Physical property of matter that causes it to experience a force when placed in an electromagnetic field.",
+        "category": "non_financial",
+        "examples": [
+            "The surface electrical charge of the nanoparticle was measured using zeta potential analysis at neutral pH.",
+            "Electrons carry a negative unit charge of approximately 1.602 x 10^-19 coulombs.",
+            "A high charge density across the cell membrane stimulates rapid action potential propagation.",
+        ],
+        "label": "negative",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "neg-002",
+        "concept": "Chemical and Molecular Bonds",
+        "definition": "Attraction between atoms, ions, or molecules that enables the formation of chemical compounds.",
+        "category": "non_financial",
+        "examples": [
+            "The covalent bond dissociation energy between carbon and hydrogen atoms is roughly 413 kJ/mol.",
+            "Hydrogen bonding between adjacent peptide backbones stabilizes the secondary alpha-helix structure.",
+            "Disulfide bonds maintain the tertiary folding and stability of the immunoglobulin protein.",
+        ],
+        "label": "negative",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "neg-003",
+        "concept": "Geological and Mineral Deposits",
+        "definition": "Natural accumulation of minerals, sediments, or rock in a specific geological formation.",
+        "category": "non_financial",
+        "examples": [
+            "Glacial deposits composed of moraine gravel and clay cover the northern plateau bedrock.",
+            "Sedimentary calcium carbonate deposits accumulated along the seabed over prehistoric epochs.",
+            "Alluvial silt deposit layers were examined across the river basin to determine flood history.",
+        ],
+        "label": "negative",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "neg-004",
+        "concept": "Academic and Research Interest",
+        "definition": "Intellectual curiosity, scholarly focus, or conflict of interest declarations.",
+        "category": "non_financial",
+        "examples": [
+            "The Principal Investigator declared no conflict of interest regarding the submitted manuscript.",
+            "Areas of current research interest include quantum computing algorithms and graph theory.",
+            "In the interest of experimental safety, all personnel wore protective respirator equipment.",
+        ],
+        "label": "negative",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "neg-005",
+        "concept": "Standard Non-Disclosure Boilerplate",
+        "definition": "Confidentiality obligations, governing law, and general legal terms without financial commitments.",
+        "category": "non_financial",
+        "examples": [
+            "The Receiving Party shall hold all Confidential Information in strict confidence using reasonable care.",
+            "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware.",
+            "This agreement may be executed in counterparts, each of which shall be deemed an original.",
+        ],
+        "label": "negative",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+    {
+        "reference_id": "neg-006",
+        "concept": "Programming and Scripting Syntax",
+        "definition": "Code variables, regular expressions, environment flags, and shell syntax using dollar symbols.",
+        "category": "non_financial",
+        "examples": [
+            "Export the environment variable using export APP_DIR=$HOME/bin and check ${USER_ID}.",
+            "In Perl and PHP, string interpolation replaces $variable with its evaluated scalar value.",
+            "The regular expression ^[a-z]+$ matches strings that start and end with lowercase characters.",
+        ],
+        "label": "negative",
+        "source": "FRIE curated reference set v1",
+        "license": "CC0-1.0",
+    },
+]
+
+ref_file = REF_DIR / "financial_reference_v1.jsonl"
+with ref_file.open("w", encoding="utf-8") as f:
+    for entry in entries:
+        f.write(json.dumps(entry) + "\n")
+
+print(f"Generated {len(entries)} reference entries in {ref_file}")
