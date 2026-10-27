@@ -33,6 +33,10 @@ class TableData:
     formulas: dict[str, str] = field(default_factory=dict)  # cell ref -> formula text (never evaluated)
     number_formats: dict[str, str] = field(default_factory=dict)  # cell ref -> number format
     row_bboxes: list[list[float]] | None = None
+    # Per-cell [x0, y0, x1, y1] boxes, header row first (same shape as [headers] + rows); None when unknown.
+    cell_bboxes: list[list[list[float] | None]] | None = None
+    bbox: list[float] | None = None  # whole-table bbox
+    unit_line: str | None = None  # unit declaration found just above the table, e.g. "($ in millions)"
 
 
 @dataclass

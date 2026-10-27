@@ -46,6 +46,18 @@ class SourceLocation(BaseModel):
     page_height: float | None = None
     heading_path: list[str] | None = None
     section_heading: str | None = None
+    # --- chunk metadata (additive): everything needed to interpret numbers without neighbouring chunks
+    page_end: int | None = None  # last page when a section spans pages
+    bbox_pages: list[int] | None = None  # page of each entry in ``bboxes``
+    chunk_role: str | None = None  # narrative | table | cover_page | table_of_contents | signature_block
+    statement_type: str | None = None  # income_statement | balance_sheet | cash_flow_statement | highlights | notes | narrative | other
+    unit: dict[str, Any] | None = None  # detected reporting unit (scale, multiplier, currency, except_per_share, source, text)
+    period_columns: list[str] | None = None
+    fiscal_period: dict[str, Any] | None = None  # document reporting period, e.g. {"key": "FY2025", "label": ...}
+    table_bbox: list[float] | None = None
+    cell_bboxes: list[list[list[float] | None]] | None = None  # header row first
+    table_part: list[int] | None = None  # [part, total] when an oversized table had to be sliced
+    overlap: list[int] | None = None  # [start, end) of text repeated from the previous piece of the same section
 
 
 # --------------------------------------------------------------------------- jobs

@@ -215,6 +215,8 @@ def render_table(table: TableData, rows: list[list[str]] | None = None) -> str:
     lines: list[str] = []
     if table.caption:
         lines.append(table.caption)
+    if table.unit_line and table.unit_line not in (table.caption or ""):
+        lines.append(table.unit_line)
     lines.append(" | ".join(h.strip() for h in table.headers))
     for r in rows if rows is not None else table.rows:
         lines.append(" | ".join(v.strip() for v in r))

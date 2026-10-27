@@ -37,6 +37,42 @@ def _rect_overlaps(a: list[float], b: list[float]) -> bool:
     return (inter / area_a) > 0.4
 
 
+def _fill_missing_cell_boxes(
+    boxes: list[list[list[float] | None]], rows: list[list[str]], page
+) -> list[list[list[float] | None]]:
+    """Give every non-empty cell a bbox: use find_tables() cell rects, else the word boxes
+    that fall inside the cell's row band and column band."""
+    if all(b is not None for row_b, row_t in zip(boxes, rows) for b, t in zip(row_b, row_t) if t):
+        return boxes
+    n_cols = max((len(r) for r in boxes), default=0)
+    col_x: list[tuple[float, float] | None] = []
+    for c in range(n_cols):
+        xs = [rb[c] for rb in boxes if c < len(rb) and rb[c] is not None]
+        col_x.append((min(b[0] for b in xs), max(b[2] for b in xs)) if xs else None)
+    words = page.get_text("words") or []
+    out: list[list[list[float] | None]] = []
+    for row_b, row_t in zip(boxes, rows):
+        known = [b for b in row_b if b is not None]
+        band = (min(b[1] for b in known), max(b[3] for b in known)) if known else None
+        new_row: list[list[float] | None] = []
+        for c, (b, txt) in enumerate(zip(row_b, row_t)):
+            if b is not None or not txt or band is None or c >= len(col_x) or col_x[c] is None:
+                new_row.append(b)
+                continue
+            x0, x1 = col_x[c]  # type: ignore[misc]
+            hits = [
+                w for w in words
+                if x0 <= (w[0] + w[2]) / 2 <= x1 and band[0] <= (w[1] + w[3]) / 2 <= band[1]
+            ]
+            new_row.append(
+                [round(min(w[0] for w in hits), 1), round(min(w[1] for w in hits), 1),
+                 round(max(w[2] for w in hits), 1), round(max(w[3] for w in hits), 1)]
+                if hits else None
+            )
+        out.append(new_row)
+    return out
+
+
 class PdfParser(DocumentParser):
     types = frozenset({"pdf"})
 
@@ -80,24 +116,32 @@ class PdfParser(DocumentParser):
                                 # PyMuPDF's t.extract() can strip punctuation, decimals, and spaces.
                                 # Use cell-level clip extraction to preserve exact source formatting verbatim.
                                 rows: list[list[str]] = []
+                                boxes: list[list[list[float] | None]] = []
                                 t_rows = getattr(t, "rows", None)
                                 if t_rows:
                                     for r in t_rows:
                                         row_text: list[str] = []
+                                        row_boxes: list[list[float] | None] = []
                                         for cell in getattr(r, "cells", []):
                                             if cell is None:
                                                 row_text.append("")
+                                                row_boxes.append(None)
                                             else:
                                                 c_rect = fitz.Rect(cell)
                                                 c_raw = page.get_text("text", clip=c_rect).strip()
                                                 c_clean = " ".join(c_raw.split())
                                                 row_text.append(c_clean)
+                                                row_boxes.append([round(float(x), 1) for x in cell])
                                         rows.append(row_text)
+                                        boxes.append(row_boxes)
                                 else:
                                     extracted = t.extract() or []
                                     rows = [[(" ".join(str(c).split()) if c is not None else "") for c in r] for r in extracted]
+                                    boxes = [[None] * len(r) for r in rows]
 
-                                rows = [r for r in rows if any(c for c in r)]
+                                keep = [i for i, r in enumerate(rows) if any(c for c in r)]
+                                rows = [rows[i] for i in keep]
+                                boxes = _fill_missing_cell_boxes([boxes[i] for i in keep], rows, page)
                                 if len(rows) >= 2 and max(len(r) for r in rows) >= 2:
                                     table_counter += 1
                                     t_bbox = [round(float(x), 1) for x in t.bbox]
@@ -109,6 +153,8 @@ class PdfParser(DocumentParser):
                                         rows=body,
                                         row_numbers=list(range(2, len(rows) + 1)),
                                         header_row_number=1,
+                                        cell_bboxes=boxes,
+                                        bbox=t_bbox,
                                     )
                                     page_blocks.append(
                                         (
@@ -124,6 +170,8 @@ class PdfParser(DocumentParser):
                                                     "col_start": 1,
                                                     "col_end": len(headers),
                                                     "bboxes": [t_bbox],
+                                                    "table_bbox": t_bbox,
+                                                    "cell_bboxes": boxes,
                                                     "page_width": pw,
                                                     "page_height": ph,
                                                 },

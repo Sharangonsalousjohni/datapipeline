@@ -59,7 +59,9 @@ class Settings(BaseSettings):
     chunk_size_chars: int = 1200
     chunk_overlap_chars: int = 150
     chunk_min_chars: int = 40
-    table_rows_per_chunk: int = 25
+    table_rows_per_chunk: int = 25  # legacy; tables are no longer sliced at this size
+    chunk_max_tokens: int = 400  # narrative sections above this are split at paragraph boundaries
+    table_max_rows_per_chunk: int = 200  # tables are kept whole unless they exceed this many rows
 
     # ------------------------------------------------------------------ embeddings
     embedding_provider: Literal["sentence-transformers", "hashing"] = "sentence-transformers"

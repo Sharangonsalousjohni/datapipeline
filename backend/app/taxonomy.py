@@ -343,3 +343,63 @@ def _embedding_fallback(norm_label: str) -> MetricMatch:
 def metric_category(metric: str | None) -> str | None:
     md = METRICS_BY_NAME.get(metric or "")
     return md.category if md else None
+
+
+# --------------------------------------------------------------------------- periods
+_QUARTER_RE = re.compile(r"\b(?:Q([1-4])\s*(?:FY\s*)?['’]?((?:19|20)?\d\d)\b|((?:19|20)\d\d)\s*Q([1-4])\b)", re.I)
+_YEAR_RE = re.compile(r"(?<![\d.,])((?:19|20)\d\d)(?![\d.,]\d)")
+_FY_SHORT_RE = re.compile(r"\bFY\s*['’]?(\d\d)\b", re.I)
+_NON_PERIOD_RE = re.compile(r"\b(change|chg|variance|var\.?|growth|yoy|y/y|%|delta|diff)\b", re.I)
+
+
+def normalize_period(label: str | None) -> str | None:
+    """Map a period column / phrase to a comparable key: 'FY2025', 'Q3-2026'. Change columns -> None."""
+    if not label:
+        return None
+    s = label.strip()
+    q = _QUARTER_RE.search(s)
+    if q:
+        num, yr = (q.group(1), q.group(2)) if q.group(1) else (q.group(4), q.group(3))
+        yr = yr if len(yr) == 4 else f"20{yr}"
+        return f"Q{num}-{yr}"
+    years = _YEAR_RE.findall(s)
+    if len(set(years)) == 1:
+        return f"FY{years[0]}"
+    fy = _FY_SHORT_RE.search(s)
+    if fy:
+        return f"FY20{fy.group(1)}"
+    return None
+
+
+def is_change_column(label: str | None) -> bool:
+    return bool(label) and normalize_period(label) is None and bool(_NON_PERIOD_RE.search(label or ""))
+
+
+_FISCAL_PATTERNS = [
+    re.compile(r"fiscal\s+period\s*:\s*(Q[1-4]\s*(?:19|20)\d\d)", re.I),
+    re.compile(r"(?:fiscal\s+)?(?:year|twelve\s+months)\s+ended\s+([A-Z][a-z]+\.?\s+\d{1,2},?\s+((?:19|20)\d\d))", re.I),
+    re.compile(r"\b(?:fiscal|FY)\s*((?:19|20)\d\d)\b", re.I),
+    re.compile(r"\b((?:19|20)\d\d)\s+annual\s+report\b", re.I),
+]
+
+
+def detect_fiscal_period(text: str) -> dict | None:
+    """Detect the document's primary reporting period, e.g. {'key': 'FY2025', 'label': 'December 31, 2025'}."""
+    for pat in _FISCAL_PATTERNS:
+        m = pat.search(text or "")
+        if m:
+            label = " ".join(m.group(1).split())
+            key = normalize_period(label)
+            if key:
+                return {"key": key, "label": label}
+    return None
+
+
+def shift_period(key: str | None, years: int) -> str | None:
+    """'FY2025' -1 -> 'FY2024'; 'Q3-2026' -1 -> 'Q3-2025'."""
+    if not key:
+        return None
+    m = re.fullmatch(r"(FY|Q[1-4]-)(\d{4})", key)
+    if not m:
+        return None
+    return f"{m.group(1)}{int(m.group(2)) + years}"
