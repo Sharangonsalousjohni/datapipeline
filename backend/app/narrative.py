@@ -23,7 +23,7 @@ from typing import Any
 
 from app.numbers import format_decimal, parse_number
 from app.schemas import ExtractedFinancialField
-from app.taxonomy import METRICS, METRICS_BY_NAME, normalize_period, shift_period
+from app.taxonomy import METRICS, METRICS_BY_NAME, shift_period
 
 # --------------------------------------------------------------------------- mention patterns
 _NUM = r"\d[\d,]*(?:\.\d+)?"
@@ -232,7 +232,7 @@ def extract_narrative_facts(
 
             if mt.region:
                 base = metric if metric and metric.endswith("revenue") else "revenue"
-                metric = f"{mt.region}_{base}" if mt.measure == "pct_of_revenue" else f"{mt.region}_{base}"
+                metric = f"{mt.region}_{base}"
             mt.metric, mt.phrase = metric, phrase
 
             # period
@@ -331,7 +331,3 @@ def _to_field(
         char_start=start,
         char_end=end,
     )
-
-
-def normalize_period_label(label: str | None) -> str | None:
-    return normalize_period(label)

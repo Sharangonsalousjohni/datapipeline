@@ -40,7 +40,13 @@ from app.schemas import (
     TableRowClassification,
     ValidationSummary,
 )
-from app.taxonomy import METRICS_BY_NAME, FinancialCategory, canonicalize_category, canonicalize_scores
+from app.taxonomy import (
+    METRICS_BY_NAME,
+    FinancialCategory,
+    canonicalize_category,
+    canonicalize_scores,
+    detect_fiscal_period,
+)
 
 
 @dataclass
@@ -179,9 +185,14 @@ def extract_document(
 ) -> tuple[list[ChunkResult], StructuredExtractionReport]:
     sample = " ".join(c.text for c in chunks[:6])
     doc_type = detect_document_type(sample, filename)
+    # Chunks stored before chunk metadata existed carry no fiscal period; detect it once for the document.
+    doc_fiscal = next((c.location.get("fiscal_period") for c in chunks if c.location.get("fiscal_period")), None)
+    doc_fiscal = doc_fiscal or detect_fiscal_period("\n".join(c.text for c in chunks[:10]))
     results: list[ChunkResult] = []
     items: list[StructuredExtractionItem] = []
     for c in chunks:
+        if doc_fiscal and not c.location.get("fiscal_period"):
+            c.location = {**c.location, "fiscal_period": doc_fiscal}
         # Legacy behaviour for rental agreements: only classified-financial chunks are mined.
         if doc_type == "residential_rental_agreement" and c.decision == "IRRELEVANT":
             content = ChunkContent(role=c.location.get("chunk_role"))
