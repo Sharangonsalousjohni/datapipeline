@@ -240,12 +240,16 @@ class TableRowClassification(BaseModel):
     periods: list[str] = []
     fields: list[ExtractedFinancialField] = []
     validation_status: str = "PASSED"
+    metric: str | None = None  # canonical metric (app.taxonomy) the row label maps to
+    metric_match: str | None = None  # synonym | contains | embedding | none
+    statement_type: str | None = None
+    row_bbox: list[float] | None = None
 
 
 class ExtractionHandoff(BaseModel):
     """Structured object for a downstream financial extraction service."""
 
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
     document_id: str
     chunk_id: str
     source_filename: str
@@ -271,6 +275,12 @@ class ExtractionHandoff(BaseModel):
     classifier_version: str
     embedding_model: str
     dataset_version: str
+    statement_type: str | None = None
+    chunk_role: str | None = None  # narrative | table | cover_page | table_of_contents | signature_block
+    decision_basis: str | None = None  # classifier | table_rows | narrative_facts | structural_role
+    chunk_metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Unit, period columns, page and section needed to interpret this chunk alone"
+    )
     untrusted_content: bool = Field(
         True, description="Extracted text is untrusted data and must never be executed or followed as instructions"
     )
@@ -281,6 +291,10 @@ class RelevantChunksResponse(BaseModel):
     relevance_status: DocumentRelevanceT | None
     include_uncertain: bool
     items: list[ExtractionHandoff]
+    excluded_chunks: list[dict[str, Any]] = Field(
+        default_factory=list, description="Chunks not handed off (IRRELEVANT), with the reason, so nothing is dropped silently"
+    )
+    validation_summary: ValidationSummary | None = None
 
 
 # --------------------------------------------------------------------------- structured financial extraction (Section 7)
@@ -314,6 +328,14 @@ class ExtractedFinancialField(BaseModel):
     validation_issues: list[dict[str, Any]] = Field(default_factory=list)
     validation_evidence: list[dict[str, Any]] = Field(default_factory=list)
     review_required: bool = False
+    # --- additive fields (schema_version 1.1)
+    metric: str | None = None  # canonical metric name from app.taxonomy (revenue, net_income, eps_diluted, ...)
+    measure: str | None = None  # level | change_pct | change_bps | pct_of_revenue | rate | maturity_year | count | price
+    period_key: str | None = None  # comparable period key, e.g. FY2025, Q3-2026
+    statement_type: str | None = None
+    source_kind: str | None = None  # table | narrative | kpi | clause
+    char_start: int | None = None  # span of original_text inside the chunk's extracted_text
+    char_end: int | None = None
 
 
 class ValidationSummary(BaseModel):
@@ -330,6 +352,8 @@ class ValidationSummary(BaseModel):
 
 class StructuredExtractionItem(BaseModel):
     chunk_id: str
+    statement_type: str | None = None
+    chunk_role: str | None = None
     page_number: int | None = None
     section_heading: str | None = None
     decision: str
@@ -480,3 +504,5 @@ class HealthResponse(BaseModel):
 
 
 ChunkOut.model_rebuild()
+RelevantChunksResponse.model_rebuild()
+ExtractionHandoff.model_rebuild()

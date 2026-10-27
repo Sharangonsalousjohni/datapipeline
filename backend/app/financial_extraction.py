@@ -11,12 +11,29 @@ import re
 from decimal import Decimal, InvalidOperation
 from typing import Any, Literal
 
+from app.numbers import (
+    UnitSpec,
+    detect_document_unit,
+    detect_unit,
+    format_decimal,
+    is_per_share_label,
+    is_share_count_label,
+    parse_number,
+)
 from app.schemas import (
     ExtractedFinancialField,
     StructuredExtractionItem,
     StructuredExtractionReport,
     TableRowClassification,
     ValidationSummary,
+)
+from app.taxonomy import (
+    FinancialCategory,
+    canonicalize_category,
+    is_change_column,
+    match_metric,
+    metric_category,
+    normalize_period,
 )
 
 # ---------------------------------------------------------------------------
@@ -303,52 +320,41 @@ def extract_generic_financial_fields(
 # ---------------------------------------------------------------------------
 
 def detect_scale_and_currency(text: str, context: str | None = None) -> tuple[str, str, float]:
-    """Detect reporting currency and scale (thousands, millions, billions)."""
-    full = f"{context or ''} {text}"
-    curr = "USD"
-    scale = "units"
-    mult = 1.0
+    """Detect reporting currency and an explicit scale declaration.
 
-    # Currency pattern
+    Returns ``(currency, scale, multiplier)``; ``scale`` is ``"unknown"`` (multiplier 1.0) when no
+    declaration is found, never a silent ``"units"``.
+    """
+    full = f"{context or ''} {text}"
+    unit = detect_document_unit(full) or detect_unit(full)
+    curr = (unit.currency if unit else None) or _detect_currency_code(full) or "USD"
     c_m = re.search(r"\bCurrency\s*:\s*([A-Z]{3})\b", full, re.I)
     if c_m:
         curr = c_m.group(1).upper()
-    elif "$" in full or "USD" in full:
-        curr = "USD"
-    elif "€" in full or "EUR" in full:
-        curr = "EUR"
-    elif "£" in full or "GBP" in full:
-        curr = "GBP"
+    if unit is None:
+        return curr, "unknown", 1.0
+    return curr, unit.scale, float(unit.multiplier)
 
-    # Scale pattern (e.g. "Currency: USD (Thousands)", "USD (in thousands)", "($ in Millions)")
-    s_m = re.search(
-        r"(?:Currency\s*:\s*[A-Z]{3}\s*\(|\b(?:amounts|figures|in)\s+in\s+|\b\(\s*in\s+|\b\(\s*)(thousands|millions|billions)\)",
-        full,
-        re.I,
-    )
-    if s_m:
-        s_str = s_m.group(1).lower()
-        if "thousand" in s_str:
-            scale = "thousands"
-            mult = 1000.0
-        elif "million" in s_str:
-            scale = "millions"
-            mult = 1_000_000.0
-        elif "billion" in s_str:
-            scale = "billions"
-            mult = 1_000_000_000.0
-    elif re.search(r"\bUSD\s*\(Thousands\)\b|\b\(\s*Thousands\s+USD\s*\)\b", full, re.I):
-        scale = "thousands"
-        mult = 1000.0
-    elif re.search(r"\bUSD\s*\(Millions\)\b|\b\(\s*Millions\s+USD\s*\)\b", full, re.I):
-        scale = "millions"
-        mult = 1_000_000.0
 
-    return curr, scale, mult
+def _detect_currency_code(text: str) -> str | None:
+    if "$" in text or "USD" in text:
+        return "USD"
+    if "€" in text or "EUR" in text:
+        return "EUR"
+    if "£" in text or "GBP" in text:
+        return "GBP"
+    return None
 
 
 def classify_row_label(label: str) -> str:
-    """Classify a financial statement table row into its exact accounting category."""
+    """Classify a financial statement table row into its canonical category.
+
+    Uses the canonical metric dictionary (app.taxonomy) first so similar rows always share a
+    category; the keyword lists below only apply to labels with no canonical metric.
+    """
+    cat = metric_category(match_metric(label, allow_embedding=False).metric)
+    if cat:
+        return cat
     norm = label.strip().lower()
 
     # 1. Income / Revenue
@@ -523,81 +529,167 @@ def parse_cell_numeric(
     return reported_val, norm_amount, dtype, curr, "PASSED", True, None
 
 
-def extract_financial_table_rows(
+def _slug(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
+
+
+def _union_bbox(boxes: list[list[float] | None]) -> list[float] | None:
+    real = [b for b in boxes if b]
+    if not real:
+        return None
+    return [min(b[0] for b in real), min(b[1] for b in real), max(b[2] for b in real), max(b[3] for b in real)]
+
+
+def _scale_issue(field_name: str, label: str) -> dict[str, Any]:
+    return {
+        "rule_id": "RULE_SCALE_UNKNOWN_001",
+        "severity": "WARNING",
+        "message": f"No unit declaration found for the table containing '{label}'; scale is unknown",
+        "expected": "Unit in header, caption, line above the table or section heading",
+        "actual": "unknown",
+        "review_required": True,
+    }
+
+
+def extract_table_fields(
     table_text: str,
+    location: dict[str, Any] | None = None,
+    *,
     default_currency: str = "USD",
-    scale: str = "units",
-    scale_multiplier: float = 1.0,
+    unit: UnitSpec | None = None,
     page_num: int | None = None,
     table_index: int | None = None,
-    bbox: list[float] | None = None,
+    statement_type: str | None = None,
+    allow_embedding: bool = True,
 ) -> tuple[list[TableRowClassification], list[ExtractedFinancialField]]:
-    """Parse a financial markdown/pipe-delimited table into classified rows and structured fields."""
-    lines = [line.strip() for line in table_text.splitlines() if line.strip()]
-    if not lines:
-        return [], []
+    """Parse a pipe-delimited table chunk into classified rows and scaled, per-cell fields.
 
-    header_idx = -1
-    for i, line in enumerate(lines):
-        if "|" in line:
-            header_idx = i
-            break
+    The table's unit comes from the chunk metadata (header, caption, line above, section heading) or,
+    failing that, from the caption/header lines of ``table_text`` itself. Without one, monetary cells
+    get ``reported_scale="unknown"`` and ``review_required=True``.
+    """
+    loc = location or {}
+    lines = [line.strip() for line in table_text.splitlines() if line.strip()]
+    header_idx = next((i for i, line in enumerate(lines) if "|" in line), -1)
     if header_idx == -1:
         return [], []
 
+    caption_lines = lines[:header_idx]
     raw_headers = [h.strip() for h in lines[header_idx].split("|")]
-    periods = [h for h in raw_headers[1:] if h]
+    if unit is None:
+        unit = UnitSpec.from_dict(loc.get("unit"))
+    if unit is None or not unit.known:
+        for text, source in ((raw_headers[0], "header"), (" ".join(caption_lines), "caption")):
+            found = detect_unit(text, source=source)
+            if found:
+                unit = found
+                break
+    if unit is None:
+        unit = UnitSpec(scale="unknown")
+    currency_default = unit.currency or default_currency
+    page_num = page_num if page_num is not None else loc.get("page")
+    table_index = table_index if table_index is not None else loc.get("table_index")
+    statement_type = statement_type or loc.get("statement_type")
+    table_bbox = loc.get("table_bbox") or ((loc.get("bboxes") or [None])[0])
+
+    periods = raw_headers[1:]
+    pipe_lines = [line for line in lines[header_idx:] if "|" in line]
+    cell_boxes = loc.get("cell_bboxes")
+    if not cell_boxes or len(cell_boxes) != len(pipe_lines):
+        cell_boxes = None
 
     classified_rows: list[TableRowClassification] = []
     extracted_fields: list[ExtractedFinancialField] = []
 
-    for r_idx, line in enumerate(lines[header_idx + 1:], start=1):
-        if "|" not in line:
-            continue
+    for r_idx, line in enumerate(pipe_lines[1:], start=1):
         cells = [c.strip() for c in line.split("|")]
-        if not cells or not any(c for c in cells):
+        if not any(cells):
             continue
-
         row_label = cells[0]
         val_cells = cells[1:]
-        if not any(v for v in val_cells):
+        if not any(val_cells):
             continue
 
-        row_cat = classify_row_label(row_label)
+        mm = match_metric(row_label, allow_embedding=allow_embedding) if row_label else None
+        metric = mm.metric if mm else None
+        mdef_type = None
+        if metric:
+            from app.taxonomy import METRICS_BY_NAME
+
+            mdef_type = METRICS_BY_NAME[metric].data_type
+        row_cat = (mm.category if mm and mm.metric else None) or classify_row_label(row_label)
+        per_share_row = is_per_share_label(row_label) or mdef_type == "per_share"
+        share_row = not per_share_row and (is_share_count_label(row_label) or mdef_type == "shares")
+        row_boxes = cell_boxes[r_idx] if cell_boxes else []
         row_fields: list[ExtractedFinancialField] = []
 
         for c_idx, cell_text in enumerate(val_cells):
-            if c_idx >= len(periods):
+            if c_idx >= len(periods) or not cell_text:
                 continue
             period = periods[c_idx]
-            if not cell_text:
+            change_col = is_change_column(period)
+            parsed = parse_number(cell_text, currency_default)
+            if parsed.kind == "text":
                 continue
 
-            reported_val, norm_amount, dtype, curr, norm_status, valid, err_note = parse_cell_numeric(
-                cell_text, default_currency, scale, scale_multiplier
-            )
-            if not reported_val:
-                continue
+            issues: list[dict[str, Any]] = []
+            status = "PASSED"
+            measure = "change_pct" if change_col else "level"
+            mult = Decimal(1)
+            reported_scale: str | None = "units"
+            scale_note = "not scaled"
+            if parsed.is_null:
+                dtype = "null"
+                reported_scale = None
+            elif parsed.kind in ("percentage", "basis_points", "ratio", "year"):
+                dtype = parsed.kind
+                reported_scale = None
+                if parsed.kind == "basis_points" and change_col:
+                    measure = "change_bps"
+            elif change_col and parsed.kind == "number" and re.search(r"%", period):
+                dtype = "percentage"
+                reported_scale = None
+            elif per_share_row:
+                dtype = "per_share"
+                scale_note = "per-share value (" + ("excluded by 'except per share'" if unit.except_per_share else "never scaled") + ")"
+            elif share_row:
+                dtype = "shares"
+                if parsed.scale:
+                    reported_scale, mult, scale_note = parsed.scale, parsed.multiplier, f"inline '{parsed.scale}'"
+                elif unit.except_shares or not unit.known:
+                    scale_note = "share count (excluded by 'except share')" if unit.except_shares else "share count, no unit"
+                else:
+                    reported_scale, mult, scale_note = unit.scale, unit.multiplier, f"table unit '{unit.scale}'"
+            else:
+                dtype = "monetary_change" if change_col else "monetary"
+                if parsed.scale:
+                    reported_scale, mult, scale_note = parsed.scale, parsed.multiplier, f"inline '{parsed.scale}'"
+                elif unit.known:
+                    reported_scale, mult, scale_note = unit.scale, unit.multiplier, f"table unit '{unit.scale}' from {unit.source}"
+                else:
+                    reported_scale, scale_note = "unknown", "unit unknown"
+                    status = "REVIEW_REQUIRED"
+                    issues.append(_scale_issue(row_label, row_label))
 
-            field_slug = re.sub(r"[^a-z0-9]+", "_", row_label.lower()).strip("_")
-            period_slug = re.sub(r"[^a-z0-9]+", "_", period.lower()).strip("_")
-            full_field_name = f"{field_slug}_{period_slug}"
+            value = parsed.value
+            normalized = None if value is None else value * mult
+            reported_val = "" if value is None else f"{value:f}"
+            norm_str = format_decimal(normalized) or ""
+            if dtype in ("percentage", "basis_points", "ratio", "year"):
+                norm_str = reported_val
+            curr = None if dtype in ("percentage", "basis_points", "ratio", "year", "shares", "null") else (parsed.currency or currency_default)
+            tolerance = None if value is None else parsed.half_unit * mult
 
-            v_notes = (
-                f"Normalized {cell_text} with scale '{scale}' ({scale_multiplier:g}x) into {norm_amount} {curr}; "
-                f"row: {row_label} ({row_cat})"
-            )
-            if err_note:
-                v_notes += f" [Warning: {err_note}]"
-
+            field_name = f"{_slug(row_label)}_{_slug(period)}" if row_label else f"col{c_idx + 1}_{_slug(period)}"
+            cell_bbox = row_boxes[c_idx + 1] if c_idx + 1 < len(row_boxes) else None
             field_obj = ExtractedFinancialField(
-                field=full_field_name,
+                field=field_name,
                 original_text=cell_text,
-                normalized_value=norm_amount,
+                normalized_value=norm_str,
                 reported_value=reported_val,
-                reported_scale=scale if dtype in ("monetary", "monetary_change") else None,
-                scale_multiplier=scale_multiplier if dtype in ("monetary", "monetary_change") else 1.0,
-                normalized_amount=norm_amount,
+                reported_scale=reported_scale,
+                scale_multiplier=float(mult),
+                normalized_amount=norm_str if dtype not in ("percentage", "basis_points", "ratio", "year") else None,
                 currency=curr,
                 data_type=dtype,
                 reporting_period=period,
@@ -606,41 +698,87 @@ def extract_financial_table_rows(
                 details={
                     "row_label": row_label,
                     "reporting_period": period,
-                    "scale": scale,
-                    "multiplier": scale_multiplier,
+                    "scale": reported_scale,
+                    "multiplier": format_decimal(mult),
+                    "scale_source": scale_note,
+                    "unit": unit.to_dict(),
                     "data_type": dtype,
+                    "metric_match": {"method": mm.method, "score": mm.score} if mm else None,
+                    "tolerance": format_decimal(tolerance),
+                    "decimals": parsed.decimals,
                 },
-                validation_status="PASSED" if valid else "REVIEW_REQUIRED",
-                normalization_status=norm_status,
-                validation_notes=v_notes,
-                confidence=0.99 if valid else 0.80,
+                validation_status=status,
+                normalization_status="REVIEW_REQUIRED" if status != "PASSED" else "PASSED",
+                validation_notes=f"Normalized {cell_text} ({scale_note}) into {norm_str or 'null'} {curr or ''}".strip()
+                + f"; row: {row_label} ({row_cat})",
+                confidence=None,
                 source_location={
                     "page": page_num,
                     "table_index": table_index,
                     "row_index": r_idx,
+                    "column_index": c_idx + 1,
                     "row_label": row_label,
                     "period_column": period,
-                    "bbox": bbox,
+                    "bbox": cell_bbox,
+                    "table_bbox": table_bbox,
+                    "row_bbox": _union_bbox(row_boxes) if row_boxes else None,
                 },
+                validation_issues=issues,
+                review_required=bool(issues),
+                metric=metric,
+                measure=measure,
+                period_key=normalize_period(period) if not change_col else None,
+                statement_type=statement_type,
+                source_kind="table",
             )
             row_fields.append(field_obj)
             extracted_fields.append(field_obj)
 
+        numeric = [f for f in row_fields if f.data_type != "null"]
         classified_rows.append(
             TableRowClassification(
                 row_index=r_idx,
                 row_label=row_label,
                 category=row_cat,
-                decision="RELEVANT",
+                decision="RELEVANT" if numeric else "UNCERTAIN",
                 cells=cells,
                 periods=periods,
                 fields=row_fields,
                 validation_status="PASSED" if all(f.validation_status == "PASSED" for f in row_fields) else "REVIEW_REQUIRED",
+                metric=metric,
+                metric_match=mm.method if mm else None,
+                statement_type=statement_type,
+                row_bbox=_union_bbox(row_boxes) if row_boxes else None,
             )
         )
 
     return classified_rows, extracted_fields
 
+
+def extract_financial_table_rows(
+    table_text: str,
+    default_currency: str = "USD",
+    scale: str = "units",
+    scale_multiplier: float = 1.0,
+    page_num: int | None = None,
+    table_index: int | None = None,
+    bbox: list[float] | None = None,
+    location: dict[str, Any] | None = None,
+) -> tuple[list[TableRowClassification], list[ExtractedFinancialField]]:
+    """Backward-compatible wrapper around :func:`extract_table_fields`.
+
+    An explicit caller-supplied ``scale`` (anything except "units"/"unknown") is honoured as the table
+    unit; otherwise the unit is detected per table instead of being assumed.
+    """
+    loc = dict(location or {})
+    if bbox and not loc.get("table_bbox"):
+        loc["table_bbox"] = bbox
+    unit = None
+    if scale not in ("units", "unknown", None) and not loc.get("unit"):
+        unit = UnitSpec(scale=scale, currency=default_currency, source="caller")
+    return extract_table_fields(
+        table_text, loc, default_currency=default_currency, unit=unit, page_num=page_num, table_index=table_index
+    )
 
 def extract_summary_metrics(
     text: str,
