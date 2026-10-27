@@ -25,28 +25,12 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.embeddings import get_embedding_service
 from app.models import ModelVersion, ReferenceDatasetVersion, ReferenceEntry
+from app.taxonomy import FinancialCategory, canonicalize_category
 
 log = logging.getLogger(__name__)
 
-CATEGORIES: list[str] = [
-    "income_revenue",
-    "expenses_operating_costs",
-    "financial_performance",
-    "accounts_payable_receivable",
-    "invoices_purchase_orders",
-    "cash_flow_bank_transactions",
-    "loans_interest_repayment",
-    "rent_leases_recurring_payments",
-    "deposits_and_escrow",
-    "contracts_payment_obligations",
-    "insurance",
-    "taxes_duties",
-    "penalties_late_fees",
-    "assets_liabilities_investments",
-    "maturity_renewals_deadlines",
-    "refunds_credits_settlements",
-    "non_financial",
-]
+# Canonical category vocabulary (see app.taxonomy); reference labels are migrated on load.
+CATEGORIES: list[str] = [c.value for c in FinancialCategory if c.value != "uncertain"]
 
 
 @dataclass
@@ -141,7 +125,7 @@ class ReferenceVectorIndex:
                         vector_id=vid,
                         reference_id=entry.id,
                         concept=entry.concept,
-                        category=entry.category,
+                        category=canonicalize_category(entry.category),
                         label=entry.label,
                         text=head,
                     )
@@ -159,7 +143,7 @@ class ReferenceVectorIndex:
                             vector_id=vid,
                             reference_id=entry.id,
                             concept=entry.concept,
-                            category=entry.category,
+                            category=canonicalize_category(entry.category),
                             label=entry.label,
                             text=ex_str,
                         )

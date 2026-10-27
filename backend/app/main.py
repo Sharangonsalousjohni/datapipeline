@@ -53,6 +53,7 @@ from app.models import (
     new_uuid,
 )
 from app.ocr import get_ocr_provider, ocr_available
+from app.taxonomy import canonicalize_category, canonicalize_scores
 from app.reference import (
     CATEGORIES,
     ensure_reference_dataset_loaded,
@@ -523,8 +524,8 @@ def get_document_chunks(
                 "semantic_score": cls_obj.semantic_score,
                 "positive_similarity": cls_obj.positive_similarity,
                 "negative_similarity": cls_obj.negative_similarity,
-                "top_category": cls_obj.top_category,
-                "category_scores": cls_obj.category_scores or {},
+                "top_category": canonicalize_category(cls_obj.top_category) if cls_obj.top_category else None,
+                "category_scores": canonicalize_scores(cls_obj.category_scores),
                 "matched_references": cls_obj.matched_references or [],
                 "signals": cls_obj.signals or [],
                 "negative_signals": [],
@@ -824,7 +825,7 @@ def submit_feedback(
         chunk_id=chunk.id,
         original_decision=orig_dec,
         corrected_decision=fb.corrected_decision,
-        corrected_category=fb.corrected_category,
+        corrected_category=canonicalize_category(fb.corrected_category) if fb.corrected_category else None,
         comment=fb.comment,
         reviewer=fb.reviewer,
         text_snapshot=chunk.text,
@@ -875,12 +876,15 @@ def get_reference_stats(db: Session = Depends(get_db)):
     pos = db.query(ReferenceEntry).filter(ReferenceEntry.is_active.is_(True), ReferenceEntry.label == "positive").count()
     neg = db.query(ReferenceEntry).filter(ReferenceEntry.is_active.is_(True), ReferenceEntry.label == "negative").count()
 
-    cat_dist = dict(
+    cat_dist: dict[str, int] = {}
+    for cat, n in (
         db.query(ReferenceEntry.category, func.count(ReferenceEntry.id))
         .filter(ReferenceEntry.is_active.is_(True))
         .group_by(ReferenceEntry.category)
         .all()
-    )
+    ):
+        ccat = canonicalize_category(cat)
+        cat_dist[ccat] = cat_dist.get(ccat, 0) + n
 
     lbl_dist = dict(
         db.query(ReferenceEntry.label, func.count(ReferenceEntry.id))

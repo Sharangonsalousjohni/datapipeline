@@ -2,7 +2,7 @@
 
 Detects:
 - Currency & amount patterns (including OCR-noisy numbers and currency codes).
-- Financial terminology mapped to the 14 financial categories.
+- Financial terminology mapped to the canonical categories in ``app.taxonomy``.
 - Payment and transaction phrases (even without currency symbols).
 - Relevant table headers (Invoice, Debit, Credit, Amount, Balance, Principal, etc.).
 - Dates associated with payment terms / deadlines / maturity.
@@ -17,6 +17,9 @@ import re
 from dataclasses import dataclass, field
 
 from app.schemas import SignalEvidence
+from app.taxonomy import canonicalize_category
+
+__all__ = ["SignalAnalysis", "analyze_signals", "canonicalize_category"]
 
 
 @dataclass
@@ -50,7 +53,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(shall\s+(?:pay|repay|remit|reimburse|compensate)|agrees\s+to\s+pay|obligation\s+to\s+pay|payment\s+obligation|promise[sd]?\s+to\s+pay)\b",
             re.I,
         ),
-        "contracts_payment_obligations",
+        "contractual_financial_obligations",
         0.32,
     ),
     (
@@ -58,7 +61,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(equal\s+monthly\s+installments|monthly\s+installments|repayment\s+schedule|amortization\s+schedule|principal\s+and\s+interest|promissory\s+note|loan\s+facility|credit\s+facility)\b",
             re.I,
         ),
-        "loans_interest_repayment",
+        "loans_and_interest",
         0.34,
     ),
     (
@@ -66,7 +69,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(net\s*(?:15|30|45|60|90)\s*(?:days)?|due\s+upon\s+receipt|amount\s+due|total\s+due|balance\s+due|remit\s+to|wire\s+transfer|ach\s+transfer|purchase\s+order|invoice\s*(?:no|number|#)|lnvoice|t0tal\s+due)\b",
             re.I,
         ),
-        "invoices_purchase_orders",
+        "invoices_and_billing",
         0.34,
     ),
     (
@@ -74,7 +77,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(accounts\s+payable|accounts\s+receivable|aged\s+receivables|aged\s+payables|aging\s+schedule|trade\s+payables|trade\s+receivables|vendor\s+ledger)\b",
             re.I,
         ),
-        "accounts_payable_receivable",
+        "invoices_and_billing",
         0.34,
     ),
     (
@@ -106,7 +109,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(late\s+(?:fee|payment|charge|penalty)|overdue\s+balance|default\s+interest|liquidated\s+damages|past\s+due|service\s+charge\s+of\s+\d)\b",
             re.I,
         ),
-        "penalties_late_fees",
+        "contractual_financial_obligations",
         0.34,
     ),
     (
@@ -114,7 +117,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(insurance\s+premium|annual\s+premium|policy\s+deductible|coverage\s+limit|claim\s+payout|indemnity\s+limit|co-?pay(?:ment)?)\b",
             re.I,
         ),
-        "insurance",
+        "insurance_and_claims",
         0.34,
     ),
     (
@@ -122,7 +125,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(withholding\s+tax|value\s+added\s+tax|sales\s+tax|corporate\s+income\s+tax|customs\s+duty|excise\s+duty|gst|vat\s+(?:rate|registration|amount)|tax\s+assessment|statutory\s+(?:levy|payment|contribution))\b",
             re.I,
         ),
-        "taxes_duties",
+        "tax_and_payroll",
         0.34,
     ),
     (
@@ -130,7 +133,7 @@ _PAYMENT_PHRASE_PATTERNS: list[tuple[re.Pattern[str], str, float]] = [
             r"\b(credit\s+memo|credit\s+note|refund\s+(?:amount|policy|issued)|expense\s+reimbursement|rebate\s+amount|settlement\s+amount|chargeback)\b",
             re.I,
         ),
-        "refunds_credits_settlements",
+        "contractual_financial_obligations",
         0.32,
     ),
     (
@@ -369,7 +372,7 @@ def analyze_signals(text: str, context: str | None = None, chunk_type: str = "pr
                 text=m.group(0),
                 start=m.start(),
                 end=m.end(),
-                category="loans_interest_repayment",
+                category="loans_and_interest",
                 weight=0.26,
             )
         )
@@ -455,38 +458,3 @@ def analyze_signals(text: str, context: str | None = None, chunk_type: str = "pr
         category_hints=cat_hints,
         feature_counts=counts,
     )
-
-
-def canonicalize_category(cat: str | None) -> str:
-    if not cat:
-        return "uncertain"
-    mapping = {
-        "invoices_purchase_orders": "invoices_and_billing",
-        "accounts_payable_receivable": "invoices_and_billing",
-        "billing_statements": "invoices_and_billing",
-        "cash_flow_bank_transactions": "bank_transactions",
-        "bank_transactions": "bank_transactions",
-        "taxes_duties": "tax_and_payroll",
-        "payroll_benefits": "tax_and_payroll",
-        "tax_and_payroll": "tax_and_payroll",
-        "loans_interest_repayment": "loans_and_interest",
-        "loans_and_interest": "loans_and_interest",
-        "insurance": "insurance_and_claims",
-        "insurance_and_claims": "insurance_and_claims",
-        "assets_liabilities_investments": "assets_liabilities_investments",
-        "investments_and_assets": "assets_liabilities_investments",
-        "financial_statements": "financial_statements",
-        "income_revenue": "income_revenue",
-        "expenses_operating_costs": "expenses_operating_costs",
-        "financial_performance": "financial_performance",
-        "deposits_and_escrow": "deposits_and_escrow",
-        "contracts_payment_obligations": "contractual_financial_obligations",
-        "penalties_late_fees": "contractual_financial_obligations",
-        "refunds_credits_settlements": "contractual_financial_obligations",
-        "rent_leases_recurring_payments": "rent_leases_recurring_payments",
-        "administrative_content": "administrative_content",
-        "non_financial_content": "non_financial_content",
-        "uncertain": "uncertain",
-    }
-    return mapping.get(cat, cat)
-

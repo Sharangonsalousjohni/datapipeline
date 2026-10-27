@@ -9,19 +9,17 @@
   "categories": {
     "income_revenue": "Income and revenue",
     "expenses_operating_costs": "Expenses and operating costs",
-    "accounts_payable_receivable": "Accounts payable and receivable",
-    "invoices_purchase_orders": "Invoices and purchase orders",
+    "invoices_and_billing": "Invoices, billing, purchase orders, accounts payable and receivable",
     "cash_flow_bank_transactions": "Cash flow and bank transactions",
-    "loans_interest_repayment": "Loans, principal, interest, and repayment schedules",
+    "loans_and_interest": "Loans, principal, interest, and repayment schedules",
     "rent_leases_recurring_payments": "Rent, leases, deposits, and recurring payments",
-    "contracts_payment_obligations": "Contracts and payment obligations",
-    "insurance": "Insurance premiums, deductibles, and payouts",
-    "taxes_duties": "Taxes, duties, and statutory payments",
-    "penalties_late_fees": "Penalties, late fees, and overdue balances",
+    "contractual_financial_obligations": "Contracts, payment obligations, penalties, refunds and settlements",
+    "insurance_and_claims": "Insurance premiums, deductibles, and payouts",
+    "tax_and_payroll": "Taxes, duties, and statutory payments",
     "assets_liabilities_investments": "Financial assets, liabilities, and investments",
     "maturity_renewals_deadlines": "Maturity dates, renewals, installments, and payment deadlines",
-    "refunds_credits_settlements": "Refunds, credits, reimbursements, and settlement terms",
-    "non_financial": "Non-financial (hard negatives)"
+    "non_financial_content": "Non-financial (hard negatives)"
   },
-  "created": "2026-10-26"
+  "created": "2026-10-26",
+  "category_aliases_note": "Entry categories in the JSONL may use legacy aliases; app.taxonomy.CATEGORY_ALIASES migrates them to these canonical names on load."
 }

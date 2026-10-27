@@ -32,7 +32,8 @@ from app.embeddings import get_embedding_service
 from app.models import ChunkDecision, DocumentRelevance
 from app.reference import SimilarityMatch, get_reference_index
 from app.schemas import ChunkClassification, MatchedReference, SignalEvidence
-from app.signals import SignalAnalysis, analyze_signals, canonicalize_category
+from app.signals import SignalAnalysis, analyze_signals
+from app.taxonomy import NON_FINANCIAL_CATEGORIES, canonicalize_category
 
 log = logging.getLogger(__name__)
 
@@ -135,7 +136,7 @@ def _aggregate_semantic_matches(
     neg_sims: list[float] = []
 
     for m in matches:
-        if m.label == "negative" or m.category == "non_financial":
+        if m.label == "negative" or canonicalize_category(m.category) in NON_FINANCIAL_CATEGORIES:
             neg_sims.append(max(0.0, m.similarity))
         else:
             c_cat = canonicalize_category(m.category)
@@ -183,7 +184,7 @@ def _aggregate_semantic_matches(
             MatchedReference(
                 reference_id=m.reference_id,
                 concept=m.concept,
-                category=m.category,
+                category=canonicalize_category(m.category),
                 label="negative" if m.label == "negative" else "positive",
                 similarity=m.similarity,
                 matched_text=m.matched_text[:280],
