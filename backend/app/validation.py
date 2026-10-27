@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any, Literal
 
+from app.metric_validation import FieldRef, MetricValidator
 from app.schemas import (
     ExtractedFinancialField,
     StructuredExtractionItem,
@@ -72,6 +73,9 @@ class FinancialValidationEngine:
         all_fields: list[ExtractedFinancialField] = []
         for item in report.items:
             all_fields.extend(item.financial_fields)
+        # Fields mapped to a canonical metric use the metric validator; the label-based legacy
+        # checks below only see fields without one, so no check runs twice.
+        legacy_fields = [f for f in all_fields if not f.metric]
 
         # 1. Field-level validation: Integrity, Signs & Change Semantics, Scale & Currency
         for field in all_fields:
@@ -87,8 +91,22 @@ class FinancialValidationEngine:
             item.table_rows for item in report.items
         ):
             accounting_checks = self._validate_accounting_statements(
-                all_fields, active_policy, audit_trail
+                legacy_fields, active_policy, audit_trail
             )
+
+        # 3b. Metric-level checks: cross-table, statement arithmetic, change %, narrative vs table,
+        #     then evidence-based confidence for every field.
+        refs = [
+            FieldRef(field=f, group=item.chunk_id, extraction_method=item.extraction_method,
+                     ocr_confidence=item.extraction_confidence)
+            for item in report.items
+            for f in item.financial_fields
+        ]
+        metric_checks = MetricValidator().run(refs)
+        audit_trail.extend(metric_checks)
+        cross_ids = ("RULE_XTABLE_", "RULE_NARRATIVE_")
+        accounting_checks.extend(c for c in metric_checks if not c["rule_id"].startswith(cross_ids))
+        cross_ref_checks.extend(c for c in metric_checks if c["rule_id"].startswith(cross_ids))
 
         # 4. Rental agreement specific checks
         if report.document_type == "residential_rental_agreement":
@@ -102,7 +120,10 @@ class FinancialValidationEngine:
 
         # Update report items requiring review
         for item in report.items:
-            has_failed_fields = any(f.validation_status in ("FAILED", "NEEDS_REVIEW") for f in item.financial_fields)
+            has_failed_fields = any(
+                f.validation_status in ("FAILED", "NEEDS_REVIEW", "REVIEW_REQUIRED") or f.review_required
+                for f in item.financial_fields
+            )
             if has_failed_fields or (item.decision == "UNCERTAIN"):
                 item.requires_review = True
 
@@ -111,7 +132,8 @@ class FinancialValidationEngine:
         failed_count += sum(1 for chk in accounting_checks if chk.get("status") == "FAILED")
         warning_count = sum(1 for f in all_fields if f.validation_status == "WARNING")
         warning_count += sum(1 for chk in accounting_checks if chk.get("status") == "WARNING")
-        needs_review_count = sum(1 for f in all_fields if f.validation_status == "NEEDS_REVIEW")
+        needs_review_count = sum(1 for f in all_fields if f.validation_status in ("NEEDS_REVIEW", "REVIEW_REQUIRED"))
+        failed_count += sum(1 for chk in cross_ref_checks if chk.get("status") == "FAILED" and chk.get("rule_id", "").startswith(cross_ids))
 
         requires_review = (
             gate_decision in ("HOLD_FOR_REVIEW", "REJECT")
@@ -243,8 +265,10 @@ class FinancialValidationEngine:
             else:
                 field.change_semantics = "SIGNED_VALUE_DELTA"
 
-            # Direction
-            if is_parenthesized or is_explicit_minus or (signed_dec < 0):
+            # Direction (narrative facts already carry the direction stated in the text: "grew", "declined")
+            if field.source_kind == "narrative" and field.change_direction:
+                pass
+            elif is_parenthesized or is_explicit_minus or (signed_dec < 0):
                 field.change_direction = "DECREASE"
             elif is_explicit_plus or (signed_dec > 0):
                 field.change_direction = "INCREASE"
@@ -354,6 +378,8 @@ class FinancialValidationEngine:
 
         for item in items:
             for field in item.financial_fields:
+                if field.metric:
+                    continue  # covered by the metric validator (RULE_XTABLE / RULE_NARRATIVE)
                 is_summary = (
                     "summary" in (field.field or "").lower()
                     or "kpi" in (field.field or "").lower()
@@ -905,11 +931,11 @@ class FinancialValidationEngine:
 
         warning_fields = [f for f in fields if f.validation_status == "WARNING"]
         warning_acct = [chk for chk in accounting_checks if chk.get("status") == "WARNING"]
-        needs_review_fields = [f for f in fields if f.validation_status == "NEEDS_REVIEW"]
+        needs_review_fields = [f for f in fields if f.validation_status in ("NEEDS_REVIEW", "REVIEW_REQUIRED")]
 
         # 1. Fundamental balance sheet breakage -> REJECT or HOLD_FOR_REVIEW
         broken_bs_equation = any(
-            chk.get("rule_id") == "RULE_ACCT_BS_EQ_001" and chk.get("status") == "FAILED"
+            chk.get("rule_id") in ("RULE_ACCT_BS_EQ_001", "RULE_ARITH_BS_BALANCE_001") and chk.get("status") == "FAILED"
             for chk in accounting_checks
         )
         if broken_bs_equation and policy.require_balance_sheet_balance:

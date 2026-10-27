@@ -60,14 +60,8 @@ from app.reference import (
     get_reference_index,
     import_reference_bytes,
 )
-from app.financial_extraction import (
-    build_structured_extraction,
-    detect_scale_and_currency,
-    extract_financial_table_rows,
-    extract_generic_financial_fields,
-    extract_rental_agreement_fields,
-    extract_summary_metrics,
-)
+from app.financial_extraction import build_structured_extraction
+from app.handoff import ChunkView, build_handoff
 from app.schemas import (
     BatchUploadResult,
     ChunkCounts,
@@ -570,116 +564,49 @@ def get_relevant_chunks(
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
 
-    allowed_decisions = [ChunkDecision.RELEVANT.value]
-    if include_uncertain:
-        allowed_decisions.append(ChunkDecision.UNCERTAIN.value)
-
     res = (
         db.query(DocumentChunk, ClassificationResult)
         .join(ClassificationResult, DocumentChunk.id == ClassificationResult.chunk_id)
         .filter(
             DocumentChunk.document_id == document_id,
             ClassificationResult.is_current.is_(True),
-            ClassificationResult.decision.in_(allowed_decisions),
         )
         .order_by(DocumentChunk.chunk_index.asc())
         .all()
     )
-
-    handoffs: list[ExtractionHandoff] = []
-    is_rental = (doc.detected_type == "residential_rental_agreement") or (
-        "rental" in (doc.filename or "").lower() or "lease" in (doc.filename or "").lower()
-    )
-    sample_text = " ".join(c.text for c, cr in res[:4])
-    doc_curr, doc_scale, doc_mult = detect_scale_and_currency(sample_text)
-
-    for c, cr in res:
-        chunk_heading = c.location.get("section_heading") if isinstance(c.location, dict) else None
-        fields: list[ExtractedFinancialField] = []
-        table_rows: list[TableRowClassification] = []
-
-        if is_rental:
-            fields = extract_rental_agreement_fields(c.text, context=chunk_heading)
-        elif "|" in c.text and "\n" in c.text:
-            first_bbox = c.location.get("bboxes")[0] if isinstance(c.location, dict) and c.location.get("bboxes") else None
-            t_rows, t_fields = extract_financial_table_rows(
-                c.text,
-                default_currency=doc_curr,
-                scale=doc_scale,
-                scale_multiplier=doc_mult,
-                page_num=c.location.get("page") if isinstance(c.location, dict) else None,
-                table_index=c.location.get("table_index") if isinstance(c.location, dict) else None,
-                bbox=first_bbox,
-            )
-            table_rows.extend(t_rows)
-            fields.extend(t_fields)
-            s_fields = extract_summary_metrics(
-                c.text,
-                default_currency=doc_curr,
-                scale=doc_scale,
-                scale_multiplier=doc_mult,
-                page_num=c.location.get("page") if isinstance(c.location, dict) else None,
-            )
-            fields.extend(s_fields)
-        else:
-            s_fields = extract_summary_metrics(
-                c.text,
-                default_currency=doc_curr,
-                scale=doc_scale,
-                scale_multiplier=doc_mult,
-                page_num=c.location.get("page") if isinstance(c.location, dict) else None,
-            )
-            if s_fields:
-                fields.extend(s_fields)
-            else:
-                fields = extract_generic_financial_fields(c.text)
-
-        ocr_conf = c.ocr_confidence if c.ocr_confidence is not None else 1.0
-
-        # Validate field semantics and scales for handoff
-        from app.validation import FinancialValidationEngine
-        val_engine = FinancialValidationEngine()
-        dummy_trail: list[dict] = []
-        for f in fields:
-            val_engine._validate_field_integrity(f, dummy_trail)
-            val_engine._validate_change_semantics(f, dummy_trail)
-            val_engine._validate_scale_and_currency(f, dummy_trail)
-
-        handoffs.append(
-            ExtractionHandoff(
-                document_id=doc.id,
-                chunk_id=c.id,
-                source_filename=doc.filename,
-                source_type=doc.detected_type,
-                source_location=SourceLocation(**c.location),
-                extracted_text=c.text,
-                context=c.context,
-                financial_category=cr.top_category,
-                category_scores=cr.category_scores or {},
-                relevance_score=cr.score,
-                semantic_score=cr.semantic_score if cr.semantic_score is not None else 0.0,
-                signal_score=cr.signal_score if cr.signal_score is not None else 0.0,
-                decision=cr.decision,
-                matching_references=cr.matched_references or [],
-                evidence=cr.signals or [],
-                evidence_bboxes=c.location.get("bboxes") if isinstance(c.location, dict) else None,
-                extraction_method=c.extraction_method,
-                ocr_confidence=c.ocr_confidence,
-                extraction_confidence=ocr_conf,
-                financial_fields=fields,
-                table_rows=table_rows,
-                extraction_quality=doc.extraction_quality,
-                classifier_version=cr.classifier_version,
-                embedding_model=cr.embedding_model,
-                dataset_version=cr.dataset_version,
-            )
+    # Every chunk is analysed (cross-table and narrative checks need the whole document); the handoff
+    # keeps RELEVANT/UNCERTAIN plus structural non-financial chunks and lists the rest as excluded.
+    views = [
+        ChunkView(
+            id=c.id,
+            text=c.text,
+            location=dict(c.location or {}),
+            chunk_type=c.chunk_type,
+            context=c.context,
+            extraction_method=c.extraction_method,
+            ocr_confidence=c.ocr_confidence,
+            decision=cr.decision,
+            top_category=cr.top_category,
+            category_scores=cr.category_scores or {},
+            score=cr.score,
+            semantic_score=cr.semantic_score if cr.semantic_score is not None else 0.0,
+            signal_score=cr.signal_score if cr.signal_score is not None else 0.0,
+            matched_references=cr.matched_references or [],
+            signals=cr.signals or [],
+            classifier_version=cr.classifier_version,
+            embedding_model=cr.embedding_model,
+            dataset_version=cr.dataset_version,
         )
-
-    return RelevantChunksResponse(
+        for c, cr in res
+    ]
+    return build_handoff(
         document_id=doc.id,
+        filename=doc.filename,
+        source_type=doc.detected_type,
         relevance_status=doc.relevance_status,
+        extraction_quality=doc.extraction_quality,
+        chunks=views,
         include_uncertain=include_uncertain,
-        items=handoffs,
     )
 
 
@@ -711,6 +638,9 @@ def get_document_report(document_id: str, db: Session = Depends(get_db)):
             "ocr_confidence": c.ocr_confidence if c.ocr_confidence is not None else 1.0,
             "signals": c.classification.signals if c.classification else [],
             "text": c.text,
+            "chunk_type": c.chunk_type,
+            "extraction_method": c.extraction_method,
+            "category_scores": c.classification.category_scores if c.classification else {},
             "location": c.location.model_dump(),
             "bboxes": c.location.bboxes,
         }
@@ -752,6 +682,9 @@ def get_document_structured_extraction(document_id: str, db: Session = Depends(g
             "ocr_confidence": c.ocr_confidence if c.ocr_confidence is not None else 1.0,
             "signals": c.classification.signals if c.classification else [],
             "text": c.text,
+            "chunk_type": c.chunk_type,
+            "extraction_method": c.extraction_method,
+            "category_scores": c.classification.category_scores if c.classification else {},
             "location": c.location.model_dump(),
             "bboxes": c.location.bboxes,
         }

@@ -1152,7 +1152,7 @@ def detect_document_type(text_sample: str, filename: str = "") -> str:
     sample = f"{filename} {text_sample}".lower()
     if re.search(r"residential\s+(?:lease|tenancy|rental)\s+agreement|rental\s+agreement|lease\s+agreement", sample):
         return "residential_rental_agreement"
-    if re.search(r"balance\s+sheet|income\s+statement|statement\s+of\s+operations|financial\s+statements|quarterly\s+financial\s+report", sample):
+    if re.search(r"balance\s+sheet|income\s+statement|statements?\s+of\s+(?:operations|income)|financial\s+statements|quarterly\s+financial\s+report|annual\s+report|financial\s+highlights", sample):
         return "financial_statement"
     if re.search(r"invoice|billing\s+statement|purchase\s+order", sample):
         return "invoice"
@@ -1169,109 +1169,37 @@ def build_structured_extraction(
     document_decision: str,
     chunks: list[dict[str, Any]],
 ) -> StructuredExtractionReport:
-    """Build the complete Section 7 compliant structured extraction report."""
-    all_text = " ".join(c.get("text", "") for c in chunks[:5])
-    doc_type = detect_document_type(all_text, filename)
-    doc_curr, doc_scale, doc_mult = detect_scale_and_currency(all_text)
+    """Build the complete Section 7 compliant structured extraction report.
 
-    items: list[StructuredExtractionItem] = []
-    all_doc_fields: list[ExtractedFinancialField] = []
-    total_checked = 0
-    failed_checks = 0
-    needs_review = False
+    Delegates to :func:`app.handoff.extract_document` so the report, the handoff and the
+    classifier all derive fields and decisions from the same code path.
+    """
+    from app.handoff import ChunkView, extract_document
 
+    views: list[ChunkView] = []
     for chunk in chunks:
-        c_id = chunk.get("id") or chunk.get("chunk_id", "chk")
-        c_dec = chunk.get("decision", "IRRELEVANT")
-        c_cat = chunk.get("top_category") or chunk.get("category")
-        c_text = chunk.get("text") or chunk.get("source_text", "")
-        loc = chunk.get("location") or {}
-        page_num = chunk.get("page_number") or loc.get("page")
-        heading = chunk.get("section_heading") or loc.get("section_heading")
-        bboxes = chunk.get("bboxes") or loc.get("bboxes")
-        first_bbox = bboxes[0] if bboxes and isinstance(bboxes, list) else None
-
-        fields: list[ExtractedFinancialField] = []
-        table_rows: list[TableRowClassification] = []
-
-        if c_dec == "RELEVANT" or (c_dec == "UNCERTAIN" and c_cat in ("rent_leases_recurring_payments", "invoices_and_billing", "financial_statements", "assets_liabilities_investments")):
-            if doc_type == "residential_rental_agreement":
-                fields = extract_rental_agreement_fields(c_text, context=heading)
-            elif doc_type == "financial_statement" or ("|" in c_text and "\n" in c_text):
-                # Check for table
-                if "|" in c_text:
-                    t_rows, t_fields = extract_financial_table_rows(
-                        c_text,
-                        default_currency=doc_curr,
-                        scale=doc_scale,
-                        scale_multiplier=doc_mult,
-                        page_num=page_num,
-                        table_index=loc.get("table_index"),
-                        bbox=first_bbox,
-                    )
-                    table_rows.extend(t_rows)
-                    fields.extend(t_fields)
-                # Check for executive summary KPI blocks
-                s_fields = extract_summary_metrics(
-                    c_text,
-                    default_currency=doc_curr,
-                    scale=doc_scale,
-                    scale_multiplier=doc_mult,
-                    page_num=page_num,
-                )
-                fields.extend(s_fields)
-            else:
-                fields = extract_generic_financial_fields(c_text)
-
-        all_doc_fields.extend(fields)
-
-        # Monetary value checks
-        for f in fields:
-            total_checked += 1
-            if f.validation_status not in ("PASSED", "WARNING"):
-                failed_checks += 1
-                needs_review = True
-
-        req_rev = (c_dec == "UNCERTAIN") or any(f.validation_status not in ("PASSED", "WARNING") for f in fields)
-        if req_rev:
-            needs_review = True
-
-        items.append(
-            StructuredExtractionItem(
-                chunk_id=c_id,
-                page_number=page_num,
-                section_heading=heading,
-                decision=c_dec,
-                category=c_cat,
-                source_text=c_text,
-                relevance_score=float(chunk.get("score") or chunk.get("relevance_score") or 0.0),
+        loc = dict(chunk.get("location") or {})
+        if chunk.get("page_number") is not None:
+            loc.setdefault("page", chunk.get("page_number"))
+        if chunk.get("section_heading"):
+            loc.setdefault("section_heading", chunk.get("section_heading"))
+        text = chunk.get("text") or chunk.get("source_text", "")
+        views.append(
+            ChunkView(
+                id=chunk.get("id") or chunk.get("chunk_id", "chk"),
+                text=text,
+                location=loc,
+                chunk_type=chunk.get("chunk_type") or ("table" if "|" in text and "\n" in text else "prose"),
+                extraction_method=chunk.get("extraction_method") or "unknown",
+                ocr_confidence=chunk.get("ocr_confidence"),
+                decision=chunk.get("decision", "IRRELEVANT"),
+                top_category=chunk.get("top_category") or chunk.get("category"),
+                category_scores=chunk.get("category_scores") or {},
+                score=float(chunk.get("score") or chunk.get("relevance_score") or 0.0),
                 semantic_score=float(chunk.get("semantic_score") or 0.0),
                 signal_score=float(chunk.get("signal_score") or 0.0),
-                extraction_confidence=float(chunk.get("ocr_confidence") or 1.0),
-                rule_evidence=chunk.get("signals") or [],
-                financial_fields=fields,
-                table_rows=table_rows,
-                requires_review=req_rev,
+                signals=chunk.get("signals") or [],
             )
         )
-
-    initial_summary = ValidationSummary(
-        monetary_values_checked=total_checked > 0,
-        failed_checks=failed_checks,
-        requires_review=needs_review,
-        details=[f"Extracted {total_checked} financial fields from {len(items)} chunks."],
-        accounting_validations=[],
-    )
-
-    report = StructuredExtractionReport(
-        document_id=document_id,
-        document_type=doc_type,
-        document_decision=document_decision,
-        items=items,
-        validation_summary=initial_summary,
-    )
-
-    # Run independent financial validation engine
-    from app.validation import FinancialValidationEngine
-    engine = FinancialValidationEngine()
-    return engine.validate_document(report)
+    _, report = extract_document(document_id, filename, document_decision, views)
+    return report

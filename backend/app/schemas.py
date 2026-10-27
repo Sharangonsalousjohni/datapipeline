@@ -363,6 +363,7 @@ class StructuredExtractionItem(BaseModel):
     semantic_score: float = 0.0
     signal_score: float = 0.0
     extraction_confidence: float = 1.0
+    extraction_method: str | None = None
     rule_evidence: list[SignalEvidence] = []
     financial_fields: list[ExtractedFinancialField] = []
     table_rows: list[TableRowClassification] = []

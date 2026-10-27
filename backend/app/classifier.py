@@ -29,6 +29,7 @@ import numpy as np
 from app.chunking import ChunkDraft
 from app.config import get_settings
 from app.embeddings import get_embedding_service
+from app.handoff import analyze_chunk_content, reconcile_decision
 from app.models import ChunkDecision, DocumentRelevance
 from app.reference import SimilarityMatch, get_reference_index
 from app.schemas import ChunkClassification, MatchedReference, SignalEvidence
@@ -359,6 +360,13 @@ def classify_chunks(chunks: list[ChunkDraft]) -> BatchClassificationOutput:
                 llm_used = True
                 decision, score, llm_rationale = llm_out
                 decided_by = "llm"
+
+        # Derive decision/category from the chunk's own content: a chunk with a RELEVANT table row
+        # can never be UNCERTAIN, cover pages / TOCs / signature blocks are non-financial.
+        content = analyze_chunk_content(chunk.text, chunk.location, chunk.chunk_type)
+        decision, top_cat, cat_scores, basis = reconcile_decision(decision, top_cat, cat_scores, content)
+        if basis != "classifier":
+            decided_by = basis
 
         results.append(
             ChunkClassification(
