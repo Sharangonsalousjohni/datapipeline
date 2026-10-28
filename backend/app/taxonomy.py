@@ -94,6 +94,8 @@ class StatementType(str, Enum):
     HIGHLIGHTS = "highlights"
     NOTES = "notes"
     NARRATIVE = "narrative"
+    LEASE = "lease"
+    CONTRACT = "contract"
     OTHER = "other"
 
 

@@ -39,11 +39,13 @@ from app.financial_extraction import (
 )
 from app.models import ClassificationResult, Document, DocumentChunk
 from app.worker import process_document_pipeline
+from conftest import ensure_fixture_document
 
 _DIR = Path(__file__).parent.parent
 FIN_PDF_PATH = _DIR / "data" / "uploads" / "0c0112cd97564ff2195560a873af03b06497f8d0020f70bf0c5c231421238bd7.pdf"
 FIN_DOC_ID = "4c78499ca5e64be3881cfeab033497ed"
 RENTAL_DOC_ID = "24fd3ddc6989474687c13d70e932e89e"
+RENTAL_PDF_PATH = _DIR / "data" / "uploads" / "ff5a04edca039b471f21ae026c71599f67427cc588fc27215d0b941feedc68bf.pdf"
 
 
 def test_table_cell_extraction_no_detached_commas():
@@ -144,18 +146,19 @@ def test_row_level_category_classification():
 
 def test_financial_statements_end_to_end_pipeline():
     """Verify full pipeline execution on Financial Statements PDF."""
-    res = process_document_pipeline(FIN_DOC_ID, reextract=True)
-    assert res["document_id"] == FIN_DOC_ID
+    doc_id = ensure_fixture_document(FIN_DOC_ID, FIN_PDF_PATH, "Financial_Statements.pdf")
+    res = process_document_pipeline(doc_id, reextract=True)
+    assert res["document_id"] == doc_id
     assert res["relevance_status"] == "FINANCIAL_RELEVANT"
 
     with session_scope() as session:
-        doc = session.get(Document, FIN_DOC_ID)
+        doc = session.get(Document, doc_id)
         assert doc is not None
 
         chunks = (
             session.query(DocumentChunk, ClassificationResult)
             .join(ClassificationResult, DocumentChunk.id == ClassificationResult.chunk_id)
-            .filter(DocumentChunk.document_id == FIN_DOC_ID, ClassificationResult.is_current.is_(True))
+            .filter(DocumentChunk.document_id == doc_id, ClassificationResult.is_current.is_(True))
             .order_by(DocumentChunk.chunk_index.asc())
             .all()
         )
@@ -268,14 +271,15 @@ def test_accounting_mismatch_triggers_warning_without_mutation():
 
 def test_rental_agreement_deposit_and_late_fee_preservation():
     """Verify Residential Rental Agreement preserves deposit specificity and conditional late fee."""
-    res = process_document_pipeline(RENTAL_DOC_ID, reextract=True)
+    doc_id = ensure_fixture_document(RENTAL_DOC_ID, RENTAL_PDF_PATH, "Residential_Rental_Agreement.pdf")
+    res = process_document_pipeline(doc_id, reextract=True)
     assert res["relevance_status"] == "FINANCIAL_RELEVANT"
 
     with session_scope() as session:
         chunks = (
             session.query(DocumentChunk, ClassificationResult)
             .join(ClassificationResult, DocumentChunk.id == ClassificationResult.chunk_id)
-            .filter(DocumentChunk.document_id == RENTAL_DOC_ID, ClassificationResult.is_current.is_(True))
+            .filter(DocumentChunk.document_id == doc_id, ClassificationResult.is_current.is_(True))
             .order_by(DocumentChunk.chunk_index.asc())
             .all()
         )

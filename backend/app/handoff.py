@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from app.chunking import NON_FINANCIAL_ROLES, ROLE_SIGNATURE
+from app.contracts import extract_lease_fields
 from app.financial_extraction import (
     detect_document_type,
     extract_generic_financial_fields,
@@ -43,10 +44,13 @@ from app.schemas import (
 from app.taxonomy import (
     METRICS_BY_NAME,
     FinancialCategory,
+    StatementType,
     canonicalize_category,
     canonicalize_scores,
     detect_fiscal_period,
 )
+
+LEASE_DOCUMENT_TYPES = frozenset({"commercial_lease_agreement"})
 
 
 @dataclass
@@ -105,6 +109,12 @@ def analyze_chunk_content(
     role = loc.get("chunk_role")
     if role in NON_FINANCIAL_ROLES:
         return ChunkContent(statement_type=loc.get("statement_type"), role=role)
+    if document_type in LEASE_DOCUMENT_TYPES:
+        # Leases: contract terms from clauses and from rent schedule / party tables.
+        rows, fields = extract_lease_fields(text, loc, chunk_type)
+        if chunk_type == "table" and not rows and not fields:
+            rows, fields = extract_table_fields(text, loc, default_currency=default_currency, allow_embedding=allow_embedding)
+        return ChunkContent(rows=rows, fields=fields, statement_type=StatementType.LEASE.value, role=role)
     page = loc.get("page")
     if chunk_type == "table" or ("|" in text and "\n" in text and role in (None, "table")):
         rows, fields = extract_table_fields(text, loc, default_currency=default_currency, allow_embedding=allow_embedding)
@@ -150,6 +160,14 @@ def reconcile_decision(
     if content.role in NON_FINANCIAL_ROLES:
         cat = (FinancialCategory.ADMINISTRATIVE_CONTENT if content.role == ROLE_SIGNATURE else FinancialCategory.NON_FINANCIAL_CONTENT).value
         return "IRRELEVANT", cat, scores, "structural_role"
+    if content.statement_type == StatementType.LEASE.value and content.fields:
+        # A clause or table that yields contract terms is relevant, categorised by its terms.
+        counts = Counter(f.category for f in content.fields if f.category)
+        if counts:
+            category = max(counts, key=lambda c: (counts[c], scores.get(c, 0.0)))
+            total = sum(counts.values())
+            scores = {**scores, **{c: max(scores.get(c, 0.0), round(n / total, 4)) for c, n in counts.items()}}
+        return "RELEVANT", category, scores, "contract_terms"
     relevant_rows = [r for r in content.rows if r.decision == "RELEVANT"]
     if relevant_rows:
         mapped = [r.category for r in relevant_rows if r.metric]

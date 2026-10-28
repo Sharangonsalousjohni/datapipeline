@@ -82,8 +82,9 @@ class Settings(BaseSettings):
     threshold_relevant: float = 0.60
     threshold_irrelevant: float = 0.35
     calibration_path: Path = BACKEND_DIR / "evaluation" / "results" / "calibration.json"
-    classifier_mode: Literal["baseline", "trained", "auto"] = "auto"
+    classifier_mode: Literal["baseline", "trained", "auto", "lexical"] = "auto"
     trained_classifier_path: Path = BACKEND_DIR / "evaluation" / "results" / "trained_classifier.joblib"
+    lexical_classifier_path: Path = BACKEND_DIR / "evaluation" / "results" / "lexical_classifier.joblib"
 
     # ------------------------------------------------------------------ document aggregation
     doc_relevant_fraction_for_financial: float = 0.5

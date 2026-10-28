@@ -69,3 +69,6 @@ Thumbs.db
 frontend.zip
 *.zip
 *.tar.gz
+
+# Documents uploaded through the app (test fixtures already in git stay tracked)
+backend/data/uploads/*

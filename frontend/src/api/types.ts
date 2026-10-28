@@ -474,3 +474,88 @@ export interface HealthResponse {
 
 /** Full evaluation report (GET /api/evaluation/latest). Loose by design — every key may be missing. */
 export type EvaluationReport = Record<string, unknown>;
+
+// ---------------------------------------------------------------- financial summary (GET /api/documents/{id}/summary)
+export interface SummaryValue {
+  /** Exact normalized value as a decimal string (monetary values in full units). */
+  value: string;
+  /** ISO currency code, or percent | basis_points | ratio | per_share | shares | year | number. */
+  unit: string;
+  display: string;
+  as_reported: string;
+}
+
+export interface KeyFigure extends SummaryValue {
+  label: string;
+  metric: string | null;
+  measure: string;
+  period: string | null;
+  page: number | null;
+}
+
+export interface StatementLine {
+  label: string;
+  metric: string | null;
+  values: Record<string, SummaryValue>;
+}
+
+export interface StatementSummary {
+  statement: string;
+  title: string;
+  currency: string | null;
+  reported_in: string | null;
+  columns: string[];
+  lines: StatementLine[];
+  page: number | null;
+}
+
+export interface ContractTerm extends SummaryValue {
+  term: string;
+  label: string;
+  frequency: string | null;
+  due: string | null;
+  condition: string | null;
+  page: number | null;
+}
+
+export interface ReviewItem {
+  label: string;
+  as_reported: string;
+  reason: string;
+  page: number | null;
+  section: string | null;
+}
+
+export interface FinancialSummary {
+  schema_version: string;
+  generated_at: string;
+  document: {
+    id: string;
+    filename: string;
+    source_type: string;
+    document_type: string;
+    relevance_status: string | null;
+  };
+  outcome: {
+    decision: string;
+    requires_review: boolean;
+    headline: string;
+    reasons: string[];
+  };
+  reporting: {
+    currency: string | null;
+    reported_in: string | null;
+    periods: string[];
+  };
+  key_figures: KeyFigure[];
+  statements: StatementSummary[];
+  terms: ContractTerm[];
+  needs_review: ReviewItem[];
+  checks: {
+    total: number;
+    passed: number;
+    warnings: number;
+    failed: number;
+    issues: string[];
+  };
+}

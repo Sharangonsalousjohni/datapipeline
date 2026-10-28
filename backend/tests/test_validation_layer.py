@@ -83,8 +83,10 @@ def test_scenario_01_valid_financial_statement_passes():
     report = build_structured_extraction(FIN_DOC_ID, "Financial Statements & Performance Report.pdf", "FINANCIAL_RELEVANT", chunks)
     assert report.validation_summary.quality_gate_decision in ("ACCEPT", "ACCEPT_WITH_WARNINGS")
     assert report.validation_summary.failed_checks == 0
-    # Verify primary accounting equations passed
-    bs_eq = [chk for chk in report.validation_summary.accounting_validations if chk.get("rule_id") == "RULE_ACCT_BS_EQ_001"]
+    # Verify primary accounting equations passed. Metric-mapped fields are checked by MetricValidator
+    # (RULE_ARITH_*); the legacy RULE_ACCT_* checks only run for fields without a metric.
+    bs_eq_rules = ("RULE_ACCT_BS_EQ_001", "RULE_ARITH_BS_BALANCE_001", "RULE_ARITH_BS_TA_TLE_001")
+    bs_eq = [chk for chk in report.validation_summary.accounting_validations if chk.get("rule_id") in bs_eq_rules]
     assert len(bs_eq) >= 1
     assert all(chk["status"] == "PASSED" for chk in bs_eq)
 

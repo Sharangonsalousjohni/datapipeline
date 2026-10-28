@@ -16,6 +16,7 @@ from app.numbers import (
     detect_document_unit,
     detect_unit,
     format_decimal,
+    infer_unit_type,
     is_per_share_label,
     is_share_count_label,
     parse_number,
@@ -235,6 +236,7 @@ def extract_rental_agreement_fields(
                 field="late_fee_percentage",
                 original_text=orig_pct,
                 normalized_value=pct_clean,
+                data_type="percentage",
                 details={"unit": "%", "base": "unpaid balance"},
                 validation_status="PASSED",
                 validation_notes=f"Percentage fee parsed as {pct_clean}% of unpaid balance",
@@ -540,6 +542,10 @@ def _union_bbox(boxes: list[list[float] | None]) -> list[float] | None:
     return [min(b[0] for b in real), min(b[1] for b in real), max(b[2] for b in real), max(b[3] for b in real)]
 
 
+STATEMENT_STYLE_TYPES = frozenset({"income_statement", "balance_sheet", "cash_flow_statement", "highlights", "notes"})
+_UNSCALED_TYPES = ("percentage", "basis_points", "ratio", "year", "duration", "area")
+
+
 def _scale_issue(field_name: str, label: str) -> dict[str, Any]:
     return {
         "rule_id": "RULE_SCALE_UNKNOWN_001",
@@ -549,6 +555,67 @@ def _scale_issue(field_name: str, label: str) -> dict[str, Any]:
         "actual": "unknown",
         "review_required": True,
     }
+
+
+_KV_CELL_RE = re.compile(r"^([A-Z][A-Za-z /&'-]{1,40}):\s*(.+)$")
+
+
+def _key_value_grid_fields(
+    pipe_lines: list[str],
+    default_currency: str,
+    page_num: int | None,
+    table_index: int | None,
+    statement_type: str | None,
+) -> tuple[list[TableRowClassification], list[ExtractedFinancialField]] | None:
+    """Tables whose cells are "Label: value" pairs (agreement cover grids). Each field is named from
+    its own cell label, never from the row label plus column header concatenation. ``None`` when the
+    table is not such a grid."""
+    cells = [(r_i, c_i, c.strip()) for r_i, ln in enumerate(pipe_lines) for c_i, c in enumerate(ln.split("|")) if c.strip()]
+    kv = [(r_i, c_i, m) for r_i, c_i, c in cells if (m := _KV_CELL_RE.match(c))]
+    if not cells or len(kv) * 2 < len(cells):
+        return None
+    rows: list[TableRowClassification] = []
+    fields: list[ExtractedFinancialField] = []
+    for r_i, c_i, m in kv:
+        label, value_text = m.group(1).strip(), m.group(2).strip()
+        parsed = parse_number(value_text, default_currency)
+        if parsed.kind == "text" or parsed.value is None:
+            continue  # "[Landlord Full Legal Name]": not a value
+        unit_type = infer_unit_type(value_text)
+        if unit_type and unit_type[0] in ("duration", "area"):
+            dtype, scale, curr, norm = unit_type[0], None, None, f"{parsed.value:f}"
+        elif parsed.kind in ("percentage", "basis_points", "ratio", "year"):
+            dtype, scale, curr, norm = parsed.kind, None, None, f"{parsed.value:f}"
+        elif parsed.currency:
+            dtype, scale, curr, norm = "monetary", "units", parsed.currency, format_decimal(parsed.value) or ""
+        else:
+            continue  # a bare number with no unit in a key-value grid is not a reliable value
+        name = _slug(label)
+        f = ExtractedFinancialField(
+            field=name,
+            original_text=value_text,
+            normalized_value=norm,
+            reported_value=f"{parsed.value:f}",
+            reported_scale=scale,
+            scale_multiplier=1.0 if scale else None,
+            normalized_amount=norm if dtype == "monetary" else None,
+            currency=curr,
+            data_type=dtype,
+            row_label=label,
+            category=classify_row_label(label),
+            details={"scale_source": "symbol: explicit currency symbol, no scale declaration" if scale else None,
+                     "unit": unit_type[1] if unit_type else None, "layout": "key_value_grid"},
+            validation_notes=f"{label}: {value_text} -> {norm} {curr or (unit_type[1] if unit_type else '')}".strip(),
+            source_location={"page": page_num, "table_index": table_index, "row_index": r_i, "column_index": c_i,
+                             "row_label": label},
+            statement_type=statement_type,
+            source_kind="table",
+        )
+        fields.append(f)
+        rows.append(TableRowClassification(row_index=r_i, row_label=label, category=f.category or "financial_statements",
+                                           decision="RELEVANT", cells=[label, value_text], fields=[f],
+                                           statement_type=statement_type))
+    return rows, fields
 
 
 def extract_table_fields(
@@ -594,6 +661,9 @@ def extract_table_fields(
 
     periods = raw_headers[1:]
     pipe_lines = [line for line in lines[header_idx:] if "|" in line]
+    kv_fields = _key_value_grid_fields(pipe_lines, currency_default, page_num, table_index, statement_type)
+    if kv_fields is not None:
+        return kv_fields
     cell_boxes = loc.get("cell_bboxes")
     if not cell_boxes or len(cell_boxes) != len(pipe_lines):
         cell_boxes = None
@@ -638,9 +708,15 @@ def extract_table_fields(
             mult = Decimal(1)
             reported_scale: str | None = "units"
             scale_note = "not scaled"
+            unit_type = infer_unit_type(cell_text)
             if parsed.is_null:
                 dtype = "null"
                 reported_scale = None
+            elif unit_type and unit_type[0] in ("duration", "area"):
+                # "36 months", "3,150 sq ft": never currency, never scaled
+                dtype = unit_type[0]
+                reported_scale = None
+                scale_note = f"{unit_type[1]} (unit word)"
             elif parsed.kind in ("percentage", "basis_points", "ratio", "year"):
                 dtype = parsed.kind
                 reported_scale = None
@@ -662,10 +738,16 @@ def extract_table_fields(
                     reported_scale, mult, scale_note = unit.scale, unit.multiplier, f"table unit '{unit.scale}'"
             else:
                 dtype = "monetary_change" if change_col else "monetary"
+                if unit_type and unit_type[0] == "limit":
+                    dtype = "limit"
                 if parsed.scale:
                     reported_scale, mult, scale_note = parsed.scale, parsed.multiplier, f"inline '{parsed.scale}'"
                 elif unit.known:
                     reported_scale, mult, scale_note = unit.scale, unit.multiplier, f"table unit '{unit.scale}' from {unit.source}"
+                elif parsed.currency and statement_type not in STATEMENT_STYLE_TYPES:
+                    # An explicit currency symbol without any scale declaration means whole currency units.
+                    # Statement-style tables keep "unknown": they usually declare thousands/millions elsewhere.
+                    reported_scale, scale_note = "units", "symbol: explicit currency symbol, no scale declaration"
                 else:
                     reported_scale, scale_note = "unknown", "unit unknown"
                     status = "REVIEW_REQUIRED"
@@ -675,9 +757,9 @@ def extract_table_fields(
             normalized = None if value is None else value * mult
             reported_val = "" if value is None else f"{value:f}"
             norm_str = format_decimal(normalized) or ""
-            if dtype in ("percentage", "basis_points", "ratio", "year"):
+            if dtype in _UNSCALED_TYPES:
                 norm_str = reported_val
-            curr = None if dtype in ("percentage", "basis_points", "ratio", "year", "shares", "null") else (parsed.currency or currency_default)
+            curr = None if dtype in _UNSCALED_TYPES + ("shares", "null") else (parsed.currency or currency_default)
             tolerance = None if value is None else parsed.half_unit * mult
 
             field_name = f"{_slug(row_label)}_{_slug(period)}" if row_label else f"col{c_idx + 1}_{_slug(period)}"
@@ -689,7 +771,7 @@ def extract_table_fields(
                 reported_value=reported_val,
                 reported_scale=reported_scale,
                 scale_multiplier=float(mult),
-                normalized_amount=norm_str if dtype not in ("percentage", "basis_points", "ratio", "year") else None,
+                normalized_amount=norm_str if dtype not in _UNSCALED_TYPES else None,
                 currency=curr,
                 data_type=dtype,
                 reporting_period=period,
@@ -1150,6 +1232,8 @@ def validate_financial_statements(fields: list[ExtractedFinancialField]) -> list
 def detect_document_type(text_sample: str, filename: str = "") -> str:
     """Identify document type with precision."""
     sample = f"{filename} {text_sample}".lower()
+    if re.search(r"commercial\s+lease|office\s+lease|retail\s+lease|industrial\s+lease", sample):
+        return "commercial_lease_agreement"
     if re.search(r"residential\s+(?:lease|tenancy|rental)\s+agreement|rental\s+agreement|lease\s+agreement", sample):
         return "residential_rental_agreement"
     if re.search(r"balance\s+sheet|income\s+statement|statements?\s+of\s+(?:operations|income)|financial\s+statements|quarterly\s+financial\s+report|annual\s+report|financial\s+highlights", sample):

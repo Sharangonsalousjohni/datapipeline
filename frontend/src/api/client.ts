@@ -11,6 +11,7 @@ import type {
   EvaluationReport,
   FeedbackIn,
   FeedbackOut,
+  FinancialSummary,
   HealthResponse,
   ImportResult,
   JobOut,
@@ -302,6 +303,8 @@ export const api = {
   report: (id: string) => request<DocumentReport>(`/api/documents/${encodeURIComponent(id)}/report`),
   structuredExtraction: (id: string, signal?: AbortSignal) =>
     request<StructuredExtractionReport>(`/api/documents/${encodeURIComponent(id)}/structured-extraction`, { signal }),
+  financialSummary: (id: string, signal?: AbortSignal) =>
+    request<FinancialSummary>(`/api/documents/${encodeURIComponent(id)}/summary`, { signal }),
   qualityGate: (id: string, signal?: AbortSignal) =>
     request<ValidationSummary>(`/api/documents/${encodeURIComponent(id)}/quality-gate`, { signal }),
   downloadOriginal: (id: string, fallbackName: string) =>

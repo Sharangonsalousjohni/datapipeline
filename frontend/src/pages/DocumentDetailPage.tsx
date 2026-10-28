@@ -154,6 +154,9 @@ export function DocumentDetailPage() {
           <Link to={`/documents/${doc.id}/chunks`} className="btn btn-primary">
             Explore Chunks ({fmtNumber(doc.chunk_counts?.total)})
           </Link>
+          <Link to={`/documents/${doc.id}/summary`} className="btn btn-primary">
+            Financial Summary
+          </Link>
           <button
             type="button"
             className="btn btn-secondary"

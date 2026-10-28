@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-10-27T07:51:52+00:00",
+  "lexical": {
+    "thresholds": {
+      "relevant": 0.5287,
+      "irrelevant": 0.3749,
+      "source": "out-of-fold on validation"
+    },
+    "test": {
+      "accuracy": 0.9583,
+      "precision": 0.9296,
+      "recall": 1.0,
+      "f1": 0.9635,
+      "false_rejections": 0,
+      "false_accepts": 5,
+      "uncertain_rate": 0.0333,
+      "confident_relevant_precision": 0.9701,
+      "support": 120
+    },
+    "test_by_difficulty": {
+      "hard_negative": 0.9,
+      "hard_positive": 1.0,
+      "standard": 0.9697
+    },
+    "test_at_0.5": {
+      "accuracy": 0.9833,
+      "precision": 0.9706,
+      "recall": 1.0,
+      "f1": 0.9851,
+      "false_rejections": 0,
+      "false_accepts": 2,
+      "uncertain_rate": 0.0,
+      "confident_relevant_precision": 0.9706,
+      "support": 120
+    },
+    "cv5_accuracy_all_240": {
+      "mean": 0.9778,
+      "runs": [
+        0.975,
+        0.9958,
+        0.9625
+      ]
+    },
+    "errors": [
+      {
+        "id": "test-0088",
+        "label": "irrelevant",
+        "difficulty": "hard_negative",
+        "prob": 0.416,
+        "decision": "UNCERTAIN",
+        "text": "Mechanical Drawing Spec \u2014 Part #BRK-9022 CNC Mounting Bracket: Material 6061-T6 Aluminum; Anodized Type II Class 1 Clear finish; general dim"
+      },
+      {
+        "id": "test-0090",
+        "label": "irrelevant",
+        "difficulty": "hard_negative",
+        "prob": 0.572,
+        "decision": "RELEVANT",
+        "text": "Sheet: Lab Equipment Calibration | Row 9: Instrument: Agilent 1260 Infinity II HPLC | Serial: DEAB804192 | Last Calibrated: 2025-09-01 | Nex"
+      },
+      {
+        "id": "test-0091",
+        "label": "irrelevant",
+        "difficulty": "hard_negative",
+        "prob": 0.631,
+        "decision": "RELEVANT",
+        "text": "2025-11-19,DEPLOY-309,prod-eu-central-1,v2.14.0,canary-10pct,Healthy,99.98% success rate,p95 latency 42ms,Promoted to 100% traffic"
+      },
+      {
+        "id": "test-0112",
+        "label": "irrelevant",
+        "difficulty": "standard",
+        "prob": 0.406,
+        "decision": "UNCERTAIN",
+        "text": "Dockerfile Snippet:\nFROM python:3.12-slim-bookworm\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nC"
+      },
+      {
+        "id": "test-0115",
+        "label": "irrelevant",
+        "difficulty": "standard",
+        "prob": 0.447,
+        "decision": "UNCERTAIN",
+        "text": "2025-11-05,SENSOR-09,Cold Storage Room B,3.8,Celsius,42.1,%RH,Normal Operating Range"
+      }
+    ]
+  }
+}

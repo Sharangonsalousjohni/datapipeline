@@ -25,6 +25,7 @@ from app.financial_extraction import (
 )
 from app.models import Document, DocumentChunk, ClassificationResult
 from app.worker import process_document_pipeline
+from conftest import ensure_fixture_document
 
 _DIR = Path(__file__).parent.parent
 RENTAL_PDF_PATH = _DIR / "data" / "uploads" / "ff5a04edca039b471f21ae026c71599f67427cc588fc27215d0b941feedc68bf.pdf"
@@ -117,20 +118,21 @@ def test_rental_agreement_structured_field_extraction():
 
 def test_rental_agreement_end_to_end_pipeline():
     """Verify full pipeline execution on the uploaded rental agreement document."""
-    res = process_document_pipeline(RENTAL_DOC_ID, reextract=True)
-    assert res["document_id"] == RENTAL_DOC_ID
+    doc_id = ensure_fixture_document(RENTAL_DOC_ID, RENTAL_PDF_PATH, "Residential_Rental_Agreement.pdf")
+    res = process_document_pipeline(doc_id, reextract=True)
+    assert res["document_id"] == doc_id
     assert res["relevance_status"] == "FINANCIAL_RELEVANT"
     assert res["relevance_score"] >= 0.80
 
     with session_scope() as session:
-        doc = session.get(Document, RENTAL_DOC_ID)
+        doc = session.get(Document, doc_id)
         assert doc is not None
         assert doc.relevance_status == "FINANCIAL_RELEVANT"
 
         chunks = (
             session.query(DocumentChunk, ClassificationResult)
             .join(ClassificationResult, DocumentChunk.id == ClassificationResult.chunk_id)
-            .filter(DocumentChunk.document_id == RENTAL_DOC_ID, ClassificationResult.is_current.is_(True))
+            .filter(DocumentChunk.document_id == doc_id, ClassificationResult.is_current.is_(True))
             .order_by(DocumentChunk.chunk_index.asc())
             .all()
         )

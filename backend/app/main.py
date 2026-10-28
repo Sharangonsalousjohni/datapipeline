@@ -62,6 +62,7 @@ from app.reference import (
 )
 from app.financial_extraction import build_structured_extraction
 from app.handoff import ChunkView, build_handoff
+from app.summary import build_financial_summary
 from app.schemas import (
     BatchUploadResult,
     ChunkCounts,
@@ -79,6 +80,7 @@ from app.schemas import (
     ExtractionHandoff,
     FeedbackIn,
     FeedbackOut,
+    FinancialSummary,
     HealthResponse,
     ImportResult,
     JobOut,
@@ -693,6 +695,21 @@ def get_document_structured_extraction(document_id: str, db: Session = Depends(g
     return build_structured_extraction(
         doc.id, doc.filename, doc.relevance_status or "NOT_FINANCIAL", chunk_dicts
     )
+
+
+@app.get("/api/documents/{document_id}/summary", response_model=FinancialSummary)
+def get_document_summary(document_id: str, db: Session = Depends(get_db)):
+    """Compact, human-readable financial summary derived from the extraction handoff."""
+    doc = db.get(Document, document_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    if doc.status != ProcessingStatus.COMPLETED.value:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Document is {doc.status.lower()}; a summary is available once processing completes",
+        )
+    handoff = get_relevant_chunks(document_id, include_uncertain=True, db=db)
+    return build_financial_summary(handoff, filename=doc.filename, source_type=doc.detected_type)
 
 
 @app.get("/api/documents/{document_id}/quality-gate", response_model=ValidationSummary)

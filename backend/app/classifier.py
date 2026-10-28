@@ -6,7 +6,8 @@ Implements:
    - Semantic similarity against positive and hard-negative reference examples
      aggregated by category (never treating a single nearest term as sufficient proof).
 2. Optional lightweight trained binary classifier (LogisticRegression over
-   embedding + signal/similarity features) loaded when evaluation demonstrates a benefit.
+   embedding + signal/similarity features) loaded when evaluation demonstrates a benefit,
+   or the lexical TF-IDF classifier (``classifier_mode == "lexical"``, see ``app.lexical_classifier``).
 3. Optional second-stage LLM tie-breaker for ``UNCERTAIN`` chunks only, with a
    strict JSON schema, per-document call budget, and prompt-injection isolation.
 4. Three-way chunk decision: ``RELEVANT``, ``UNCERTAIN``, ``IRRELEVANT``.
@@ -30,6 +31,7 @@ from app.chunking import ChunkDraft
 from app.config import get_settings
 from app.embeddings import get_embedding_service
 from app.handoff import analyze_chunk_content, reconcile_decision
+from app.lexical_classifier import LEXICAL_VERSION, lexical_bundle
 from app.models import ChunkDecision, DocumentRelevance
 from app.reference import SimilarityMatch, get_reference_index
 from app.schemas import ChunkClassification, MatchedReference, SignalEvidence
@@ -277,7 +279,16 @@ def classify_chunks(chunks: list[ChunkDraft]) -> BatchClassificationOutput:
 
     t_rel, t_irrel, t_source = settings.thresholds()
     trained = _trained_bundle.load_if_available(emb_batch.model_id)
-    if trained is not None:
+    # Lexical mode: the TF-IDF model decides relevance; embeddings still supply categories/references.
+    lexical = lexical_bundle.load() if settings.classifier_mode == "lexical" else None
+    lexical_probs = lexical["model"].predict_proba([c.text for c in chunks])[:, 1] if lexical else None
+    if lexical is not None:
+        trained = None
+        classifier_version = str(lexical.get("version", LEXICAL_VERSION))
+        t_rel = float(lexical.get("threshold_relevant", t_rel))
+        t_irrel = float(lexical.get("threshold_irrelevant", t_irrel))
+        t_source = f"lexical:{classifier_version}"
+    elif trained is not None:
         classifier_version = str(trained.get("version", "trained-v1"))
         t_rel = float(trained.get("threshold_relevant", t_rel))
         t_irrel = float(trained.get("threshold_irrelevant", t_irrel))
@@ -303,7 +314,10 @@ def classify_chunks(chunks: list[ChunkDraft]) -> BatchClassificationOutput:
         decided_by = "baseline"
         score = baseline_score
 
-        if trained is not None:
+        if lexical_probs is not None:
+            score = round(float(lexical_probs[i]), 4)
+            decided_by = "lexical"
+        elif trained is not None:
             feat = build_feature_vector(
                 emb_batch.vectors[i], sig, pos_sim, neg_sim, sem_score, pos_sim
             ).reshape(1, -1)

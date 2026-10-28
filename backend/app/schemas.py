@@ -504,6 +504,103 @@ class HealthResponse(BaseModel):
     classifier_mode: str
 
 
+# --------------------------------------------------------------------------- financial summary (consumer payload)
+class SummaryDocument(BaseModel):
+    id: str
+    filename: str
+    source_type: str
+    document_type: str = Field(description="Human-readable kind of document, e.g. 'Financial statement'")
+    relevance_status: str | None
+
+
+class SummaryOutcome(BaseModel):
+    decision: str = Field(description="Quality gate: ACCEPT | ACCEPT_WITH_WARNINGS | HOLD_FOR_REVIEW | REJECT")
+    requires_review: bool
+    headline: str = Field(description="One-sentence plain-English result")
+    reasons: list[str] = Field(default_factory=list)
+
+
+class SummaryReporting(BaseModel):
+    currency: str | None = None
+    reported_in: str | None = Field(None, description="Scale the document reports in: units | thousands | millions | billions")
+    periods: list[str] = Field(default_factory=list, description="Reporting periods found, most recent first")
+
+
+class SummaryValue(BaseModel):
+    value: str = Field(description="Exact normalized value as a decimal string (monetary values in full units)")
+    unit: str = Field(description="ISO currency code, or percent | basis_points | ratio | per_share | shares | year | number")
+    display: str = Field(description="Human-readable value, e.g. '$482.6 million'")
+    as_reported: str = Field(description="Text exactly as it appears in the document")
+
+
+class KeyFigure(SummaryValue):
+    label: str
+    metric: str | None = Field(None, description="Canonical metric id (stable key for systems)")
+    measure: str = Field("level", description="level | change_pct | change_bps | pct_of_revenue | ...")
+    period: str | None = None
+    page: int | None = None
+
+
+class StatementLine(BaseModel):
+    label: str
+    metric: str | None = None
+    values: dict[str, SummaryValue] = Field(description="Keyed by the statement's column names")
+
+
+class StatementSummary(BaseModel):
+    statement: str
+    title: str
+    currency: str | None = None
+    reported_in: str | None = None
+    columns: list[str]
+    lines: list[StatementLine]
+    page: int | None = None
+
+
+class ContractTerm(SummaryValue):
+    term: str
+    label: str
+    frequency: str | None = None
+    due: str | None = None
+    condition: str | None = None
+    page: int | None = None
+
+
+class ReviewItem(BaseModel):
+    label: str
+    as_reported: str
+    reason: str
+    page: int | None = None
+    section: str | None = None
+
+
+class SummaryChecks(BaseModel):
+    total: int = 0
+    passed: int = 0
+    warnings: int = 0
+    failed: int = 0
+    issues: list[str] = Field(default_factory=list, description="Messages for every check that did not pass")
+
+
+class FinancialSummary(BaseModel):
+    """Compact, human-readable view of a document's extracted financial data.
+
+    Derived from the extraction handoff: duplicates are merged, only validated values appear in
+    ``key_figures`` / ``statements`` / ``terms``, and anything unverified is listed in ``needs_review``.
+    """
+
+    schema_version: str = "1.0"
+    generated_at: datetime
+    document: SummaryDocument
+    outcome: SummaryOutcome
+    reporting: SummaryReporting
+    key_figures: list[KeyFigure] = Field(default_factory=list)
+    statements: list[StatementSummary] = Field(default_factory=list)
+    terms: list[ContractTerm] = Field(default_factory=list)
+    needs_review: list[ReviewItem] = Field(default_factory=list)
+    checks: SummaryChecks
+
+
 ChunkOut.model_rebuild()
 RelevantChunksResponse.model_rebuild()
 ExtractionHandoff.model_rebuild()

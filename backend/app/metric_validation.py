@@ -469,9 +469,10 @@ class MetricValidator:
 
 
 # --------------------------------------------------------------------------- confidence
-_SCALE_SOURCE_SCORE = {"header": 1.0, "caption": 1.0, "line_above": 1.0, "inline": 1.0, "caller": 0.9,
+_SCALE_SOURCE_SCORE = {"header": 1.0, "caption": 1.0, "line_above": 1.0, "inline": 1.0, "symbol": 1.0, "caller": 0.9,
                        "section_heading": 0.9, "document": 0.85}
-_LABEL_SCORE = {"synonym": 1.0, "contains": 0.92, "embedding": 0.8, "none": 0.65}
+# "structure": label fixed by the table layout (e.g. rent schedule row "Year 1" x column "Monthly Rent")
+_LABEL_SCORE = {"synonym": 1.0, "structure": 0.95, "contains": 0.92, "embedding": 0.8, "none": 0.65}
 
 
 def score_confidence(ref: FieldRef) -> None:
@@ -479,13 +480,16 @@ def score_confidence(ref: FieldRef) -> None:
     f = ref.field
     d = f.details or {}
     factors: dict[str, float] = {}
-    if f.data_type in ("monetary", "monetary_change", "shares"):
+    if f.data_type in ("monetary", "monetary_change", "shares", "limit"):
         if f.reported_scale == "unknown":
             factors["scale"] = 0.35
         else:
-            src = (d.get("unit") or {}).get("source") if str(d.get("scale_source", "")).startswith("table") else None
+            unit = d.get("unit") if isinstance(d.get("unit"), dict) else {}
+            src = unit.get("source") if str(d.get("scale_source", "")).startswith("table") else None
             if str(d.get("scale_source", "")).startswith("inline"):
                 src = "inline"
+            elif str(d.get("scale_source", "")).startswith("symbol"):
+                src = "symbol"  # explicit currency symbol, whole currency units
             factors["scale"] = _SCALE_SOURCE_SCORE.get(src or "", 0.9)
     else:
         factors["scale"] = 1.0

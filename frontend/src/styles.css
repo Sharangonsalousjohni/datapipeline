@@ -556,3 +556,99 @@ th {
   font-weight: 600;
   color: var(--text-muted);
 }
+
+/* Financial summary page */
+.summary-stack {
+  gap: 16px;
+}
+
+.summary-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 16px;
+  background: #eef2f7;
+  border-radius: var(--radius);
+}
+
+.summary-tab {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.summary-tab-active {
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.summary-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary-headline {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.summary-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px 24px;
+  margin: 0;
+}
+
+.summary-meta dt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summary-meta dd {
+  margin: 2px 0 0;
+}
+
+.summary-issues {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--warning);
+  font-size: 0.875rem;
+}
+
+.summary-review {
+  border-left: 4px solid var(--warning);
+}
+
+.summary-scroll {
+  overflow-x: auto;
+}
+
+.summary-num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-json {
+  margin: 0;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 16px;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: var(--radius);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}

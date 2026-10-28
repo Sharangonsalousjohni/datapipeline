@@ -5,6 +5,7 @@ import { UploadPage } from "./pages/UploadPage";
 import { DocumentsPage } from "./pages/DocumentsPage";
 import { DocumentDetailPage } from "./pages/DocumentDetailPage";
 import { ChunkExplorerPage } from "./pages/ChunkExplorerPage";
+import { FinancialSummaryPage } from "./pages/FinancialSummaryPage";
 import { ReferenceDatasetPage } from "./pages/ReferenceDatasetPage";
 import { EvaluationPage } from "./pages/EvaluationPage";
 import { FeedbackPage } from "./pages/FeedbackPage";
@@ -18,6 +19,7 @@ export function App() {
         <Route path="/documents" element={<DocumentsPage />} />
         <Route path="/documents/:id" element={<DocumentDetailPage />} />
         <Route path="/documents/:id/chunks" element={<ChunkExplorerPage />} />
+        <Route path="/documents/:id/summary" element={<FinancialSummaryPage />} />
         <Route path="/reference" element={<ReferenceDatasetPage />} />
         <Route path="/evaluation" element={<EvaluationPage />} />
         <Route path="/feedback" element={<FeedbackPage />} />

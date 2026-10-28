@@ -23,6 +23,7 @@ from typing import Any
 
 from app.config import get_settings
 from app.extraction.base import HEADING, TABLE, ContentBlock, ExtractedDocument, TableData
+from app.extraction.layout import NUMBERED_HEADING_RE
 from app.extraction.tabular import col_letter, render_table
 from app.numbers import UnitSpec, detect_document_unit, detect_unit
 from app.taxonomy import detect_fiscal_period, detect_statement_type, is_change_column, match_metric
@@ -155,6 +156,42 @@ def _is_signature_block(block: ContentBlock) -> bool:
     return block.block_type != TABLE and bool(_SIGNATURE_RE.search(block.text.strip()))
 
 
+def _join_headings(headings: list[ContentBlock]) -> ContentBlock:
+    """One heading block standing for consecutive headings that had no body of their own."""
+    if len(headings) == 1:
+        return headings[0]
+    return ContentBlock(
+        block_type=HEADING,
+        text="\n\n".join(h.text for h in headings),
+        location=_merge_locations([h.location for h in headings], []),
+        extraction_method=headings[0].extraction_method,
+        heading_level=headings[-1].heading_level,
+    )
+
+
+def _signature_start(blocks: list[ContentBlock]) -> int:
+    """Index where a trailing execution block starts: the first signature cue followed only by short
+    lines (names, titles, signature rules, "Date: ____"). ``len(blocks)`` when there is none."""
+    for i, b in enumerate(blocks):
+        if _is_signature_block(b) and all(
+            b2.block_type != TABLE and all(len(ln.split()) <= 12 for ln in b2.text.splitlines())
+            for b2 in blocks[i + 1:]
+        ):
+            return i
+    return len(blocks)
+
+
+_AGREEMENT_RE = re.compile(
+    r"\b(?:lease|tenancy|rental|loan|credit|license|services?|purchase|employment)\s+agreement\b"
+    r"|\bthis\s+(?:agreement|lease|contract)\b|\bby\s+and\s+between\b",
+    re.I,
+)
+
+
+def is_agreement(sample: str) -> bool:
+    return bool(_AGREEMENT_RE.search(sample))
+
+
 def _is_toc(heading: str | None, blocks: list[ContentBlock]) -> bool:
     if heading and _TOC_HEADING_RE.match(heading):
         return True
@@ -224,10 +261,14 @@ def chunk_document(
     sample = "\n".join(b.text for b in extracted.blocks[:40])
     fiscal_period = detect_fiscal_period(sample)
     doc_unit = detect_document_unit(sample)
+    # In agreements a table under a numbered clause is part of that clause (e.g. a rent schedule).
+    agreement = is_agreement(sample)
 
     heading_stack: list[tuple[int, str]] = []
     section_heading_block: ContentBlock | None = None
     section_blocks: list[ContentBlock] = []
+    # Headings whose section had no body yet; they are attached to the next body, never emitted alone.
+    orphan_headings: list[ContentBlock] = []
 
     raw_chunks: list[tuple[str, str, str | None, dict[str, Any], str, float | None]] = []
 
@@ -253,6 +294,20 @@ def chunk_document(
         meta = base_meta({"chunk_role": role, "statement_type": st, "unit": doc_unit.to_dict() if doc_unit else None})
         if fiscal_period:
             meta["period_columns"] = [fiscal_period["key"]]
+        embedded = [b for b in blocks if b.block_type == TABLE and b.table is not None]
+        if embedded:
+            # Tables kept inside a clause travel as structured data so extraction never re-parses text.
+            meta["tables"] = [
+                {
+                    "headers": b.table.headers,
+                    "rows": b.table.rows,
+                    "cell_bboxes": b.table.cell_bboxes or b.location.get("cell_bboxes"),
+                    "table_bbox": b.table.bbox or b.location.get("table_bbox"),
+                    "page": b.location.get("page"),
+                    "table_index": b.location.get("table_index"),
+                }
+                for b in embedded
+            ]
         head_text = heading_block.text if heading_block is not None else None
         paragraphs = [b.text for b in blocks]
 
@@ -303,10 +358,14 @@ def chunk_document(
         section_heading_block = None
         if not blocks and heading_block is None:
             return
+        if not blocks:
+            orphan_headings.append(heading_block)  # type: ignore[arg-type]
+            return
+        if orphan_headings:
+            heading_block = _join_headings(orphan_headings + ([heading_block] if heading_block else []))
+            orphan_headings.clear()
         # Trailing sign-off / signature paragraphs become their own non-financial chunk.
-        sig_start = len(blocks)
-        while sig_start > 0 and _is_signature_block(blocks[sig_start - 1]):
-            sig_start -= 1
+        sig_start = _signature_start(blocks)
         body, sig = blocks[:sig_start], blocks[sig_start:]
         role = ROLE_TOC if _is_toc(heading_block.text if heading_block else None, body) else ROLE_NARRATIVE
         if body or heading_block is not None:
@@ -391,6 +450,9 @@ def chunk_document(
 
         if block.block_type == TABLE and block.table is not None:
             t = block.table
+            if agreement and section_heading_block is not None and NUMBERED_HEADING_RE.match(section_heading_block.text):
+                section_blocks.append(block)
+                continue
             if section_heading_block is not None and not section_blocks and not t.caption:
                 # A heading directly above the table is its caption, not a separate prose chunk.
                 t.caption = section_heading_block.text
@@ -412,6 +474,12 @@ def chunk_document(
         section_blocks.append(block)
 
     flush_section()
+    if orphan_headings and raw_chunks:
+        # Headings at the very end with no body: attach to the last chunk rather than emit them alone.
+        c_type, text, context, loc, method, conf = raw_chunks[-1]
+        raw_chunks[-1] = (c_type, text + "\n\n" + "\n\n".join(h.text for h in orphan_headings), context, loc, method, conf)
+    elif orphan_headings:
+        emit_prose([], ROLE_NARRATIVE, _join_headings(orphan_headings))
 
     # Deduplicate identical chunks while retaining extra source locations
     deduped: list[ChunkDraft] = []

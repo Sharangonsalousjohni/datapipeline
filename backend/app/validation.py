@@ -9,10 +9,12 @@ quality gating decisions (ACCEPT, ACCEPT_WITH_WARNINGS, HOLD_FOR_REVIEW, REJECT)
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any, Literal
 
+from app.lease_validation import validate_lease
 from app.metric_validation import FieldRef, MetricValidator
 from app.schemas import (
     ExtractedFinancialField,
@@ -40,6 +42,52 @@ class QualityPolicy:
         self.require_balance_sheet_balance = require_balance_sheet_balance
         self.max_acceptable_warnings = max_acceptable_warnings
         self.allow_minor_subtotal_warning = allow_minor_subtotal_warning
+
+
+RENTAL_DOCUMENT_TYPES = frozenset({"residential_rental_agreement", "commercial_lease_agreement"})
+
+
+@dataclass
+class _Tally:
+    """Single source for every failure / warning / review count reported by the engine."""
+
+    failed_fields: list[ExtractedFinancialField]
+    failed_acct: list[dict[str, Any]]
+    failed_cross: list[dict[str, Any]]
+    warning_fields: list[ExtractedFinancialField]
+    warning_checks: list[dict[str, Any]]
+    review_fields: list[ExtractedFinancialField]
+
+    @classmethod
+    def of(cls, fields, accounting_checks, cross_ref_checks) -> "_Tally":
+        checks = list(accounting_checks) + list(cross_ref_checks)
+        return cls(
+            failed_fields=[f for f in fields if f.validation_status == "FAILED"],
+            failed_acct=[c for c in accounting_checks if c.get("status") == "FAILED"],
+            failed_cross=[c for c in cross_ref_checks if c.get("status") == "FAILED"],
+            warning_fields=[f for f in fields if f.validation_status == "WARNING"],
+            warning_checks=[c for c in checks if c.get("status") == "WARNING"],
+            review_fields=[f for f in fields if f.validation_status in ("NEEDS_REVIEW", "REVIEW_REQUIRED")],
+        )
+
+    @property
+    def failed(self) -> int:
+        return len(self.failed_fields) + len(self.failed_acct) + len(self.failed_cross)
+
+    @property
+    def warnings(self) -> int:
+        return len(self.warning_fields) + len(self.warning_checks)
+
+    @property
+    def needs_review(self) -> int:
+        return len(self.review_fields)
+
+    @property
+    def non_fatal(self) -> int:
+        return self.warnings + self.needs_review
+
+    def describe(self) -> str:
+        return f"{self.failed} failed, {self.warnings} warnings, {self.needs_review} needs review"
 
 
 class FinancialValidationEngine:
@@ -102,20 +150,22 @@ class FinancialValidationEngine:
             for item in report.items
             for f in item.financial_fields
         ]
+        # 3a. Lease / rental terms: arithmetic and completeness. Runs before metric validation so the
+        #     pass/fail counts feed each field's confidence.
+        if report.document_type in RENTAL_DOCUMENT_TYPES:
+            lease_checks = validate_lease(refs)
+            accounting_checks.extend(lease_checks)
+            audit_trail.extend(lease_checks)
         metric_checks = MetricValidator().run(refs)
         audit_trail.extend(metric_checks)
         cross_ids = ("RULE_XTABLE_", "RULE_NARRATIVE_")
         accounting_checks.extend(c for c in metric_checks if not c["rule_id"].startswith(cross_ids))
         cross_ref_checks.extend(c for c in metric_checks if c["rule_id"].startswith(cross_ids))
 
-        # 4. Rental agreement specific checks
-        if report.document_type == "residential_rental_agreement":
-            rental_checks = self._validate_rental_agreement(all_fields, audit_trail)
-            accounting_checks.extend(rental_checks)
-
-        # 5. Quality gate evaluation
+        # 4. Quality gate evaluation; the summary counts below come from the same tally
+        tally = _Tally.of(all_fields, accounting_checks, cross_ref_checks)
         gate_decision, gate_reasons = self._evaluate_quality_gate(
-            report, all_fields, accounting_checks, cross_ref_checks, active_policy
+            report, all_fields, accounting_checks, cross_ref_checks, active_policy, tally
         )
 
         # Update report items requiring review
@@ -128,28 +178,21 @@ class FinancialValidationEngine:
                 item.requires_review = True
 
         # Build validation summary
-        failed_count = sum(1 for f in all_fields if f.validation_status == "FAILED")
-        failed_count += sum(1 for chk in accounting_checks if chk.get("status") == "FAILED")
-        warning_count = sum(1 for f in all_fields if f.validation_status == "WARNING")
-        warning_count += sum(1 for chk in accounting_checks if chk.get("status") == "WARNING")
-        needs_review_count = sum(1 for f in all_fields if f.validation_status in ("NEEDS_REVIEW", "REVIEW_REQUIRED"))
-        failed_count += sum(1 for chk in cross_ref_checks if chk.get("status") == "FAILED" and chk.get("rule_id", "").startswith(cross_ids))
-
         requires_review = (
             gate_decision in ("HOLD_FOR_REVIEW", "REJECT")
-            or failed_count > 0
-            or needs_review_count > 0
+            or tally.failed > 0
+            or tally.needs_review > 0
         )
 
         details = [
             f"Quality Gate: {gate_decision}. Evaluated {len(all_fields)} fields across {len(report.items)} chunks.",
-            f"Results: {failed_count} failed, {warning_count} warnings, {needs_review_count} needs review.",
+            f"Results: {tally.describe()}.",
             *gate_reasons,
         ]
 
         report.validation_summary = ValidationSummary(
             monetary_values_checked=len(all_fields) > 0,
-            failed_checks=failed_count,
+            failed_checks=tally.failed,
             requires_review=requires_review,
             details=details,
             accounting_validations=accounting_checks,
@@ -222,6 +265,10 @@ class FinancialValidationEngine:
         rule_id = "RULE_CHANGE_SIGN_001"
         now_ts = datetime.now(timezone.utc).isoformat()
         orig = field.original_text.strip()
+        if field.data_type in ("text", "date", "period"):
+            # "Jan 1, 2026 - Dec 31, 2026" or a party name is not a signed amount
+            field.change_basis = "not_applicable"
+            return
 
         # Check for parenthesized negative: e.g. "(8,370)", "($510)", "(5%)"
         is_parenthesized = (orig.startswith("(") and orig.endswith(")")) or " (" in orig
@@ -871,46 +918,6 @@ class FinancialValidationEngine:
         return validations
 
     # -----------------------------------------------------------------------
-    # 6. Rental Agreement Verification
-    # -----------------------------------------------------------------------
-    def _validate_rental_agreement(
-        self, fields: list[ExtractedFinancialField], audit_trail: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
-        """Validate core contractual obligations for rental agreements."""
-        rule_id = "RULE_RENTAL_TERMS_001"
-        now_ts = datetime.now(timezone.utc).isoformat()
-        results: list[dict[str, Any]] = []
-
-        has_rent = False
-        has_deposit = False
-        has_late_fee = False
-
-        for f in fields:
-            fname = (f.field or "").lower()
-            if "monthly_rent" in fname or "rent" in fname:
-                has_rent = True
-            elif "security_deposit" in fname or "deposit" in fname:
-                has_deposit = True
-            elif "late_fee" in fname:
-                has_late_fee = True
-
-        chk = {
-            "rule_id": rule_id,
-            "rule_version": self.VERSION,
-            "statement": "Rental Agreement Terms",
-            "period": "Term",
-            "formula": "Contains monthly_rent and security_deposit",
-            "expected": "Rent and deposit fields present",
-            "actual": f"rent={has_rent}, deposit={has_deposit}, late_fee={has_late_fee}",
-            "status": "PASSED" if (has_rent and has_deposit) else "WARNING",
-            "message": "Rental agreement essential financial terms check",
-            "timestamp": now_ts,
-        }
-        results.append(chk)
-        audit_trail.append(chk)
-        return results
-
-    # -----------------------------------------------------------------------
     # 7. Quality Gate Evaluator
     # -----------------------------------------------------------------------
     def _evaluate_quality_gate(
@@ -920,18 +927,16 @@ class FinancialValidationEngine:
         accounting_checks: list[dict[str, Any]],
         cross_ref_checks: list[dict[str, Any]],
         policy: QualityPolicy,
+        tally: _Tally | None = None,
     ) -> tuple[QualityGateDecisionT, list[str]]:
-        """Evaluate overall document quality and assign a gating decision."""
+        """Evaluate overall document quality and assign a gating decision.
+
+        Every count in the returned reasons comes from ``tally``, the same object that produces
+        ``validation_summary.details``, so the two can never disagree.
+        """
         reasons: list[str] = []
-
-        # Count failures and warnings
-        failed_fields = [f for f in fields if f.validation_status == "FAILED"]
-        failed_acct = [chk for chk in accounting_checks if chk.get("status") == "FAILED"]
-        failed_cross = [chk for chk in cross_ref_checks if chk.get("status") == "FAILED"]
-
-        warning_fields = [f for f in fields if f.validation_status == "WARNING"]
-        warning_acct = [chk for chk in accounting_checks if chk.get("status") == "WARNING"]
-        needs_review_fields = [f for f in fields if f.validation_status in ("NEEDS_REVIEW", "REVIEW_REQUIRED")]
+        t = tally or _Tally.of(fields, accounting_checks, cross_ref_checks)
+        failed_fields, failed_acct, failed_cross = t.failed_fields, t.failed_acct, t.failed_cross
 
         # 1. Fundamental balance sheet breakage -> REJECT or HOLD_FOR_REVIEW
         broken_bs_equation = any(
@@ -953,22 +958,27 @@ class FinancialValidationEngine:
 
         # 3. Discrepancies between executive summary KPI and statement table -> HOLD_FOR_REVIEW
         if failed_cross:
-            reasons.append(f"HOLD_FOR_REVIEW: {len(failed_cross)} cross-reference discrepancy between summary KPIs and table rows")
+            reasons.append(f"HOLD_FOR_REVIEW: {len(failed_cross)} cross-reference check(s) failed ({t.describe()})")
             return "HOLD_FOR_REVIEW", reasons
 
         # 4. Other accounting equation failures (e.g. revenue subtotal, gross profit) -> HOLD_FOR_REVIEW
         if failed_acct:
-            reasons.append(f"HOLD_FOR_REVIEW: {len(failed_acct)} accounting equation checks failed")
+            reasons.append(f"HOLD_FOR_REVIEW: {len(failed_acct)} accounting check(s) failed ({t.describe()})")
             return "HOLD_FOR_REVIEW", reasons
 
         # 5. Field-level review requirements or warnings
-        total_warnings = len(warning_fields) + len(warning_acct) + len(needs_review_fields)
-        if total_warnings > policy.max_acceptable_warnings:
-            reasons.append(f"HOLD_FOR_REVIEW: Warnings ({total_warnings}) exceeded policy threshold ({policy.max_acceptable_warnings})")
+        if t.non_fatal > policy.max_acceptable_warnings:
+            reasons.append(
+                f"HOLD_FOR_REVIEW: {t.non_fatal} non-fatal issue(s) ({t.warnings} warnings, {t.needs_review} needs review) "
+                f"exceed the policy threshold ({policy.max_acceptable_warnings})"
+            )
             return "HOLD_FOR_REVIEW", reasons
 
-        if total_warnings > 0:
-            reasons.append(f"ACCEPT_WITH_WARNINGS: Document accepted with {total_warnings} non-fatal warning(s)")
+        if t.non_fatal > 0:
+            reasons.append(
+                f"ACCEPT_WITH_WARNINGS: accepted with {t.non_fatal} non-fatal issue(s) "
+                f"({t.warnings} warnings, {t.needs_review} needs review)"
+            )
             return "ACCEPT_WITH_WARNINGS", reasons
 
         reasons.append("ACCEPT: All accounting equations, field validations, and cross-checks passed successfully")

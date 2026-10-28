@@ -314,6 +314,28 @@ def is_share_count_label(label: str) -> bool:
     return bool(_SHARE_COUNT_LABEL_RE.search(label or "")) and not is_per_share_label(label)
 
 
+_DURATION_RE = re.compile(r"\b(months?|days?|years?|weeks?)\b", re.I)
+_AREA_RE = re.compile(r"\b(?:sq\.?\s*ft\.?|square\s+(?:feet|foot)|sf|sq\.?\s*m|square\s+met(?:er|re)s?)\b", re.I)
+_LIMIT_RE = re.compile(r"\bper\s+occurrence\b|\baggregate\b", re.I)
+
+
+def infer_unit_type(text: str) -> tuple[str, str] | None:
+    """Data type from unit words next to a number: (data_type, unit).
+
+    "36 months" -> duration, "3,150 sq ft" -> area, "$1,000,000 per occurrence" -> limit.
+    Percentages are handled by :func:`parse_number`.
+    """
+    if _LIMIT_RE.search(text):
+        return "limit", "per_occurrence" if "occurrence" in text.lower() else "aggregate"
+    if _AREA_RE.search(text):
+        return "area", "sq_m" if re.search(r"sq\.?\s*m\b|met(?:er|re)", text, re.I) else "sq_ft"
+    m = _DURATION_RE.search(text)
+    if m and not re.search(r"[$€£¥₹]", text):
+        word = m.group(1).lower()
+        return "duration", word if word.endswith("s") else word + "s"
+    return None
+
+
 def format_decimal(d: Decimal | None) -> str | None:
     """Exact plain-notation string for a Decimal (no exponent, trailing zeros of the scale removed)."""
     if d is None:

@@ -19,6 +19,17 @@ from app.extraction.base import (
     ExtractionError,
     TableData,
 )
+from app.extraction.layout import (
+    BOLD_FLAG,
+    NUMBERED_HEADING_RE,
+    clip_text,
+    detect_aligned_tables,
+    find_page_furniture,
+    line_inside,
+    page_lines,
+    span_id,
+    table_candidate_ok,
+)
 from app.extraction.tabular import render_table
 from app.ocr import group_lines_into_paragraphs, run_ocr
 
@@ -98,6 +109,25 @@ class PdfParser(DocumentParser):
             ocr_confs: list[float] = []
             table_counter = 0
 
+            # Page furniture (watermarks, running headers/footers) is found across all pages first,
+            # so it never reaches headings, chunks or table cells.
+            page_dicts: list[dict] = []
+            for page_idx in range(doc.page_count):
+                pg = doc.load_page(page_idx)
+                d = pg.get_text("dict") or {}
+                d["_height"] = float(pg.rect.height)
+                page_dicts.append(d)
+            furniture = find_page_furniture(page_dicts)
+            body_sizes = [
+                float(s.get("size", 10.0))
+                for p_i, d in enumerate(page_dicts)
+                for b in d.get("blocks", []) if b.get("type") == 0
+                for ln in b.get("lines", [])
+                for s in ln.get("spans", [])
+                if (s.get("text") or "").strip() and span_id(s) not in furniture.span_ids[p_i]
+            ]
+            doc_body_size = sorted(body_sizes)[len(body_sizes) // 2] if body_sizes else 10.0
+
             for page_idx in range(doc.page_count):
                 page_num = page_idx + 1
                 page = doc.load_page(page_idx)
@@ -108,6 +138,40 @@ class PdfParser(DocumentParser):
                     native_pages += 1
                     table_bboxes: list[list[float]] = []
                     page_blocks: list[tuple[list[float], ContentBlock]] = []
+                    drop = furniture.span_ids[page_idx]
+                    page_dict = page_dicts[page_idx]
+                    vlines = page_lines(page_dict, drop)
+                    rejected_candidate = False
+
+                    def add_table(tbl: TableData, t_bbox: list[float], boxes, method: str) -> None:
+                        nonlocal table_counter
+                        table_counter += 1
+                        table_bboxes.append(t_bbox)
+                        n_rows = len(tbl.rows) + 1
+                        page_blocks.append(
+                            (
+                                t_bbox,
+                                ContentBlock(
+                                    block_type=TABLE,
+                                    text=render_table(tbl),
+                                    location={
+                                        "page": page_num,
+                                        "table_index": table_counter,
+                                        "row_start": 1,
+                                        "row_end": n_rows,
+                                        "col_start": 1,
+                                        "col_end": len(tbl.headers),
+                                        "bboxes": [t_bbox],
+                                        "table_bbox": t_bbox,
+                                        "cell_bboxes": boxes,
+                                        "page_width": pw,
+                                        "page_height": ph,
+                                    },
+                                    extraction_method=method,
+                                    table=tbl,
+                                ),
+                            )
+                        )
 
                     if settings.pdf_detect_tables and hasattr(page, "find_tables"):
                         try:
@@ -117,6 +181,7 @@ class PdfParser(DocumentParser):
                                 # Use cell-level clip extraction to preserve exact source formatting verbatim.
                                 rows: list[list[str]] = []
                                 boxes: list[list[list[float] | None]] = []
+                                row_bboxes: list[list[float]] = []
                                 t_rows = getattr(t, "rows", None)
                                 if t_rows:
                                     for r in t_rows:
@@ -127,13 +192,13 @@ class PdfParser(DocumentParser):
                                                 row_text.append("")
                                                 row_boxes.append(None)
                                             else:
-                                                c_rect = fitz.Rect(cell)
-                                                c_raw = page.get_text("text", clip=c_rect).strip()
-                                                c_clean = " ".join(c_raw.split())
-                                                row_text.append(c_clean)
+                                                row_text.append(
+                                                    clip_text(page, fitz.Rect(cell), furniture.boxes[page_idx], doc_body_size)
+                                                )
                                                 row_boxes.append([round(float(x), 1) for x in cell])
                                         rows.append(row_text)
                                         boxes.append(row_boxes)
+                                        row_bboxes.append([round(float(x), 1) for x in r.bbox])
                                 else:
                                     extracted = t.extract() or []
                                     rows = [[(" ".join(str(c).split()) if c is not None else "") for c in r] for r in extracted]
@@ -141,50 +206,41 @@ class PdfParser(DocumentParser):
 
                                 keep = [i for i, r in enumerate(rows) if any(c for c in r)]
                                 rows = [rows[i] for i in keep]
+                                row_bboxes = [row_bboxes[i] for i in keep if i < len(row_bboxes)]
                                 boxes = _fill_missing_cell_boxes([boxes[i] for i in keep], rows, page)
                                 if len(rows) >= 2 and max(len(r) for r in rows) >= 2:
-                                    table_counter += 1
                                     t_bbox = [round(float(x), 1) for x in t.bbox]
-                                    table_bboxes.append(t_bbox)
-                                    headers = rows[0]
-                                    body = rows[1:]
+                                    if not table_candidate_ok(rows, t_bbox, row_bboxes, vlines):
+                                        rejected_candidate = True
+                                        continue
                                     tbl = TableData(
-                                        headers=headers,
-                                        rows=body,
+                                        headers=rows[0],
+                                        rows=rows[1:],
                                         row_numbers=list(range(2, len(rows) + 1)),
                                         header_row_number=1,
                                         cell_bboxes=boxes,
                                         bbox=t_bbox,
                                     )
-                                    page_blocks.append(
-                                        (
-                                            t_bbox,
-                                            ContentBlock(
-                                                block_type=TABLE,
-                                                text=render_table(tbl),
-                                                location={
-                                                    "page": page_num,
-                                                    "table_index": table_counter,
-                                                    "row_start": 1,
-                                                    "row_end": len(rows),
-                                                    "col_start": 1,
-                                                    "col_end": len(headers),
-                                                    "bboxes": [t_bbox],
-                                                    "table_bbox": t_bbox,
-                                                    "cell_bboxes": boxes,
-                                                    "page_width": pw,
-                                                    "page_height": ph,
-                                                },
-                                                extraction_method="pymupdf",
-                                                table=tbl,
-                                            ),
-                                        )
-                                    )
+                                    add_table(tbl, t_bbox, boxes, "pymupdf")
                         except Exception:
                             pass
 
+                    if rejected_candidate:
+                        # find_tables() merged prose/headings into a table or collapsed rows: rebuild the
+                        # tables on this page from column-aligned text lines instead.
+                        free = [ln for ln in vlines if not any(line_inside(ln, tb) for tb in table_bboxes)]
+                        for at in detect_aligned_tables(free, pw):
+                            tbl = TableData(
+                                headers=at.headers,
+                                rows=at.rows,
+                                row_numbers=list(range(2, len(at.rows) + 2)),
+                                header_row_number=1,
+                                cell_bboxes=at.cell_bboxes,
+                                bbox=at.bbox,
+                            )
+                            add_table(tbl, at.bbox, at.cell_bboxes, "pymupdf:aligned")
+
                     # Extract text blocks via get_text("dict") to inspect font sizes and coordinates
-                    page_dict = page.get_text("dict") or {}
                     blocks = page_dict.get("blocks", [])
                     font_sizes: list[float] = []
                     for b in blocks:
@@ -192,7 +248,7 @@ class PdfParser(DocumentParser):
                             continue
                         for line in b.get("lines", []):
                             for span in line.get("spans", []):
-                                if (span.get("text") or "").strip():
+                                if (span.get("text") or "").strip() and span_id(span) not in drop:
                                     font_sizes.append(float(span.get("size", 11.0)))
                     median_size = sorted(font_sizes)[len(font_sizes) // 2] if font_sizes else 11.0
 
@@ -205,15 +261,30 @@ class PdfParser(DocumentParser):
                             continue
                         lines_text: list[str] = []
                         max_span_size = 0.0
+                        all_bold = True
+                        kept_boxes: list[list[float]] = []
                         for line in b.get("lines", []):
-                            lt = "".join(s.get("text", "") for s in line.get("spans", [])).strip()
+                            spans = [s for s in line.get("spans", []) if span_id(s) not in drop and (s.get("text") or "").strip()]
+                            if not spans:
+                                continue
+                            lb = [min(s["bbox"][0] for s in spans), min(s["bbox"][1] for s in spans),
+                                  max(s["bbox"][2] for s in spans), max(s["bbox"][3] for s in spans)]
+                            cx, cy = (lb[0] + lb[2]) / 2, (lb[1] + lb[3]) / 2
+                            if any(tb[0] <= cx <= tb[2] and tb[1] <= cy <= tb[3] for tb in table_bboxes):
+                                continue  # table text belongs to the table block only
+                            lt = "".join(s.get("text", "") for s in line.get("spans", []) if span_id(s) not in drop).strip()
                             if lt:
                                 lines_text.append(lt)
-                                for s in line.get("spans", []):
+                                kept_boxes.append(lb)
+                                for s in spans:
                                     max_span_size = max(max_span_size, float(s.get("size", 0.0)))
+                                    all_bold = all_bold and bool(s.get("flags", 0) & BOLD_FLAG)
                         text = "\n".join(lines_text).strip()
                         if not text:
                             continue
+                        if kept_boxes and len(kept_boxes) < len(b.get("lines", [])):
+                            bbox = [round(min(x[0] for x in kept_boxes), 1), round(min(x[1] for x in kept_boxes), 1),
+                                    round(max(x[2] for x in kept_boxes), 1), round(max(x[3] for x in kept_boxes), 1)]
 
                         # Detect and filter repeated headers/footers (e.g. "Page 1 of 2", running page numbers)
                         y0, y1 = bbox[1], bbox[3]
@@ -226,11 +297,17 @@ class PdfParser(DocumentParser):
                             continue
 
                         para_idx += 1
-                        is_heading = (
-                            "\n" not in text
-                            and len(text) < 95
-                            and (max_span_size >= median_size * 1.18 or bool(_HEADING_RE.match(text)))
-                        )
+                        numbered = NUMBERED_HEADING_RE.match(text)
+                        if numbered:
+                            # numbered clause headings need a typographic cue; numbered list items do not qualify
+                            is_heading = "\n" not in text and len(text) < 95 and (all_bold or max_span_size >= median_size * 1.1)
+                        else:
+                            is_heading = (
+                                "\n" not in text
+                                and len(text) < 95
+                                and (max_span_size >= median_size * 1.18 or bool(_HEADING_RE.match(text)))
+                            )
+                        heading_level = (2 + text.split()[0].rstrip(".").count(".")) if numbered else 2
                         page_blocks.append(
                             (
                                 bbox,
@@ -246,7 +323,7 @@ class PdfParser(DocumentParser):
                                         "page_height": ph,
                                     },
                                     extraction_method="pymupdf",
-                                    heading_level=2 if is_heading else None,
+                                    heading_level=heading_level if is_heading else None,
                                 ),
                             )
                         )
